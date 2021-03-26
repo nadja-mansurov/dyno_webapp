@@ -30,12 +30,16 @@ from . import appbuilder, db
         category="My Category",
         category_icon='fa-envelope'
     )
+
+ 
+@appbuilder.app.route("/")
+def index():
+    return render_template("../../client/dist/index.html")
 """
 
 """
     Application wide 404 error handler
 """
-
 
 @appbuilder.app.errorhandler(404)
 def page_not_found(e):

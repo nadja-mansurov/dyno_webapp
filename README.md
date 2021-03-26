@@ -6,6 +6,8 @@
 ## activate conda 
     conda source activate dynophores_webapp
 
+# Development mode 
+
 ## start sever
     cd server
     flask run -p 3000
@@ -19,5 +21,12 @@ Check in browser `http://localhost:3000/`
 
 Check in browser `http://localhost:8080/`
 
-### NGL library
-The library is used https://github.com/nglviewer/ngl 
+## NGL library
+We are using https://github.com/nglviewer/ngl 
+
+# Production mode
+
+## build client
+    cd client
+    npm install
+    npm run build
