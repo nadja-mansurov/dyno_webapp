@@ -18,3 +18,6 @@ Check in browser `http://localhost:3000/`
     npm run serve
 
 Check in browser `http://localhost:8080/`
+
+### NGL library
+The library is used https://github.com/nglviewer/ngl 
