@@ -31,10 +31,6 @@ from . import appbuilder, db
         category_icon='fa-envelope'
     )
 
- 
-@appbuilder.app.route("/")
-def index():
-    return render_template("../../client/dist/index.html")
 """
 
 """

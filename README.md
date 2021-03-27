@@ -10,9 +10,11 @@
 
 ## start sever
     cd server
-    flask run -p 3000
+    python run.py
 
 Check in browser `http://localhost:3000/`
+Example API: `/api/v1/example/greeting`
+
 
 ## start client
     cd client
@@ -24,9 +26,16 @@ Check in browser `http://localhost:8080/`
 ## NGL library
 We are using https://github.com/nglviewer/ngl 
 
-# Production mode
+# Production mode (frontend production)
 
-## build client
+1. build client
+Client application is in `client\dist`-folder
     cd client
     npm install
     npm run build
+
+2. build server
+    cd server
+    python run.py
+
+3. go to `0.0.0.0:3000`
