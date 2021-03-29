@@ -10,8 +10,8 @@ logging.basicConfig(format="%(asctime)s:%(levelname)s:%(name)s:%(message)s")
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-template_dir = os.path.abspath('../client/dist')
-static_dir = os.path.abspath('../client/dist')
+template_dir = os.path.abspath('../client/dist/client')
+static_dir = os.path.abspath('../client/dist/client')
 
 app = Flask(__name__, 
             template_folder=template_dir, 

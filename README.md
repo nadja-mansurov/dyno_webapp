@@ -21,7 +21,7 @@ Example API: `/api/v1/example/greeting`
     npm install
     npm run serve
 
-Check in browser `http://localhost:8080/`
+Check in browser `http://localhost:4200/`
 
 ## NGL library
 We are using https://github.com/nglviewer/ngl 
