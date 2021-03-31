@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "prestart": "npm run build:ngl:copy",
     "start": "ng serve",
+    "prebuild": "npm run build:ngl:copy",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "update": "rm -rf node_modules  && rm -rf package-lock.json && npm i",
-    "update:all": "ncu -u && npm i"
+    "update": "rm -rf node_modules  && rm -rf package-lock.json && npm i && npm audit fix --force",
+    "update:all": "ncu -u && npm i",
+    "build:ngl:dts": "cd node_modules/ngl && npm run dts",
+    "build:ngl:copy": "copyfiles --flat node_modules/ngl/dist/ngl.esm.js src/assets",
+    "build:ngl:dts:copy": "npm run dts"
   },
   "private": true,
   "dependencies": {
@@ -21,10 +26,10 @@
     "@angular/platform-browser": "11.2.7",
     "@angular/platform-browser-dynamic": "11.2.7",
     "@angular/router": "11.2.7",
-    "@popperjs/core": "^2.9.1",
+    "@popperjs/core": "2.9.1",
     "bootstrap": "5.0.0-beta3",
     "bootstrap-icons": "1.4.0",
-    "ngl": "2.0.0-dev0.0",
+    "ngl": "2.0.0-dev.39",
     "rxjs": "6.6.7",
     "tslib": "2.1.0",
     "zone.js": "0.11.4"
@@ -36,6 +41,7 @@
     "@types/jasmine": "3.6.9",
     "@types/node": "14.14.37",
     "codelyzer": "6.0.1",
+    "copyfiles": "^2.4.1",
     "jasmine-core": "3.7.1",
     "jasmine-spec-reporter": "6.0.0",
     "karma": "6.3.1",

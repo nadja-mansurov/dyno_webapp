@@ -4,8 +4,16 @@
       <span class="fs-4">Dynophores Webapp</span>
     </a>
     <ul class="nav nav-pills">
-      <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-      <li class="nav-item"><a href="/ngl" class="nav-link active">NGL-Viewer</a></li>
+      <li class="nav-item">
+        <a routerLink="/" class="nav-link"
+          [routerLinkActiveOptions]="{exact: true}"
+          routerLinkActive="active">Home</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/ngl" class="nav-link"
+          [routerLinkActiveOptions]="{exact: true}"
+          routerLinkActive="active">NGL-Viewer</a>
+      </li>
     </ul>
   </header>
 
