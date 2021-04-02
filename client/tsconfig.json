@@ -10,6 +10,7 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": true,
+    "emitDeclarationOnly": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
@@ -22,7 +23,8 @@
     ],
     "paths": {
       "@/*": ["src/*"],
-      "@views/*": ["src/app/views/*"]
+      "@views/*": ["src/app/views/*"],
+      "@assets/*": ["src/app/assets/*"]
     }
 
   },

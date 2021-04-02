@@ -13,7 +13,7 @@
     "update": "rm -rf node_modules  && rm -rf package-lock.json && npm i && npm audit fix --force",
     "update:all": "ncu -u && npm i",
     "build:ngl:dts": "cd node_modules/ngl && npm run dts",
-    "build:ngl:copy": "copyfiles --flat node_modules/ngl/dist/ngl.esm.js src/assets",
+    "build:ngl:copy": "copyfiles --flat node_modules/ngl/dist/ngl.js src/assets",
     "build:ngl:dts:copy": "npm run dts"
   },
   "private": true,
@@ -29,7 +29,7 @@
     "@popperjs/core": "2.9.1",
     "bootstrap": "5.0.0-beta3",
     "bootstrap-icons": "1.4.0",
-    "ngl": "2.0.0-dev.39",
+    "ngl": "^2.0.0-dev.39",
     "rxjs": "6.6.7",
     "tslib": "2.1.0",
     "zone.js": "0.11.4"
@@ -40,6 +40,7 @@
     "@angular/compiler-cli": "11.2.7",
     "@types/jasmine": "3.6.9",
     "@types/node": "14.14.37",
+    "@types/three": "^0.126.2",
     "codelyzer": "6.0.1",
     "copyfiles": "^2.4.1",
     "jasmine-core": "3.7.1",

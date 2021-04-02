@@ -39,3 +39,7 @@ Client application is in `client\dist`-folder
     python run.py
 
 3. go to `0.0.0.0:3000`
+
+
+# TODO 
+1) `script ngl` is hardcode in header, wait for update https://github.com/nglviewer/ngl

@@ -6,10 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ngl.component.scss']
 })
 export class NglComponent implements OnInit {
+  private Stage: any;
 
-  constructor() { }
+  constructor() {
+    // TODO: check update https://github.com/nglviewer/ngl,
+    // Stage has to be imported from node_modules
+    this.Stage = (<any>window).NGL.Stage;
+  }
 
   ngOnInit(): void {
+    let stage = new this.Stage("viewport");
+    stage.loadFile("rcsb://1crn", {defaultRepresentation: true});
   }
 
 }
