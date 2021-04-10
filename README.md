@@ -19,7 +19,7 @@ Example API: `/api/v1/example/greeting`
 ## start client
     cd client
     npm install
-    npm run serve
+    npm run start
 
 Check in browser `http://localhost:4200/`
 
