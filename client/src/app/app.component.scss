@@ -1,0 +1,34 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+
+
+.site-header {
+  background-color: $gray-900;
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+
+  a {
+    color: $gray-600;
+    transition: color .15s ease-in-out;
+  }
+
+  a:hover, a.active {
+    color: $gray-200;
+    text-decoration: none;
+  }
+}
+
+.site-footer {
+  background-color: $gray-900;
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+
+  a {
+    color: $gray-600;
+    transition: color .15s ease-in-out;
+  }
+
+  a:hover, a.active {
+    color: $gray-200;
+    text-decoration: none;
+  }
+}

@@ -16,7 +16,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
-    "module": "es2015",
+    "module": "esNext",
     "lib": [
       "es2018",
       "dom"
@@ -24,7 +24,11 @@
     "paths": {
       "@/*": ["src/*"],
       "@views/*": ["src/app/views/*"],
-      "@assets/*": ["src/app/assets/*"]
+      "@assets/*": ["src/app/assets/*"],
+      "@modules/*": ["src/app/modules/*"],
+
+      "@dynophores-viewer/*": ["src/app/modules/dynophores-viewer/*"],
+      "@ngl-viewer/*": ["src/app/modules/ngl-viewer/*"]
     }
 
   },

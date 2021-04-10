@@ -1,22 +1,42 @@
-<div class="container">
-  <header class="d-flex justify-content-center py-3">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-      <span class="fs-4">Dynophores Webapp</span>
+<header class="site-header py-1  mb-2">
+  <nav class="container d-flex flex-column flex-md-row justify-content-between">
+    <a
+      class="py-2 d-none d-md-inline-block"
+      routerLink="/"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLinkActive="active"
+    >
+      Dynophores Webapp
     </a>
-    <ul class="nav nav-pills">
-      <li class="nav-item">
-        <a routerLink="/" class="nav-link"
-          [routerLinkActiveOptions]="{exact: true}"
-          routerLinkActive="active">Home</a>
-      </li>
-      <li class="nav-item">
-        <a routerLink="/ngl" class="nav-link"
-          [routerLinkActiveOptions]="{exact: true}"
-          routerLinkActive="active">NGL-Viewer</a>
-      </li>
-    </ul>
-  </header>
+    <a
+      routerLink="/ngl"
+      class="py-2 d-none d-md-inline-block"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLinkActive="active"
+    >
+      NGL-Viewer
+    </a>
+    <a
+      routerLink="/viewer"
+      class="py-2 d-none d-md-inline-block"
+      [routerLinkActiveOptions]="{ exact: true }"
+      routerLinkActive="active"
+    >
+      Dynophore-Viewer
+    </a>
+  </nav>
+</header>
 
-  <router-outlet></router-outlet>
-</div>
+<main class="mt-2 mb-2">
+  <div class="container d-flex align-content-start">
+    <router-outlet></router-outlet>
+  </div>
+</main>
 
+<footer class="mt-auto site-footer py-1">
+  <div class="container">
+    <p>
+        Dynophores Webapp
+    </p>
+  </div>
+</footer>

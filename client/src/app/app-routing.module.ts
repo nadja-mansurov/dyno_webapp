@@ -1,10 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NglComponent } from '@views/ngl/ngl.component';
+import { HomeComponent } from '@views/home/home.component';
 
 const routes: Routes = [
-  { path: 'ngl', component: NglComponent },
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'ngl',
+    loadChildren: () => import('@ngl-viewer/ngl-viewer.module')
+                          .then(m => m.NglViewerModule)
+  },
+  {
+    path: 'viewer',
+    loadChildren: () => import('@dynophores-viewer/dynophores-viewer.module')
+                          .then(m => m.DynophoresViewerModule),
+  },
+  {
+    path: '',
+    redirectTo: '',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
