@@ -1,9 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SubSink } from 'subsink';
-import { UploadFilesService } from '@dynophores-viewer/services/file-upload.service';
-import { DynophoreModel } from '@dynophores-viewer/models/dynophore.model';
 import { XmlParser } from '@angular/compiler';
 import { combineLatest } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+
+import { UploadFilesService } from '@dynophores-viewer/services/file-upload.service';
+import { DynophoreModel } from '@dynophores-viewer/models/dynophore.model';
+
 import { NGL } from '@/app/ngl.const';
 import { UtilsService } from '../services/utils.service';
 
@@ -31,14 +34,31 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy {
         //this.parseJson(item);
       });
 
+    let pdb: any;
     this.subs.sink = combineLatest([
       this.fileUpload.getFiles('dyno_dynophore', 'pml'),
       this.fileUpload.getFiles('startframe', 'pdb', stageInstance)
-      //this.fileUpload.getFiles('trajectory', 'dcd', this.stageInstance)
-    ]).subscribe(([pmlFile, pdbFile /*, dcdFile*/]) => {
-      this.drawPdb(pdbFile, stageInstance);
-      //console.log('PML File', pmlFile);
-      //console.log('DCD File', dcdFile);
+    ]).pipe(
+      switchMap(([pmlFile, pdbFile]) => {
+        pdb = this.drawPdb(pdbFile, stageInstance);
+        console.log('PML File', pmlFile);
+        return this.fileUpload.getFiles('trajectory', 'dcd')
+      })
+    )
+    .subscribe(dcdFile => {
+      pdb.addTrajectory(dcdFile, {
+        initialFrame: 100,
+        defaultTimeout: 100,
+        defaultStep: undefined,
+        defaultInterpolateType: "spline",
+        defaultDirection: "forward",
+        centerPbc: false,
+        removePbc: false,
+        superpose: true,
+        sele: "backbone and not hydrogen"
+      })
+      console.log('PDB File', pdb);
+
     });
   }
 
@@ -49,25 +69,11 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy {
   private drawPdb(pdbFile: any, stageInstance: any) {
     let shape = new NGL.Shape(pdbFile);
     let shapeComp = stageInstance.addComponentFromObject(shape);
-    shapeComp.addRepresentation('buffer', { opacity: 0.7 });
+    shapeComp.addRepresentation('buffer', { opacity: 0.3 });
     pdbFile.addRepresentation("ball+stick", { color: "atomindex" })
     pdbFile.autoView()
-    /*
-    console.log('PDB File', pdbFile);
-    const ids = this.utils.getAtomTypeIds(pdbFile);
-    console.log('ids', ids);
 
-    for (let item in ids) {
-      let point_buffer = this.utils.getPointBuffer(ids[item]);
-      let shape = new NGL.Shape(item);
-      shape.addBuffer(point_buffer);
-      let stageInstance = new NGL.Stage('viewport');
-      let shapeComp = stageInstance.addComponentFromObject(shape);
-      shapeComp.addRepresentation('buffer', { opacity: 0.7 });
-      //object.bufferList.0.wireframeGeometry.attributes
-      console.log('shapeComp', shapeComp);
-      shapeComp.autoView()
-    }*/
+    return pdbFile;
   }
 
   private testDrawPdb() {

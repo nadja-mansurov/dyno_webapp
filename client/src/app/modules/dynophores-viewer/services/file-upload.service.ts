@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { NGL } from '@/app/ngl.const';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,12 @@ export class UploadFilesService {
   getFiles(name: string, type: string, instance?: any): Observable<any> {
     if (type.toLowerCase() === 'json') {
       return this.http.get(`${this.baseUrl}/data/${name}.${type}`);
-    } if (instance) {
+    } else if (type.toLowerCase() === 'pdb') {
       return instance.loadFile(`${this.baseUrl}/data/${name}.${type}`, {
+        defaultRepresentation: true
+      })
+    } else if (type.toLowerCase() === 'dcd') {
+      return NGL.autoLoad(`${this.baseUrl}/data/${name}.${type}`, {
         defaultRepresentation: true
       })
     } else {
