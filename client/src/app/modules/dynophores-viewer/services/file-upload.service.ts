@@ -23,9 +23,13 @@ export class UploadFilesService {
     return this.http.request(req);
   }
 
-  getFiles(name: string, type: string): Observable<any> {
+  getFiles(name: string, type: string, instance?: any): Observable<any> {
     if (type.toLowerCase() === 'json') {
       return this.http.get(`${this.baseUrl}/data/${name}.${type}`);
+    } if (instance) {
+      return instance.loadFile(`${this.baseUrl}/data/${name}.${type}`, {
+        defaultRepresentation: true
+      })
     } else {
       return this.http.get(`${this.baseUrl}/data/${name}.${type}`, {
         headers: new HttpHeaders()
