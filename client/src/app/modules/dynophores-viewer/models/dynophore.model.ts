@@ -1,8 +1,24 @@
-import { SuperfeatureModel } from '@dynophores-viewer/models/superfeature.model';
+import { FeatureCloudModel } from './feature-cloud.model';
 
 export class DynophoreModel {
   id: string = '';
-  ligand_name: string = '';
-  ligand_smiles: string = '';
-  superfeatures: SuperfeatureModel[] = [];
+  name: string = '';
+  pharmacophoreType: string = '';
+  featureClouds: FeatureCloudModel[] = [];
+
+  constructor(data: any) {
+    /** set common file data */
+    data.attrs.map( (item: any) => {
+      if (item.name === 'name')
+        this.name = item.value;
+      if (item.name === 'pharmacophoreType')
+        this.pharmacophoreType = item.value;
+      if (item.name === 'id')
+        this.id = item.value;
+    });
+
+    data.children.map( (item: any) => {
+      this.featureClouds.push(new FeatureCloudModel(item));
+    });
+  }
 }

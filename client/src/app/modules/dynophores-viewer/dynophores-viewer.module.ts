@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { DynophoresViewerComponent } from '@dynophores-viewer/dynophores-viewer/dynophores-viewer.component';
 
+
 export const viewerRoutes: Routes = [
   {
       path: '',

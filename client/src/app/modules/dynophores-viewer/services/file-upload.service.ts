@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { NGL } from '@/app/ngl.const';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class UploadFilesService {
   private baseUrl = '';

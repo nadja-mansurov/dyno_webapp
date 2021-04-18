@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Vector3 } from 'three';
 import { NGL } from '@/app/ngl.const';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'any'
 })
 export class UtilsService {
 
