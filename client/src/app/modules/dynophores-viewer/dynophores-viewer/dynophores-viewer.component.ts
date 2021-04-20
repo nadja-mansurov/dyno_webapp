@@ -70,16 +70,23 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy {
     console.log(dynophore);
     dynophore.featureClouds.map((featureCloud: any) => {
       let shape = new NGL.Shape(featureCloud.featureId);
-      shape.addSphere(featureCloud.position, featureCloud.featureColor, 5*featureCloud.weight, featureCloud.name);
+      //shape.addSphere(featureCloud.position, featureCloud.featureColor, 5*featureCloud.weight, featureCloud.name);
 
+      shape.addEllipsoid(featureCloud.position,
+        featureCloud.featureColor,
+        featureCloud.weight, // radius
+        featureCloud.maxima, // majorAxis
+        featureCloud.minima, // minorAxis
+        featureCloud.name)
       let shapeComp = stageInstance.addComponentFromObject(shape);
       // TODO: To be dependent on time & frame index
+      /*
       if (featureCloud.additionalPoints) {
         let additionalPoint = featureCloud.additionalPoints[0];
         let point = new NGL.Shape(additionalPoint.frameIndex);
         point.addSphere(additionalPoint.position, featureCloud.featureColor, 2*featureCloud.weight, featureCloud.name);
         shapeComp = stageInstance.addComponentFromObject(point);
-      }
+      }*/
       shapeComp.addRepresentation('buffer', { opacity: 0.7 });
       shapeComp.autoView();
     });

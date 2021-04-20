@@ -1,6 +1,7 @@
 import { Vector3, Color } from 'three';
 import { AdditionalPointModel } from './additional-point.model';
 
+
 export class FeatureCloudModel {
   id: string = '';
   name: string = '';
@@ -12,6 +13,8 @@ export class FeatureCloudModel {
   involvedAtomSerials: Array<number> = [];
   position: Vector3 = new Vector3(0, 0, 0);
   additionalPoints: AdditionalPointModel[] = [];
+  minima?: Vector3 = new Vector3(0.0, 0.0, 0.0);
+  maxima?: Vector3 = new Vector3(0.0, 0.0, 0.0);
   x: number = 0.0;
   y: number = 0.0;
   z: number = 0.0;
@@ -33,6 +36,7 @@ export class FeatureCloudModel {
         this.additionalPoints.push(new AdditionalPointModel(item.attrs));
       }
     });
+    this.getMinMax();
   }
 
   renderPosition(pos:any): Vector3 {
@@ -43,5 +47,21 @@ export class FeatureCloudModel {
       if (item.name === 'z3') this.z = z = item.value;
     })
     return new Vector3(x, y, z);
+  }
+
+  getMinMax() {
+    let localMax = 0;
+    let localMin = 100000000;
+    this.additionalPoints.map(attrs => {
+      const distance = attrs.position.distanceTo(this.position);
+      if (distance > localMax) {
+        localMax = distance;
+        this.maxima = attrs.position;
+      }
+      if (distance < localMax) {
+        localMin = distance;
+        this.minima = attrs.position;
+      }
+    });
   }
 }
