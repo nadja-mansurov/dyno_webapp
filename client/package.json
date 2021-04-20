@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "dynophores_webclient",
   "version": "0.0.1",
   "scripts": {
     "ng": "ng",
@@ -10,6 +10,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "copy:publish": "copyfiles --flat dist/dynophores_webclient ../../../../github/nadja-mansurov.github.io",
+    "buildaot": "ng build --prod --base-href 'https://nadja-mansurov.github.io/dynophores_webclient/'",
+    "deploy": "npx angular-cli-ghpages --dir=dist/dynophores_webclient",
     "update": "rm -rf node_modules  && rm -rf package-lock.json && npm i && npm audit fix --force",
     "update:all": "ncu -u && npm i",
     "build:ngl:dts": "cd node_modules/ngl && npm run dts",
@@ -46,6 +49,7 @@
     "@types/node": "^14.14.37",
     "@types/three": "^0.127.0",
     "@types/xml2js": "^0.4.8",
+    "angular-cli-ghpages": "*",
     "codelyzer": "6.0.1",
     "copyfiles": "^2.4.1",
     "jasmine-core": "3.7.1",
