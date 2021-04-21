@@ -9,6 +9,7 @@ import { ParserService } from '@dynophores-viewer/services/dynophore.parser.serv
 
 import { NGL } from '@/app/ngl.const';
 import { UtilsService } from '@dynophores-viewer/services/utils.service';
+import { AdditionalPointModel } from '../models/additional-point.model';
 
 @Component({
   selector: 'dyno-dynophores-viewer',
@@ -72,23 +73,13 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy {
       let shape = new NGL.Shape(featureCloud.featureId);
       //shape.addSphere(featureCloud.position, featureCloud.featureColor, 5*featureCloud.weight, featureCloud.name);
 
+      featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
+        shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
+      });
 
-/*
-      shape.addEllipsoid(featureCloud.position,
-        featureCloud.featureColor,
-        featureCloud.weight, // radius
-        featureCloud.maxima, // majorAxis
-        featureCloud.minima, // minorAxis
-        featureCloud.name)*/
       let shapeComp = stageInstance.addComponentFromObject(shape);
       // TODO: To be dependent on time & frame index
-      /*
-      if (featureCloud.additionalPoints) {
-        let additionalPoint = featureCloud.additionalPoints[0];
-        let point = new NGL.Shape(additionalPoint.frameIndex);
-        point.addSphere(additionalPoint.position, featureCloud.featureColor, 2*featureCloud.weight, featureCloud.name);
-        shapeComp = stageInstance.addComponentFromObject(point);
-      }*/
+
       shapeComp.addRepresentation('buffer', { opacity: 0.7 });
       shapeComp.autoView();
     });
@@ -98,7 +89,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy {
     let shape = new NGL.Shape(pdbFile);
     let shapeComp = stageInstance.addComponentFromObject(shape);
     shapeComp.addRepresentation('buffer', { opacity: 0.3 });
-    pdbFile.addRepresentation("ball+stick", { color: "atomindex" })
+    pdbFile.addRepresentation("ball+stick", { color: "partialCharge" })
     pdbFile.autoView()
 
     return pdbFile;

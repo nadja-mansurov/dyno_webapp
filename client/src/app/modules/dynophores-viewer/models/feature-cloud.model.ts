@@ -33,7 +33,7 @@ export class FeatureCloudModel {
       if (item.name === 'position')
         this.position = this.renderPosition(item.attrs);
       if (item.name === 'additionalPoint') {
-        this.additionalPoints.push(new AdditionalPointModel(item.attrs));
+        this.additionalPoints.push(new AdditionalPointModel(item.attrs, this.position));
       }
     });
     this.getMinMax();
