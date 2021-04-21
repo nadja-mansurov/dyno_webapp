@@ -72,12 +72,14 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy {
       let shape = new NGL.Shape(featureCloud.featureId);
       //shape.addSphere(featureCloud.position, featureCloud.featureColor, 5*featureCloud.weight, featureCloud.name);
 
+
+/*
       shape.addEllipsoid(featureCloud.position,
         featureCloud.featureColor,
         featureCloud.weight, // radius
         featureCloud.maxima, // majorAxis
         featureCloud.minima, // minorAxis
-        featureCloud.name)
+        featureCloud.name)*/
       let shapeComp = stageInstance.addComponentFromObject(shape);
       // TODO: To be dependent on time & frame index
       /*

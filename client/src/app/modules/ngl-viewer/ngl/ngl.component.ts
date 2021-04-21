@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
+import { NGL } from '@/app/ngl.const';
+
 const URI = 'rcsb://'
 
 @Component({
@@ -20,7 +22,7 @@ export class NglComponent implements OnInit {
   constructor() {
     // TODO: check update https://github.com/nglviewer/ngl,
     // Stage has to be imported from node_modules
-    this.Stage = (<any>window).NGL.Stage;
+    this.Stage = NGL.Stage;
   }
 
   ngOnInit(): void {

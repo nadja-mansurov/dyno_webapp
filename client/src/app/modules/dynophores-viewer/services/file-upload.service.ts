@@ -3,11 +3,13 @@ import { HttpClient, HttpRequest, HttpEvent, HttpHeaders } from '@angular/common
 import { Observable } from 'rxjs';
 import { NGL } from '@/app/ngl.const';
 
+import { environment } from '@/environments/environment';
+
 @Injectable({
   providedIn: 'any'
 })
 export class UploadFilesService {
-  private baseUrl = '';
+  private baseUrl = environment.base_url;
 
   constructor(private http: HttpClient) { }
 
