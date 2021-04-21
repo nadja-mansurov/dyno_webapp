@@ -13,7 +13,7 @@
     "deploy:clear": "rm -rf ../../../nadja-mansurov.github.io/dynophores_webclient",
     "deploy:copy": "cp -r dist/dynophores_webclient ../../../nadja-mansurov.github.io",
     "deploy:publish": "cd ../../../nadja-mansurov.github.io/dynophores_webclient && git add --all && git commit -m 'update prod' && git push",
-    "buildaot": "ng build --prod --base-href 'https://nadja-mansurov.github.io/dynophores_webclient/'",
+    "buildaot": "ng build --prod --output-path docs --base-href /dynophores_webclient/",
     "deploy": "npm run buildaot && npm run deploy:clear && npm run deploy:copy && npm run deploy:publish",
     "update": "rm -rf node_modules  && rm -rf package-lock.json && npm i && npm audit fix --force",
     "update:all": "ncu -u && npm i",
