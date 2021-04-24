@@ -1,0 +1,19 @@
+@import '_variables.scss';
+
+:host {
+  width: 100%;
+  height: $mainHeight;
+}
+
+.dynophore-container {
+  height: $contentHeight;
+}
+
+.timeline-container {
+  height: $timelineHeight;
+}
+
+.control-container {
+  height: $contentHeight;
+  overflow-y: auto;
+}

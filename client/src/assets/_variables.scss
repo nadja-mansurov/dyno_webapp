@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+
+$footerHeight: 4rem;
+$headerHeight: 4rem;
+$timelineHeight: 8rem;
+
+$fhHeader: $footerHeight + $headerHeight;
+
+$mainHeight: calc(100vh - 8rem);
+$contentHeight: calc(100vh - 8rem - 8rem);

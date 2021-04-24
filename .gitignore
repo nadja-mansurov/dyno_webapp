@@ -7,5 +7,5 @@ env
 venv
 *.sublime*
 ./node_modules/*
-*/dist/*
-*/docs/*
+./dist/*
+./docs/*
