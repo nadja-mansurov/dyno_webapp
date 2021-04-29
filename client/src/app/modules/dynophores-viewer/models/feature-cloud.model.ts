@@ -27,7 +27,8 @@ export class FeatureCloudModel {
       if (item.name === 'featureId') this.featureId = item.value;
       if (item.name === 'optional') this.optional = item.value;
       if (item.name === 'weight') this.weight = item.value;
-      if (item.name === 'involvedAtomSerials') this.involvedAtomSerials = item.value.split(',');
+      if (item.name === 'involvedAtomSerials')
+        this.involvedAtomSerials = item.value.split(',').map((x:string):number => +x);
     })
     data.children.map((item: any) => {
       if (item.name === 'position')
@@ -42,9 +43,9 @@ export class FeatureCloudModel {
   renderPosition(pos:any): Vector3 {
     let x, y, z;
     pos.map((item: any) => {
-      if (item.name === 'x3') this.x = x = item.value;
-      if (item.name === 'y3') this.y = y = item.value;
-      if (item.name === 'z3') this.z = z = item.value;
+      if (item.name === 'x3') this.x = x = +item.value;
+      if (item.name === 'y3') this.y = y = +item.value;
+      if (item.name === 'z3') this.z = z = +item.value;
     })
     return new Vector3(x, y, z);
   }

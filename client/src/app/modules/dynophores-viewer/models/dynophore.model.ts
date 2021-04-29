@@ -5,6 +5,7 @@ export class DynophoreModel {
   name: string = '';
   pharmacophoreType: string = '';
   featureClouds: FeatureCloudModel[] = [];
+  allInvolvedAtoms: Array<number> = [];
 
   constructor(data: any) {
     /** set common file data */
@@ -20,5 +21,13 @@ export class DynophoreModel {
     data.children.map( (item: any) => {
       this.featureClouds.push(new FeatureCloudModel(item));
     });
+
+    this.featureClouds.map(cloud => {
+      // TODO: optimize
+      cloud.involvedAtomSerials.map(serial => {
+        if (this.allInvolvedAtoms.indexOf(serial) < 0) this.allInvolvedAtoms.push(serial);
+      });
+    });
+
   }
 }

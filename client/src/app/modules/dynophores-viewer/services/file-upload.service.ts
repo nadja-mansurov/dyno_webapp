@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, LOCALE_ID } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NGL } from '@/app/ngl.const';
@@ -11,7 +11,10 @@ import { environment } from '@/environments/environment';
 export class UploadFilesService {
   private baseUrl = environment.base_url;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    @Inject(LOCALE_ID) public locale: string
+    ) {}
 
   upload(file: File): Observable<HttpEvent<any>> {
     const formData: FormData = new FormData();
