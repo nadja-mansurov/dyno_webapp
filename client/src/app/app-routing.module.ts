@@ -6,7 +6,9 @@ import { HomeComponent } from '@views/home/home.component';
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    loadChildren: () => import('@dynophores-viewer/dynophores-viewer.module')
+                          .then(m => m.DynophoresViewerModule),
+    //component: HomeComponent
   },
   {
     path: 'ngl',
