@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 import { DynophoresViewerComponent } from '@dynophores-viewer/components/dynophores-viewer/dynophores-viewer.component';
 import { ControlPanelComponent } from '@dynophores-viewer/components/control-panel/control-panel.component';
@@ -26,6 +28,7 @@ export const viewerRoutes: Routes = [
   imports: [
     CommonModule,
     HttpClientModule,
+    ReactiveFormsModule,
     RouterModule.forChild(viewerRoutes)
   ],
   exports: [

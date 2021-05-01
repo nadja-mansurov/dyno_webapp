@@ -1,4 +1,26 @@
 <div class="row">
+    <div class="col-sm-12">
+      <div class="btn-group btn-group-sm width-100" role="group" aria-label="Zoom">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="setCloudVisibility(false)"
+          title="Hide all clouds">
+          <i class="bi bi-cloud-plus-fill"></i>&nbsp;<span>Hide&nbsp;all&nbsp;clouds</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="setCloudVisibility(true)"
+          title="Show all clouds">
+          <i class="bi bi-cloud-minus-fill"></i>&nbsp;<span>Show&nbsp;all&nbsp;clouds</span>
+        </button>
+      </div>
+
+    </div>
+</div>
+
+<!--div class="row">
   <div class="col-sm-12">
     <div class="btn-group btn-group-sm width-100" role="group" aria-label="Zoom">
       <button
@@ -21,4 +43,4 @@
       </button>
     </div>
   </div>
-</div>
+</div-->

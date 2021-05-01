@@ -9,3 +9,7 @@
 .width-100 {
   width: 100%;
 }
+
+.row+.row {
+  margin-top: 1rem;
+}

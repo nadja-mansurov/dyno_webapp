@@ -3,6 +3,11 @@ import { Injectable } from '@angular/core';
 import { XmlParser } from '@angular/compiler';
 import { FeatureCloudModel } from '../models/feature-cloud.model';
 import { DynophoreModel } from '../models/dynophore.model';
+import { DynophoreAtomModel } from '../models/dynophore-atom.model';
+import { Vector3 } from 'three';
+import { AdditionalPointModel } from '../models/additional-point.model';
+
+import { NGL } from '@/app/ngl.const';
 
 @Injectable({
   providedIn: 'any'
@@ -20,6 +25,74 @@ export class ParserService {
     if (!parsed || parsed.errors.length > 0) return null;
     return new DynophoreModel(parsed.rootNodes[1]);
   };
+
+  getAtomDynophoreInteractions(atoms: number[], structureComponent: any) {
+    let i = 1;
+    let coords: any = {};
+    structureComponent.structure.eachAtom((ap: any) => {
+      if (atoms.indexOf(ap.serial) > -1) {
+        if (!coords[i]) coords[i] = new DynophoreAtomModel({
+          serial: ap.serial,
+          element: ap.element,
+          atomname: ap.atomname,
+          resno: ap.resno,
+          resname: ap.resname,
+          coords: new Vector3(ap.x, ap.y, ap.z)
+        });
+      }
+      i++;
+    });
+    return coords;
+  }
+
+  structureDrawing(pdbFile: any, stageInstance: any) {
+    let shapeComp = stageInstance.addComponentFromObject(new NGL.Shape(pdbFile));
+    shapeComp.addRepresentation('buffer', { opacity: 0.3 });
+    pdbFile.addRepresentation("backbone", {
+      colorScheme: "element",
+      crossSize: 0.75 })
+    pdbFile.autoView();
+    return pdbFile;
+  }
+
+  dynophoreDrawing(dynophore: any, hiddenIndecies: number[], atomsCoordsList: DynophoreAtomModel[]) {
+    let shapes: any = {};
+    dynophore.featureClouds.map((featureCloud: any) => {
+      let shape = new NGL.Shape(featureCloud.featureId);
+
+      featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
+        item.setVisibility(hiddenIndecies);
+        console.log('item', item)
+        if (!item.hidden) {
+          shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
+        }
+      });
+
+      featureCloud.involvedAtomSerials.map((item: number) => {
+        const atom = atomsCoordsList[item];
+        atom.addDynophore({
+          dynophoreId: dynophore.id,
+          featureCloudName: featureCloud.name,
+          featureCloudId: featureCloud.featureId,
+          id: featureCloud.id,
+          color: featureCloud.featureColor,
+          position: featureCloud.position
+        });
+        atom.setConnection();
+        shape.addArrow(atom.position1, atom.position2, atom.color, 0.05, `${atom.label}`);
+      });
+
+      shapes[featureCloud.featureId] = shape;
+
+
+    });
+
+    return shapes;
+  }
+
+  additionalPointDrawing() {
+
+  }
 
 };
 

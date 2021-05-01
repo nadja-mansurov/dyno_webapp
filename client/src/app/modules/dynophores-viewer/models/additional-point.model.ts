@@ -10,12 +10,13 @@ export class AdditionalPointModel {
   x: number = 0.0;
   y: number = 0.0;
   z: number = 0.0;
+  hidden?: boolean = false;
 
   constructor(data: any, center: Vector3) {
     let x, y, z;
     data.map((item: any) => {
       if (item.name === 'weight') this.weigth = item.value;
-      if (item.name === 'frameIndex') this.frameIndex = item.value;
+      if (item.name === 'frameIndex') this.frameIndex = +item.value;
       if (item.name === 'x3') {
         this.x = x = item.value;
         this.bufferArray[0] = x;
@@ -33,6 +34,12 @@ export class AdditionalPointModel {
     this.distance = center.distanceTo(this.position);
   }
 
-
+  setVisibility(hiddenFrames: number[]) {
+    if (hiddenFrames.indexOf(this.frameIndex) > -1) {
+      this.hidden = true;
+    } else {
+      this.hidden = false;
+    }
+  }
 
 }
