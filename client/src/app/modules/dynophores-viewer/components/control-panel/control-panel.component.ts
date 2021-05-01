@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { UploadFilesService } from '../../services/file-upload.service';
 
 @Component({
   selector: 'dyno-control-panel',
@@ -8,13 +9,24 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 export class ControlPanelComponent implements OnInit {
   @Output() getCloudVisibility: EventEmitter<boolean> = new EventEmitter();
 
-  constructor() { }
+  public allowToDraw = false;
+
+  constructor(
+    private _uploadFilesService: UploadFilesService
+  ) { }
 
   ngOnInit(): void {
+    this._uploadFilesService.uploaded$.subscribe(state => {
+      this.allowToDraw = state;
+    });
   }
 
   setCloudVisibility(val: boolean) {
     this.getCloudVisibility.emit(val);
   }
 
+  draw() {
+    this._uploadFilesService.redraw();
+
+  }
 }

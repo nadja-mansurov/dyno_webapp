@@ -9,6 +9,7 @@ import { DynophoresViewerComponent } from '@dynophores-viewer/components/dynopho
 import { ControlPanelComponent } from '@dynophores-viewer/components/control-panel/control-panel.component';
 import { TimelineComponent } from '@dynophores-viewer/components/timeline/timeline.component';
 import { DynophoresMainComponent } from '@dynophores-viewer/components/dynophores-main/dynophores-main.component';
+import { FileUploadComponent } from '@dynophores-viewer/components/file-upload/file-upload.component';
 
 
 export const viewerRoutes: Routes = [
@@ -23,7 +24,8 @@ export const viewerRoutes: Routes = [
     DynophoresViewerComponent,
     ControlPanelComponent,
     TimelineComponent,
-    DynophoresMainComponent
+    DynophoresMainComponent,
+    FileUploadComponent
   ],
   imports: [
     CommonModule,

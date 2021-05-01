@@ -1,4 +1,34 @@
 <div class="row">
+    <div class="col-sm-4">PDB File</div>
+    <div class="col-sm-8">
+      <dyno-file-upload type="pdb"></dyno-file-upload>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">PML File</div>
+    <div class="col-sm-8">
+      <dyno-file-upload type="pml"></dyno-file-upload>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4">DCD File</div>
+    <div class="col-sm-8">
+      <dyno-file-upload type="dcd"></dyno-file-upload>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <button
+          type="button"
+          class="btn btn-primary width-100"
+          (click)="draw()"
+          title="Draw"
+          [disabled]="!allowToDraw">
+          <i class="bi bi-brush-fill"></i>&nbsp;<span>Draw</span>
+      </button>
+    </div>
+</div>
+<div class="row">
     <div class="col-sm-12">
       <div class="btn-group btn-group-sm width-100" role="group" aria-label="Zoom">
         <button

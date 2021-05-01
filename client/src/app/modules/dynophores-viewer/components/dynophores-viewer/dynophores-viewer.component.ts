@@ -8,13 +8,10 @@ import { NGL } from '@/app/ngl.const';
 import { UploadFilesService } from '@dynophores-viewer/services/file-upload.service';
 import { ParserService } from '@dynophores-viewer/services/dynophore.parser.service';
 
-import { UtilsService } from '@dynophores-viewer/services/utils.service';
-
 @Component({
   selector: 'dyno-dynophores-viewer',
   templateUrl: './dynophores-viewer.component.html',
-  styleUrls: ['./dynophores-viewer.component.scss'],
-  providers: [ UploadFilesService, ParserService ]
+  styleUrls: ['./dynophores-viewer.component.scss']
 })
 export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   @Input() hiddenFrames: Array<number> = [];
@@ -29,23 +26,24 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   private shapeComponents: any = {};
 
   constructor(
-    private fileUpload: UploadFilesService,
-    private parserService: ParserService,
-    private utils: UtilsService
+    private _uploadFilesService: UploadFilesService,
+    private parserService: ParserService
   ) {}
 
   ngOnInit(): void {
     this.stageInstance = new NGL.Stage('viewport');
-    //this.testDrawPdb();
-    let pdb: any;
 
-    this.subs.sink = combineLatest([
-      this.fileUpload.getFiles('dyno_dynophore', 'pml'),
-      this.fileUpload.getFiles('dyno_dynophore', 'json'),
-      this.fileUpload.getFiles('startframe', 'pdb', this.stageInstance)
-    ]).pipe(
-      switchMap(([pmlFile, jsonFile, pdbFile]) => {
-        //console.log('jsonFile File', jsonFile);
+    this.subs.sink = this._uploadFilesService.redraw$.subscribe(redraw => {
+      if (redraw) {
+        this.stageInstance.removeAllComponents();
+        setTimeout(() => {
+          this.redraw();
+        }, 100);
+      }
+    });
+
+    this.subs.sink = this._uploadFilesService.files(this.stageInstance).pipe(
+      switchMap(([pmlFile, pdbFile]) => {
 
         this.dynophore = this.parserService.parseDynophore(pmlFile);
         this.structureComponent =
@@ -55,7 +53,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
 
         this.drawCloud();
 
-        return this.fileUpload.getFiles('trajectory', 'dcd')
+        return this._uploadFilesService.filesTrajectory();
       })
     )
     .subscribe(dcdFile => {
@@ -70,7 +68,37 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
         superpose: true,
         sele: "backbone and not hydrogen"
       })
-      //console.log('PDB File', pdb);
+
+    });
+
+  }
+
+  redraw() {
+    this.subs.sink = this._uploadFilesService.files(this.stageInstance, true).pipe(
+      switchMap(([pmlFile, pdbFile]) => {
+        this.dynophore = this.parserService.parseDynophore(pmlFile);
+        this.structureComponent =
+            this.parserService.structureDrawing(pdbFile, this.stageInstance);
+        this.atomsCoordsList =
+            this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
+
+        this.drawCloud();
+
+        return this._uploadFilesService.filesTrajectory(true);
+      })
+    )
+    .subscribe(dcdFile => {
+      this.structureComponent.addTrajectory(dcdFile, {
+        initialFrame: 100,
+        defaultTimeout: 100,
+        defaultStep: undefined,
+        defaultInterpolateType: "spline",
+        defaultDirection: "forward",
+        centerPbc: false,
+        removePbc: false,
+        superpose: true,
+        sele: "backbone and not hydrogen"
+      })
 
     });
   }
@@ -102,7 +130,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
     });
   }
 
-  toggleFrames(indecies: Array<number>) {
+  private toggleFrames(indecies: Array<number>) {
     if (this.stageInstance) {
       this.remove();
       this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, indecies, this.atomsCoordsList);
