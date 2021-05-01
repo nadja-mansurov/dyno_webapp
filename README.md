@@ -1,7 +1,7 @@
 # dyno_webapp
 
 ## online demo page 
-    https://nadja-mansurov.github.io/dynophores_webclient/
+https://nadja-mansurov.github.io/dynophores_webclient/
 
 # Development mode 
 
