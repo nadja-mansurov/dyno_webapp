@@ -1,14 +1,15 @@
-# Demo page https://nadja-mansurov.github.io/dynophores_webclient/
-
 # dyno_webapp
+
+## online demo page 
+    https://nadja-mansurov.github.io/dynophores_webclient/
+
+# Development mode 
 
     cd dynophores_webapp
 
 ## activate conda 
     conda source activate dynophores_webapp
-
-# Development mode 
-
+    
 ## start sever
     cd server
     python run.py
