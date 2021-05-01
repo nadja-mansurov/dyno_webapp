@@ -62,7 +62,6 @@ export class ParserService {
 
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         item.setVisibility(hiddenIndecies);
-        console.log('item', item)
         if (!item.hidden) {
           shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
