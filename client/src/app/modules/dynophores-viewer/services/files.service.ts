@@ -1,6 +1,6 @@
 import { Injectable, Inject, LOCALE_ID } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEvent, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { NGL } from '@/app/ngl.const';
 
 import { environment } from '@/environments/environment';
@@ -15,6 +15,12 @@ export class UploadFilesService {
   private pmlFile: any;
   private dcdFile: any;
 
+  private fileNames = {
+    pdbFile: '',
+    pmlFile: '',
+    dcdFile: ''
+  };
+
   public uploaded$ = new BehaviorSubject(false);
   public redraw$ = new BehaviorSubject(false);
 
@@ -24,21 +30,28 @@ export class UploadFilesService {
     ) {
     }
 
-  setFile(file: any, type: string) {
+  setFile(file: any, type: string, name: string) {
     if (type === 'pml') {
       this.pmlFile = file;
+      this.fileNames.pmlFile = name;
     }
     if (type === 'pdb') {
       this.pdbFile = file;
+      this.fileNames.pdbFile = name;
     }
     if (type === 'dcd') {
       this.dcdFile = file;
+      this.fileNames.dcdFile = name;
     }
     if (this.pmlFile && this.pdbFile && this.dcdFile) {
       this.uploaded$.next(true);
     } else {
       this.uploaded$.next(false);
     }
+  }
+
+  getFileNames() {
+    return this.fileNames;
   }
 
   redraw() {

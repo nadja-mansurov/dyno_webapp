@@ -1,11 +1,9 @@
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { SubSink } from 'subsink';
-import { XmlParser } from '@angular/compiler';
-import { combineLatest } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 import { NGL } from '@/app/ngl.const';
-import { UploadFilesService } from '@dynophores-viewer/services/file-upload.service';
+import { UploadFilesService } from '@dynophores-viewer/services/files.service';
 import { ParserService } from '@dynophores-viewer/services/dynophore.parser.service';
 
 @Component({
@@ -74,11 +72,12 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   redraw() {
+    const pdbFileName = this._uploadFilesService.getFileNames().pdbFile;
     this.subs.sink = this._uploadFilesService.files(this.stageInstance, true).pipe(
       switchMap(([pmlFile, pdbFile]) => {
         this.dynophore = this.parserService.parseDynophore(pmlFile);
         this.structureComponent =
-            this.parserService.structureDrawing(pdbFile, this.stageInstance);
+            this.parserService.structureDrawing(pdbFile, this.stageInstance, pdbFileName);
         this.atomsCoordsList =
             this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
 

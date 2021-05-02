@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { UploadFilesService } from '../../services/file-upload.service';
+import { UploadFilesService } from '@dynophores-viewer/services/files.service';
 
 @Component({
   selector: 'dyno-control-panel',

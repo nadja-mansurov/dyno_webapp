@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
-import { UploadFilesService } from '../../services/file-upload.service';
+import { Component, OnInit, Input } from '@angular/core';
+import { UploadFilesService } from '@dynophores-viewer/services/files.service';
 
 @Component({
   selector: 'dyno-file-upload',
@@ -29,6 +29,6 @@ export class FileUploadComponent implements OnInit {
 
   onFileSelected($event: any) {
     const fileURL = URL.createObjectURL($event.target.files[0]);
-    this._uploadFilesService.setFile(fileURL, this.type)
+    this._uploadFilesService.setFile(fileURL, this.type, $event.target.files[0].name)
   }
 }

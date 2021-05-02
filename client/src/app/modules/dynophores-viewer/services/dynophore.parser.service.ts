@@ -20,7 +20,6 @@ export class ParserService {
   ) { }
 
   public parseDynophore(dynophoreFile: any):any {
-    let dynophore: any = {};
     const parsed = this.xmlParser.parse(dynophoreFile, 'dyno_dynophore.pml');
     if (!parsed || parsed.errors.length > 0) return null;
     return new DynophoreModel(parsed.rootNodes[1]);
@@ -45,12 +44,17 @@ export class ParserService {
     return coords;
   }
 
-  structureDrawing(pdbFile: any, stageInstance: any) {
-    let shapeComp = stageInstance.addComponentFromObject(new NGL.Shape(pdbFile));
-    shapeComp.addRepresentation('buffer', { opacity: 0.3 });
+  structureDrawing(pdbFile: any, stageInstance: any, fileName?: string) {
     pdbFile.addRepresentation("backbone", {
       colorScheme: "element",
       crossSize: 0.75 })
+
+    let shapeComp = stageInstance.addComponentFromObject(new NGL.Shape(pdbFile),
+      {
+        backgroundColor: "white",
+      });
+    shapeComp.addRepresentation('buffer', { opacity: 0.3 });
+
     pdbFile.autoView();
     return pdbFile;
   }
