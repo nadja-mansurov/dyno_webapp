@@ -1,6 +1,6 @@
-import { Injectable, Inject, LOCALE_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpEvent, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest, of, from } from 'rxjs';
 import { NGL } from '@/app/ngl.const';
 
 import { environment } from '@/environments/environment';
@@ -25,8 +25,7 @@ export class UploadFilesService {
   public redraw$ = new BehaviorSubject(false);
 
   constructor(
-    private http: HttpClient,
-    @Inject(LOCALE_ID) public locale: string
+    private http: HttpClient
     ) {
     }
 
@@ -61,32 +60,63 @@ export class UploadFilesService {
     }, 5000)
   }
 
-  files(stageInstance: any, fromUploaded?: boolean) {
-    if (!fromUploaded) return combineLatest([
-      this.getFiles('dyno_dynophore', 'pml'),
-      this.getFiles('startframe', 'pdb', stageInstance)
-    ]);
-
-    console.log('this.pdbFile', this.pdbFile);
-    return combineLatest([
-      this.http.get(this.pmlFile, {
+  files(stageInstance: any) {
+    let pmlRequest = this.getFiles('dyno_dynophore', 'pml');
+    let pdbRequest = this.getFiles('startframe', 'pdb', stageInstance);
+    if (this.pmlFile) {
+      pmlRequest = this.http.get(this.pmlFile, {
         headers: new HttpHeaders()
           .set('Content-Type', 'text/xml')
           .append('Access-Control-Allow-Methods', 'GET')
           .append('Access-Control-Allow-Origin', '*')
           .append('Access-Control-Allow-Headers', "Access-Control-Allow-Headers, Access-Control-Allow-Origin, Access-Control-Request-Method"),
         responseType: 'text'
-      }),
-      stageInstance.loadFile(this.pdbFile, { ext: "pdb" })
-    ])
+      })
+    }
+    if (this.pdbFile) {
+      pdbRequest = stageInstance.loadFile(this.pdbFile, { ext: "pdb", name: "startframe" })
+    }
+
+    return combineLatest([
+      pmlRequest,
+      pdbRequest
+    ]);
   }
 
-  filesTrajectory(fromUploaded?: boolean) {
-    if (!fromUploaded) return this.getFiles('trajectory', 'dcd')
-    return NGL.autoLoad(this.dcdFile, {
-      ext: 'dcd',
-      defaultRepresentation: true
-    });
+  filesStructure(stageInstance: any) {
+    let pdbRequest = this.getFiles('startframe', 'pdb', stageInstance);
+    if (this.pdbFile) {
+      pdbRequest = from(stageInstance.loadFile(this.pdbFile, { ext: "pdb", name: "startframe" }))
+    }
+    return pdbRequest;
+  }
+
+  filesDynophore() {
+    let pmlRequest = this.getFiles('dyno_dynophore', 'pml');
+    if (this.pmlFile) {
+      pmlRequest = this.http.get(this.pmlFile, {
+        headers: new HttpHeaders()
+          .set('Content-Type', 'text/xml')
+          .append('Access-Control-Allow-Methods', 'GET')
+          .append('Access-Control-Allow-Origin', '*')
+          .append('Access-Control-Allow-Headers', "Access-Control-Allow-Headers, Access-Control-Allow-Origin, Access-Control-Request-Method"),
+        responseType: 'text'
+      })
+    }
+    return pmlRequest;
+  }
+
+  filesTrajectory() {
+    let dcdRequest = this.getFiles('trajectory', 'dcd');
+
+    if (this.dcdFile) {
+      dcdRequest = NGL.autoLoad(this.dcdFile, {
+        ext: 'dcd',
+        defaultRepresentation: true
+      });
+    }
+
+    return dcdRequest;
   }
 
   upload(file: File): Observable<HttpEvent<any>> {
@@ -106,13 +136,13 @@ export class UploadFilesService {
     if (type.toLowerCase() === 'json') {
       return this.http.get(`${this.baseUrl}/data/${name}.${type}`);
     } else if (type.toLowerCase() === 'pdb') {
-      return instance.loadFile(`${this.baseUrl}/data/${name}.${type}`, {
+      return from(instance.loadFile(`${this.baseUrl}/data/${name}.${type}`, {
         defaultRepresentation: true
-      })
+      }))
     } else if (type.toLowerCase() === 'dcd') {
-      return NGL.autoLoad(`${this.baseUrl}/data/${name}.${type}`, {
+      return from(NGL.autoLoad(`${this.baseUrl}/data/${name}.${type}`, {
         defaultRepresentation: true
-      })
+      }))
     } else {
       return this.http.get(`${this.baseUrl}/data/${name}.${type}`, {
         headers: new HttpHeaders()

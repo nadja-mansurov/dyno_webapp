@@ -6,6 +6,7 @@ import { NGL } from '@/app/ngl.const';
 import { UploadFilesService } from '@dynophores-viewer/services/files.service';
 import { ParserService } from '@dynophores-viewer/services/dynophore.parser.service';
 
+
 @Component({
   selector: 'dyno-dynophores-viewer',
   templateUrl: './dynophores-viewer.component.html',
@@ -33,73 +34,52 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
 
     this.subs.sink = this._uploadFilesService.redraw$.subscribe(redraw => {
       if (redraw) {
-        this.stageInstance.removeAllComponents();
+        this.clearStage();
         setTimeout(() => {
           this.redraw();
-        }, 100);
+        }, 1000);
       }
     });
 
-    this.subs.sink = this._uploadFilesService.files(this.stageInstance).pipe(
-      switchMap(([pmlFile, pdbFile]) => {
-
-        this.dynophore = this.parserService.parseDynophore(pmlFile);
-        this.structureComponent =
-            this.parserService.structureDrawing(pdbFile, this.stageInstance);
-        this.atomsCoordsList =
-            this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
-
-        this.drawCloud();
-
-        return this._uploadFilesService.filesTrajectory();
-      })
-    )
-    .subscribe(dcdFile => {
-      this.structureComponent.addTrajectory(dcdFile, {
-        initialFrame: 100,
-        defaultTimeout: 100,
-        defaultStep: undefined,
-        defaultInterpolateType: "spline",
-        defaultDirection: "forward",
-        centerPbc: false,
-        removePbc: false,
-        superpose: true,
-        sele: "backbone and not hydrogen"
-      })
-
-    });
+    this.getData();
 
   }
 
-  redraw() {
-    const pdbFileName = this._uploadFilesService.getFileNames().pdbFile;
-    this.subs.sink = this._uploadFilesService.files(this.stageInstance, true).pipe(
-      switchMap(([pmlFile, pdbFile]) => {
-        this.dynophore = this.parserService.parseDynophore(pmlFile);
+  private getData() {
+    this.subs.sink = this._uploadFilesService.filesStructure(this.stageInstance).pipe(
+      switchMap((pdbFile: any) => {
         this.structureComponent =
-            this.parserService.structureDrawing(pdbFile, this.stageInstance, pdbFileName);
-        this.atomsCoordsList =
-            this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
+            this.parserService.structureDrawing(pdbFile, this.stageInstance);
 
-        this.drawCloud();
-
-        return this._uploadFilesService.filesTrajectory(true);
+        return this._uploadFilesService.filesTrajectory();
+      }),
+      switchMap((dcdFile: any) => {
+        this.structureComponent.addTrajectory(dcdFile, {
+          initialFrame: 100,
+          defaultTimeout: 100,
+          defaultStep: undefined,
+          defaultInterpolateType: "spline",
+          defaultDirection: "forward",
+          centerPbc: false,
+          removePbc: false,
+          superpose: true,
+          sele: "backbone and not hydrogen"
+        });
+        this.structureComponent.rebuildTrajectories();
+        return this._uploadFilesService.filesDynophore();
       })
-    )
-    .subscribe(dcdFile => {
-      this.structureComponent.addTrajectory(dcdFile, {
-        initialFrame: 100,
-        defaultTimeout: 100,
-        defaultStep: undefined,
-        defaultInterpolateType: "spline",
-        defaultDirection: "forward",
-        centerPbc: false,
-        removePbc: false,
-        superpose: true,
-        sele: "backbone and not hydrogen"
-      })
+    ).subscribe((pmlFile:any) => {
+      this.dynophore = this.parserService.parseDynophore(pmlFile);
+      this.atomsCoordsList =
+          this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
 
-    });
+      this.drawCloud();
+
+    })
+  }
+
+  private redraw() {
+    this.getData();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -119,40 +99,44 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
     this.subs.unsubscribe();
   }
 
+  private clearStage() {
+    this.stageInstance.eachComponent((item: any) => {
+      if (item.type !== 'structure') {
+        this.stageInstance.removeComponent(item);
+      }
+    });
+  }
+
   private drawCloud() {
     this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, this.hiddenFrames || [], this.atomsCoordsList);
 
-    this.show();
-
-    Object.keys(this.dynopherShapes).map(shapeId => {
-      this.shapeComponents[shapeId].autoView();
-    });
+    this.showDynophore();
   }
 
   private toggleFrames(indecies: Array<number>) {
     if (this.stageInstance) {
-      this.remove();
+      this.removeDynophore();
       this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, indecies, this.atomsCoordsList);
-      this.show();
+      this.showDynophore();
     }
   }
 
   private toggleVisibility(value: boolean) {
     if (value) {
       this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, [], this.atomsCoordsList);
-      this.show();
+      this.showDynophore();
     } else {
-      this.remove();
+      this.removeDynophore();
     }
   }
 
-  private remove() {
+  private removeDynophore() {
     Object.keys(this.dynopherShapes).map(shapeId => {
       this.stageInstance.removeComponent(this.shapeComponents[shapeId]);
     });
   }
 
-  private show() {
+  private showDynophore() {
     Object.keys(this.dynopherShapes).map(shapeId => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynopherShapes[shapeId]);
       this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
