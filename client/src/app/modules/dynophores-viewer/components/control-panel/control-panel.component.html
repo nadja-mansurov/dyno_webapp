@@ -1,4 +1,26 @@
 <div class="row">
+    <div class="col-sm-6">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="play(!isPlay)"
+          [disabled]="isPlay"
+          title="Play">
+          <i class="bi bi-play-fill"></i>&nbsp;<span>Play</span>
+      </button>
+    </div>
+    <div class="col-sm-6">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="play(!isPlay)"
+          [disabled]="!isPlay"
+          title="Stop">
+          <i class="bi bi-stop-fill"></i>&nbsp;<span>Stop</span>
+      </button>
+    </div>
+</div>
+<div class="row">
     <div class="col-sm-4">PDB File</div>
     <div class="col-sm-8">
       <dyno-file-upload type="pdb"></dyno-file-upload>

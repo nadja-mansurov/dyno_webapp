@@ -86,7 +86,7 @@ export class UploadFilesService {
   filesStructure(stageInstance: any) {
     let pdbRequest = this.getFiles('startframe', 'pdb', stageInstance);
     if (this.pdbFile) {
-      pdbRequest = from(stageInstance.loadFile(this.pdbFile, { ext: "pdb", name: "startframe" }))
+      pdbRequest = from(stageInstance.loadFile(this.pdbFile, { ext: "pdb", name: "startframe1233" }))
     }
     return pdbRequest;
   }

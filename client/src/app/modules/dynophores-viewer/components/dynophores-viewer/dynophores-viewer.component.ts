@@ -5,6 +5,7 @@ import { switchMap } from 'rxjs/operators';
 import { NGL } from '@/app/ngl.const';
 import { UploadFilesService } from '@dynophores-viewer/services/files.service';
 import { ParserService } from '@dynophores-viewer/services/dynophore.parser.service';
+import { ControlsService } from '../../services/controls.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   private subs = new SubSink();
   private structureComponent: any;
   private dynophore: any = {};
+  private player: any = null;
   private atomsCoordsList: any = {}; // coordinates of structure atoms (pdb), involved with dynophore (pml) interactions
   private stageInstance: any;
   private dynopherShapes: any = null;
@@ -26,14 +28,25 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private _uploadFilesService: UploadFilesService,
-    private parserService: ParserService
+    private parserService: ParserService,
+    private _controlsService: ControlsService
   ) {}
 
   ngOnInit(): void {
     this.stageInstance = new NGL.Stage('viewport');
+    this.subs.sink = this._controlsService.getPlay().subscribe((val: boolean) => {
+      if (!this.player) return;
+      if (val) {
+        this.player.play();
+      } else {
+        this.player.stop();
+      }
+    });
+
 
     this.subs.sink = this._uploadFilesService.redraw$.subscribe(redraw => {
       if (redraw) {
+        this.atomsCoordsList = {};
         this.clearStage();
         setTimeout(() => {
           this.redraw();
@@ -51,6 +64,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
         this.structureComponent =
             this.parserService.structureDrawing(pdbFile, this.stageInstance);
 
+        this.structureComponent.rebuildRepresentations();
         return this._uploadFilesService.filesTrajectory();
       }),
       switchMap((dcdFile: any) => {
@@ -74,8 +88,18 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
           this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
 
       this.drawCloud();
-
+      this.setTrajectoryPlayer();
     })
+  }
+
+  private setTrajectoryPlayer() {
+    this.stageInstance.eachComponent((item: any) => {
+      if (item.type === 'structure') {
+        const trajectoryElement = item.trajList[0];
+        this.player = new NGL.TrajectoryPlayer(trajectoryElement.trajectory, {step: 1, timeout: 500});
+        //player.play();
+      }
+    });
   }
 
   private redraw() {
