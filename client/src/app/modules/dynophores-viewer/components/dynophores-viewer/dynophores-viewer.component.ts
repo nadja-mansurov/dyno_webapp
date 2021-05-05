@@ -1,12 +1,14 @@
 import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { SubSink } from 'subsink';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { NGL } from '@/app/ngl.const';
 import { UploadFilesService } from '@dynophores-viewer/services/files.service';
 import { ParserService } from '@dynophores-viewer/services/dynophore.parser.service';
 import { ControlsService } from '../../services/controls.service';
+import { Observable, from, EMPTY, of, interval } from 'rxjs';
 
+const PLAYER_TIMEOUT = 500;
 
 @Component({
   selector: 'dyno-dynophores-viewer',
@@ -26,6 +28,8 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   private dynopherShapes: any = null;
   private shapeComponents: any = {};
 
+  private frame: any = 0;
+
   constructor(
     private _uploadFilesService: UploadFilesService,
     private parserService: ParserService,
@@ -34,15 +38,42 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.stageInstance = new NGL.Stage('viewport');
-    this.subs.sink = this._controlsService.getPlay().subscribe((val: boolean) => {
-      if (!this.player) return;
-      if (val) {
-        this.player.play();
-      } else {
-        this.player.stop();
+
+    this.subs.sink = this._controlsService.getPlay().pipe(
+      switchMap((val: boolean) => {
+        if (!this.player) return EMPTY;
+        if (val) {
+          this.player.setParameters({
+            start: this.frame
+          });
+          this.player.play();
+          return interval(PLAYER_TIMEOUT/10); // check the frame number every PLAYER_TIMEOUT tume
+        } else {
+          this.frame = this.player.traj.currentFrame+1;
+          this.player.stop();
+          if (this.frame !== this.player.traj.currentFrame) {
+            console.log('this.frame', this.frame);
+            this._controlsService.setVisibleFrame([this.frame+1]);
+            this.atomsCoordsList =
+              this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
+
+            this.redrawCloud();
+          }
+          return EMPTY;
+        }
+      })
+    ).subscribe(frame => {
+      //console.log('this.player.traj.currentFrame', this.player.traj.currentFrame);
+      if (this.frame !== this.player.traj.currentFrame) {
+        console.log('this.frame', this.frame);
+        this.frame = this.player.traj.currentFrame;
+        this._controlsService.setVisibleFrame([this.frame]);
+        this.atomsCoordsList =
+          this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
+
+        this.redrawCloud();
       }
     });
-
 
     this.subs.sink = this._uploadFilesService.redraw$.subscribe(redraw => {
       if (redraw) {
@@ -96,7 +127,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
     this.stageInstance.eachComponent((item: any) => {
       if (item.type === 'structure') {
         const trajectoryElement = item.trajList[0];
-        this.player = new NGL.TrajectoryPlayer(trajectoryElement.trajectory, {step: 1, timeout: 500});
+        this.player = new NGL.TrajectoryPlayer(trajectoryElement.trajectory, {step: 1, timeout: PLAYER_TIMEOUT});
         //player.play();
       }
     });
@@ -137,6 +168,12 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
     this.showDynophore();
   }
 
+  private redrawCloud() {
+    this.removeDynophore();
+    this.dynopherShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, [this.frame+1], this.atomsCoordsList);
+    this.showDynophore();
+  }
+
   private toggleFrames(indecies: Array<number>) {
     if (this.stageInstance) {
       this.removeDynophore();
@@ -155,6 +192,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private removeDynophore() {
+    this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, [], this.atomsCoordsList);
     Object.keys(this.dynopherShapes).map(shapeId => {
       this.stageInstance.removeComponent(this.shapeComponents[shapeId]);
     });

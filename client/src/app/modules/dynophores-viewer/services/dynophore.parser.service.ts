@@ -93,6 +93,45 @@ export class ParserService {
     return shapes;
   }
 
+  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], atomsCoordsList: DynophoreAtomModel[]) {
+    let shapes: any = {};
+    dynophore.featureClouds.map((featureCloud: any) => {
+      let shape = new NGL.Shape(featureCloud.featureId);
+      let visiblePosition:any = null;
+      let visibleIndex:any = null;
+
+      featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
+        item.setVisibility(visibleIndecies, true);
+        if (!item.hidden) {
+          visiblePosition = item.position;
+          visibleIndex = item.frameIndex;
+          shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
+        }
+      });
+
+      featureCloud.involvedAtomSerials.map((item: number) => {
+        const atom = atomsCoordsList[item];
+        if (!visibleIndex) return;
+        atom.addDynophore({
+          dynophoreId: dynophore.id,
+          featureCloudName: featureCloud.name,
+          featureCloudId: featureCloud.featureId,
+          id: featureCloud.id,
+          color: featureCloud.featureColor,
+          position: featureCloud.position
+        });
+        atom.setConnection();
+        shape.addArrow(visiblePosition || atom.position1, atom.position2, atom.color, 0.05, `${atom.label} frameIndex ${visibleIndex}`);
+      });
+
+      shapes[featureCloud.featureId] = shape;
+
+
+    });
+
+    return shapes;
+  }
+
   additionalPointDrawing() {
 
   }

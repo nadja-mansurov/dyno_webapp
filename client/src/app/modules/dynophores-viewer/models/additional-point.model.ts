@@ -34,11 +34,11 @@ export class AdditionalPointModel {
     this.distance = center.distanceTo(this.position);
   }
 
-  setVisibility(hiddenFrames: number[]) {
-    if (hiddenFrames.indexOf(this.frameIndex) > -1) {
-      this.hidden = true;
+  setVisibility(frames: number[], isVisible?: boolean) {
+    if (frames.indexOf(this.frameIndex) > -1) {
+      this.hidden = !isVisible;
     } else {
-      this.hidden = false;
+      this.hidden = isVisible;
     }
   }
 

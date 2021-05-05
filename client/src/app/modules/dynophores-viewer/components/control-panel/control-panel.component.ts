@@ -1,6 +1,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UploadFilesService } from '@dynophores-viewer/services/files.service';
 import { ControlsService } from '../../services/controls.service';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'dyno-control-panel',
@@ -11,6 +12,9 @@ export class ControlPanelComponent implements OnInit {
   @Output() getCloudVisibility: EventEmitter<boolean> = new EventEmitter();
   public isPlay = false;
   public allowToDraw = false;
+  public frameNumbers: number[] = [];
+
+  private subs = new SubSink();
 
   constructor(
     private _uploadFilesService: UploadFilesService,
@@ -18,8 +22,11 @@ export class ControlPanelComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this._uploadFilesService.uploaded$.subscribe(state => {
+    this.subs.sink = this._uploadFilesService.uploaded$.subscribe(state => {
       this.allowToDraw = state;
+    });
+    this.subs.sink = this._controlsService.getVisibleFrame().subscribe(frame => {
+      this.frameNumbers = frame;
     });
   }
 

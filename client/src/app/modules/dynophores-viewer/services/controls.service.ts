@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEvent, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, combineLatest, of, from } from 'rxjs';
-import { NGL } from '@/app/ngl.const';
-
-import { environment } from '@/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'any'
@@ -11,6 +8,7 @@ import { environment } from '@/environments/environment';
 export class ControlsService {
 
   private playState = new BehaviorSubject(false);
+  private visibleFrames: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
   constructor(
     private http: HttpClient
@@ -23,6 +21,14 @@ export class ControlsService {
 
     getPlay() {
       return this.playState;
+    }
+
+    setVisibleFrame(val: number[]) {
+      this.visibleFrames.next(val);
+    }
+
+    getVisibleFrame() {
+      return this.visibleFrames;
     }
 
 }
