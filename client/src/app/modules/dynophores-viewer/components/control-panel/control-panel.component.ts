@@ -13,6 +13,7 @@ export class ControlPanelComponent implements OnInit {
   public isPlay = false;
   public allowToDraw = false;
   public frameNumbers: number[] = [];
+  public isAllVisible = true;
 
   private subs = new SubSink();
 
@@ -27,6 +28,9 @@ export class ControlPanelComponent implements OnInit {
     });
     this.subs.sink = this._controlsService.getVisibleFrame().subscribe(frame => {
       this.frameNumbers = frame;
+    });
+    this.subs.sink = this._controlsService.getAllVisible().subscribe(isAllVisible => {
+      this.isAllVisible = isAllVisible;
     });
   }
 

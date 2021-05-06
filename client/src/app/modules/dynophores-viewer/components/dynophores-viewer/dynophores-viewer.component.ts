@@ -37,6 +37,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   ) {}
 
   ngOnInit(): void {
+    this._controlsService.setAllVisible(true);
     this.stageInstance = new NGL.Stage('viewport');
 
     this.subs.sink = this._controlsService.getPlay().pipe(
@@ -50,6 +51,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
           return interval(PLAYER_TIMEOUT/10); // check the frame number every PLAYER_TIMEOUT tume
         } else {
           this.frame = this.player.traj.currentFrame+1;
+          this._controlsService.setAllVisible(false);
           this.player.stop();
           if (this.frame !== this.player.traj.currentFrame) {
             console.log('this.frame', this.frame);
@@ -67,6 +69,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
       if (this.frame !== this.player.traj.currentFrame) {
         console.log('this.frame', this.frame);
         this.frame = this.player.traj.currentFrame;
+        this._controlsService.setAllVisible(false);
         this._controlsService.setVisibleFrame([this.frame]);
         this.atomsCoordsList =
           this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);

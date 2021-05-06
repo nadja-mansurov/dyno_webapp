@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ControlsService {
 
+  private isAllVisible = new BehaviorSubject(false);
   private playState = new BehaviorSubject(false);
   private visibleFrames: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
@@ -21,6 +22,16 @@ export class ControlsService {
 
     getPlay() {
       return this.playState;
+    }
+
+    setAllVisible(val: boolean) {
+      if (val !== this.isAllVisible.value) {
+        this.isAllVisible.next(val);
+      }
+    }
+
+    getAllVisible() {
+      return this.isAllVisible;
     }
 
     setVisibleFrame(val: number[]) {
