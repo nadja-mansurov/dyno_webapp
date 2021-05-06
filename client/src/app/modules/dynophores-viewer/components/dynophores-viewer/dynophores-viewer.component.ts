@@ -16,7 +16,6 @@ const PLAYER_TIMEOUT = 500;
   styleUrls: ['./dynophores-viewer.component.scss']
 })
 export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() hiddenFrames: Array<number> = [];
   @Input() cloudsVisibility: boolean = true;
 
   private subs = new SubSink();
@@ -39,13 +38,29 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit(): void {
     this._controlsService.setAllVisible(true);
     this.stageInstance = new NGL.Stage('viewport');
+    let firstFrame = this.frame;
+    let lastFrame: any = null;
+
+    this.subs.sink = this._controlsService.getPlayingInterval().pipe().subscribe(interval => {
+      if (!this.player) return;
+      let playerIsRunning = this.player.isRunning;
+      if (playerIsRunning) this._controlsService.setPlay(false);
+      if (!interval) {
+        firstFrame = this.frame;
+        lastFrame = null;
+      } else {
+        firstFrame = interval[0];
+        lastFrame = interval[interval.length - 1];
+      }
+      if (playerIsRunning) this._controlsService.setPlay(true);
+    });
 
     this.subs.sink = this._controlsService.getPlay().pipe(
       switchMap((val: boolean) => {
         if (!this.player) return EMPTY;
         if (val) {
           this.player.setParameters({
-            start: this.frame
+            start: firstFrame ? firstFrame : this.frame
           });
           this.player.play();
           return interval(PLAYER_TIMEOUT/10); // check the frame number every PLAYER_TIMEOUT tume
@@ -67,6 +82,14 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
     ).subscribe(frame => {
       //console.log('this.player.traj.currentFrame', this.player.traj.currentFrame);
       if (this.frame !== this.player.traj.currentFrame) {
+        if (this.frame === lastFrame) {
+          this.frame = firstFrame;
+          this.player.stop();
+          this.player.setParameters({
+            start: this.frame ? this.frame : firstFrame
+          });
+          this.player.play();
+        }
         console.log('this.frame', this.frame);
         this.frame = this.player.traj.currentFrame;
         this._controlsService.setAllVisible(false);
@@ -141,11 +164,14 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.hiddenFrames) {
-      if (!changes.hiddenFrames.firstChange && changes.hiddenFrames.previousValue !== changes.hiddenFrames.currentValue) {
-        this.toggleFrames(<Array<number>>changes.hiddenFrames.currentValue);
+    /*
+    if (changes.playingFrames) {
+      if (!changes.playingFrames.firstChange && changes.playingFrames.previousValue !== changes.playingFrames.currentValue) {
+        if (this.player) {
+          this.player.stop();
+        }
       }
-    }
+    }*/
     if (changes.cloudsVisibility) {
       if (!changes.cloudsVisibility.firstChange && changes.cloudsVisibility.previousValue !== changes.cloudsVisibility.currentValue) {
         this.toggleVisibility(changes.cloudsVisibility.currentValue);
@@ -166,7 +192,7 @@ export class DynophoresViewerComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private drawCloud() {
-    this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, this.hiddenFrames || [], this.atomsCoordsList);
+    this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, [], this.atomsCoordsList);
 
     this.showDynophore();
   }

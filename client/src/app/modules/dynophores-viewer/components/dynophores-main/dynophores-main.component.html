@@ -1,9 +1,7 @@
 <div class="container height-100">
   <div class="row dynophore-container">
     <div class="col-sm-9 viewer-container">
-      <dyno-dynophores-viewer
-        [hiddenFrames]="hiddenFrames"
-        [cloudsVisibility]="cloudsVisibility"></dyno-dynophores-viewer>
+      <dyno-dynophores-viewer></dyno-dynophores-viewer>
     </div>
     <div class="col-sm-3 scroll control-container">
       <dyno-control-panel
@@ -12,7 +10,7 @@
   </div>
   <div class="row timeline-container">
     <div class="col-sm-12">
-      <dyno-timeline (setHiddenFrames)="setHiddenFrames($event)"></dyno-timeline>
+      <dyno-timeline (setPlayingFrames)="setPlayingFrames($event)"></dyno-timeline>
     </div>
   </div>
 </div>

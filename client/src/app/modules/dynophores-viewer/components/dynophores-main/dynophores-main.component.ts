@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class DynophoresMainComponent implements OnInit {
   hasHidden = false;
   cloudsVisibility = true;
-  hiddenFrames: Array<number> = [];
+  playingFrames: Array<number> = [];
   hidden = [];
 
   constructor() { }
@@ -16,13 +16,13 @@ export class DynophoresMainComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  setHiddenFrames($event: Array<Array<number>>) {
+  setPlayingFrames($event: Array<Array<number>>) {
     console.log($event);
-    this.hiddenFrames = [];
+    this.playingFrames = [];
     $event.map(item => {
       if (item.length > 0) {
         for (let i = item[0]; i < item[1]; i++) {
-          this.hiddenFrames.push(i);
+          this.playingFrames.push(i);
         }
       }
     })

@@ -8,6 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 export class ControlsService {
 
   private isAllVisible = new BehaviorSubject(false);
+  private playingInterval = new BehaviorSubject<number[]|null>(null);
   private playState = new BehaviorSubject(false);
   private visibleFrames: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
@@ -40,6 +41,14 @@ export class ControlsService {
 
     getVisibleFrame() {
       return this.visibleFrames;
+    }
+
+    setPlayingInterval(interval: number[]|null) {
+      this.playingInterval.next(interval);
+    }
+
+    getPlayingInterval() {
+      return this.playingInterval;
     }
 
 }

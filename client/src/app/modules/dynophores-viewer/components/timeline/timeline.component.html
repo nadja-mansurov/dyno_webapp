@@ -1,14 +1,14 @@
 <div *ngIf="allShown">
   <div class="alert alert-success" role="alert">
-    No hidden framesIndecies!
+    No selected framesIndecies!
   </div>
 </div>
 <div *ngIf="!allShown">
   <div class="alert alert-danger" role="alert">
-    Hidden frameIndecies from <b>{{from.value}}</b> to <b>{{to.value}}</b>.
+    Playing frameIndecies from <b>{{from.value}}</b> to <b>{{to.value}}</b>.
   </div>
 </div>
-  Hide frames&nbsp;
+  Play only frames&nbsp;
 
   <label>from
     <input [formControl]="from" type="number">
@@ -18,6 +18,6 @@
     <input [formControl]="to" type="number" />
   </label>&nbsp;
 
-  <button (click)="hide(true)" class="btn btn-secondary">Hide</button>&nbsp;
-  <button (click)="hide(false)" class="btn btn-secondary">Show All</button>
+  <button (click)="playSelected(true)" class="btn btn-secondary">Play selected</button>&nbsp;
+  <button (click)="playSelected(false)" class="btn btn-secondary">Play All</button>
 
