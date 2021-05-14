@@ -26,6 +26,7 @@
       "@views/*": ["src/app/views/*"],
       "@assets/*": ["src/app/assets/*"],
       "@modules/*": ["src/app/modules/*"],
+      "@models/*": ["src/app/models/*"],
 
       "@control-panel/*": ["src/app/modules/control-panel/*"],
       "@ngl-viewer/*": ["src/app/modules/ngl-viewer/*"]
