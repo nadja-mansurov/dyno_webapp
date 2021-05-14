@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-sm-4">{{ title }}</div>
+  <div class="col-sm-8">
+    <input
+      type="file"
+      class="file-input form-control form-control-sm"
+      [accept]="acceptedTypes"
+      (change)="onFileSelected($event)"
+    />
+  </div>
+</div>

@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "node_modules/bootstrap/scss/bootstrap";
 
 $footerHeight: 4rem;
 $headerHeight: 4rem;
@@ -11,3 +12,11 @@ $contentHeight: calc(100vh - 8rem - 8rem);
 
 $placeholderColor1: #fafafa;
 $placeholderColor2: #fcfcfc;
+
+$bordersColor: $gray-400;
+$footerColor: $gray-900;
+$aColor: $gray-600;
+$aActiveColor: $gray-200;
+$textColor: $gray-100;
+
+$defaultFontSize: $font-size-sm;

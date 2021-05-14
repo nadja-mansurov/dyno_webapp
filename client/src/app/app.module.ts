@@ -3,7 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from '@/app/app-routing.module';
 import { AppComponent } from '@/app/app.component';
-import { HomeComponent } from '@views/home/home.component';
+import { NglViewerModule } from '@ngl-viewer/ngl-viewer.module';
+import { ControlPanelModule } from '@control-panel/control-panel.module';
+import { HomeComponent } from '@/app/views/home/home.component';
 
 @NgModule({
   declarations: [
@@ -12,7 +14,9 @@ import { HomeComponent } from '@views/home/home.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NglViewerModule,
+    ControlPanelModule
   ],
   providers: [],
   bootstrap: [AppComponent]

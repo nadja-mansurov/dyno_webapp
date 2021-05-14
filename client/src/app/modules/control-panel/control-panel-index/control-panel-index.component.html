@@ -1,0 +1,152 @@
+<div class="logical-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value=""
+          id="customFiles"
+          (change)="uploadCustom = !uploadCustom"
+        />
+        <label class="form-check-label" for="flexCheckDefault">
+          Upload custom files
+        </label>
+      </div>
+      <div class="hideshow_container hidden" *ngIf="uploadCustom">
+        <div class="row">
+          <div class="col-sm-12">
+            <dyno-file-upload title="PDB file" type="pdb"></dyno-file-upload>
+            <dyno-file-upload title="PML file" type="pml"></dyno-file-upload>
+            <dyno-file-upload title="DCD file" type="dcd"></dyno-file-upload>
+          </div>
+          <div class="col-sm-12">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm width-100"
+              (click)="draw()"
+              title="Redraw All!"
+              [disabled]="!allowToDraw"
+            >
+              <i class="bi bi-brush-fill"></i>&nbsp;<span>Redraw All!</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="logical-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div
+        class="btn-group btn-group-sm width-100"
+        role="group"
+        aria-label="Zoom"
+      >
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="setCloudVisibility(false)"
+          title="Hide all clouds"
+        >
+          <i class="bi bi-cloud-minus-fill"></i>&nbsp;<span
+            >Hide&nbsp;all&nbsp;clouds</span
+          >
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="setCloudVisibility(true)"
+          title="Show all clouds"
+        >
+          <i class="bi bi-cloud-plus-fill"></i>&nbsp;<span
+            >Show&nbsp;all&nbsp;clouds</span
+          >
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-5">
+      <select class="form-select form-select-sm">
+        <option selected value="1">Show</option>
+        <option value="2">Hide</option>
+      </select>
+    </div>
+    <div class="col-sm-7">
+      <dyno-range></dyno-range>
+    </div>
+  </div>
+</div>
+
+<div class="logical-container">
+  <div class="row">
+    <div class="col-sm-4">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-primary width-100"
+        (click)="play(!isPlay)"
+        [disabled]="isPlay"
+        title="Play"
+      >
+        <i class="bi bi-play-fill"></i>&nbsp;<span>Play</span>
+      </button>
+    </div>
+    <div class="col-sm-4">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-secondary width-100"
+        (click)="play(!isPlay)"
+        [disabled]="!isPlay"
+        title="Stop"
+      >
+        <i class="bi bi-stop-fill"></i>&nbsp;<span>Stop</span>
+      </button>
+    </div>
+    <div class="col-sm-4">
+        <small>Frame No: <strong>All</strong></small>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value=""
+          id="hidePrevFrames"
+        />
+        <label class="form-check-label" for="hidePrevFrames">
+          Hide previous frames
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value=""
+          id="selectedFrames"
+          (change)="playSelected = !playSelected"
+        />
+        <label class="form-check-label" for="selectedFrames">
+          Play only...
+        </label>
+      </div>
+    </div>
+    <div class="hideshow_container hidden" *ngIf="playSelected">
+      <div class="row">
+        <div class="col-sm-5">Frames indicies</div>
+        <div class="col-sm-7"><dyno-range></dyno-range></div>
+      </div>
+    </div>
+  </div>
+</div>
