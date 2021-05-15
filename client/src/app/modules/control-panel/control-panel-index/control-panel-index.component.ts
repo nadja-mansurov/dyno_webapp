@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FilesService } from '@/app/services/files.service';
 
 @Component({
   selector: 'dyno-control-panel-index',
@@ -12,7 +13,9 @@ export class ControlPanelIndexComponent implements OnInit {
   public uploadCustom: boolean = false;
   public playSelected: boolean = false;
 
-  constructor() { }
+  constructor(
+    private _filesService: FilesService
+  ) { }
 
   ngOnInit(): void {
   }
@@ -27,5 +30,10 @@ export class ControlPanelIndexComponent implements OnInit {
 
   public play(isPlay: boolean) {
 
+  }
+
+  public setFilesOption() {
+    this.uploadCustom = !this.uploadCustom;
+    this._filesService.setCustom(this.uploadCustom);
   }
 }

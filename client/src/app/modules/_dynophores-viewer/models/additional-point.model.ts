@@ -1,5 +1,18 @@
 import { Vector3 } from 'three';
 
+export interface IAdditionalPoint {
+  position: Vector3;
+  weigth: number;
+  frameIndex: number;
+  bufferArray: number[];
+  radius: number;
+  distance: number;
+  x: number;
+  y: number;
+  z: number;
+  hidden?: boolean;
+};
+
 export class AdditionalPointModel {
   position: Vector3 = new Vector3(0, 0, 0);
   weigth: number = 0.0;

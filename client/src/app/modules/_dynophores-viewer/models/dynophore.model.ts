@@ -1,11 +1,19 @@
-import { FeatureCloudModel } from './feature-cloud.model';
+import { FeatureCloudModel, IFeatureCloud } from './feature-cloud.model';
+
+export interface IDynophore {
+  id: string;
+  name: string;
+  pharmacophoreType: string;
+  featureClouds: IFeatureCloud[];
+  allInvolvedAtoms: number[];
+}
 
 export class DynophoreModel {
   id: string = '';
   name: string = '';
   pharmacophoreType: string = '';
   featureClouds: FeatureCloudModel[] = [];
-  allInvolvedAtoms: Array<number> = [];
+  allInvolvedAtoms: number[] = [];
 
   constructor(data: any) {
     /** set common file data */
