@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "dynophores_webclient": {
+    "dynophores_webclient_v0": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
