@@ -1,6 +1,23 @@
 import { Vector3, Color } from 'three';
-import { AdditionalPointModel } from './additional-point.model';
+import { AdditionalPointModel, IAdditionalPoint } from './additional-point.model';
 
+export interface IFeatureCloud {
+  id: string;
+  name: string;
+  featureColor: Color;
+  featureId: string;
+  optional: boolean;
+  disabled: boolean;
+  weight: number;
+  involvedAtomSerials: number[];
+  position: Vector3;
+  additionalPoints: IAdditionalPoint[];
+  minima?: Vector3;
+  maxima?: Vector3;
+  x: number;
+  y: number;
+  z: number;
+};
 
 export class FeatureCloudModel {
   id: string = '';
