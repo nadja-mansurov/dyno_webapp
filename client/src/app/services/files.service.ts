@@ -17,7 +17,6 @@ import { IDynophore } from '../modules/_dynophores-viewer/models/dynophore.model
 })
 export class FilesService {
 
-  private xmlParser: XmlParser = new XmlParser();
   private baseUrl = environment.base_url;
   private isCustom = false;
   private defaultPdbUri = `${this.baseUrl}/data/startframe.pdb`;
@@ -36,7 +35,9 @@ export class FilesService {
   }
 
   public uploadPdb(stageInstance: any) {
-    let pdbRequest = from(stageInstance.loadFile(this.defaultPdbUri, { ext: "pdb", name: "startframe" }));
+    let pdbRequest = from(stageInstance.loadFile(this.defaultPdbUri, {
+      defaultRepresentation: true
+    }));
     return pdbRequest;
   }
 
@@ -94,10 +95,5 @@ export class FilesService {
     this._store.dispatch(FilesActions.setCustom({ custom: this.isCustom }))
   }
 
-  public parseDynophore(dynophoreFile: any, name?: string):any {
-    const parsed = this.xmlParser.parse(dynophoreFile, name || this.defaultPmlUri);
-    if (!parsed || parsed.errors.length > 0) return null;
-    return new DynophoreModel(parsed.rootNodes[1]);
-  };
 
 }

@@ -49,14 +49,17 @@ export class ParserService {
       colorScheme: "element",
       crossSize: 0.75 })
 
-    let shapeComp = stageInstance.addComponentFromObject(new NGL.Shape(pdbFile));
+    let shapeComp = stageInstance.addComponentFromObject(new NGL.Shape(pdbFile),
+      {
+        backgroundColor: "white",
+      });
     shapeComp.addRepresentation('buffer', { opacity: 0.3 });
 
     pdbFile.autoView();
     return pdbFile;
   }
 
-  dynophoreDrawing(dynophore: any, hiddenIndecies: number[], atomsCoordsList: DynophoreAtomModel[]) {
+  dynophoreDrawing(dynophore: any, hiddenIndecies: number[], atomsCoordsList?: DynophoreAtomModel[]) {
     let shapes: any = {};
     dynophore.featureClouds.map((featureCloud: any) => {
       let shape = new NGL.Shape(featureCloud.featureId);
@@ -68,6 +71,7 @@ export class ParserService {
         }
       });
 
+      /*
       featureCloud.involvedAtomSerials.map((item: number) => {
         const atom = atomsCoordsList[item];
         atom.addDynophore({
@@ -80,11 +84,9 @@ export class ParserService {
         });
         atom.setConnection();
         shape.addArrow(atom.position1, atom.position2, atom.color, 0.05, `${atom.label}`);
-      });
+      });*/
 
       shapes[featureCloud.featureId] = shape;
-
-
     });
 
     return shapes;
