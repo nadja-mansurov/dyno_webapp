@@ -17,7 +17,6 @@ import { IDynophore } from '../modules/_dynophores-viewer/models/dynophore.model
 })
 export class FilesService {
 
-  private xmlParser: XmlParser = new XmlParser();
   private baseUrl = environment.base_url;
   private isCustom = false;
   private defaultPdbUri = `${this.baseUrl}/data/startframe.pdb`;
@@ -35,7 +34,14 @@ export class FilesService {
     //this.setFile(stageInstance);
   }
 
-  public uploadPdbPml(stageInstance: any) {
+  public uploadPdb(stageInstance: any) {
+    let pdbRequest = from(stageInstance.loadFile(this.defaultPdbUri, {
+      defaultRepresentation: true
+    }));
+    return pdbRequest;
+  }
+
+  public uploadPml() {
     let pmlRequest = this.http.get(this.defaultPmlUri, {
       headers: new HttpHeaders()
         .set('Content-Type', 'text/xml')
@@ -44,18 +50,14 @@ export class FilesService {
         .append('Access-Control-Allow-Headers', "Access-Control-Allow-Headers, Access-Control-Allow-Origin, Access-Control-Request-Method"),
       responseType: 'text'
     });
-    let pdbRequest = stageInstance.loadFile(this.defaultPdbUri, { ext: "pdb", name: "startframe" });
-    return combineLatest([
-      pmlRequest,
-      pdbRequest
-    ]);
+    return pmlRequest;
   }
 
   public uploadDcd() {
-    let dcdRequest = NGL.autoLoad(this.defaultDcdUri, {
+    let dcdRequest = from(NGL.autoLoad(this.defaultDcdUri, {
       ext: 'dcd',
       defaultRepresentation: true
-    });
+    }));
     return dcdRequest;
   }
 
@@ -93,10 +95,5 @@ export class FilesService {
     this._store.dispatch(FilesActions.setCustom({ custom: this.isCustom }))
   }
 
-  private parseDynophore(dynophoreFile: any, name: string):any {
-    const parsed = this.xmlParser.parse(dynophoreFile, name);
-    if (!parsed || parsed.errors.length > 0) return null;
-    return new DynophoreModel(parsed.rootNodes[1]);
-  };
 
 }
