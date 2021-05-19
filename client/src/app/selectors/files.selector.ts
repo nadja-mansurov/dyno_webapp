@@ -1,11 +1,11 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { IFileState } from '@/app/reducers/interfaces';
 
-export const selectAuthState =
+export const selectFileState =
     createFeatureSelector<IFileState>("files");
 
 export const isCustom = createSelector(
-  selectAuthState,
+  selectFileState,
   files => files.custom
 );
 

@@ -2,7 +2,7 @@
 import {createAction, props} from '@ngrx/store';
 
 
-export const displ = createAction(
-    "[1] 1",
-    props<{pdbFile: any}>()
+export const setAll = createAction(
+    "[Display Actions] Set all",
+    props<{all: 'show'|'hide'|null}>()
 );

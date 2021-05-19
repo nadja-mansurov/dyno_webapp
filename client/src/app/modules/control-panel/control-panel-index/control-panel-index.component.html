@@ -48,8 +48,9 @@
         <button
           type="button"
           class="btn btn-outline-secondary"
-          (click)="setCloudVisibility(false)"
+          (click)="setCloudVisibility('hide')"
           title="Hide all clouds"
+          [disabled]="(displayAll$ | async) == 'hide'"
         >
           <i class="bi bi-cloud-minus-fill"></i>&nbsp;<span
             >Hide&nbsp;all&nbsp;clouds</span
@@ -58,8 +59,9 @@
         <button
           type="button"
           class="btn btn-outline-secondary"
-          (click)="setCloudVisibility(true)"
+          (click)="setCloudVisibility('show')"
           title="Show all clouds"
+          [disabled]="(displayAll$ | async) == 'show'"
         >
           <i class="bi bi-cloud-plus-fill"></i>&nbsp;<span
             >Show&nbsp;all&nbsp;clouds</span
