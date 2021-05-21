@@ -73,15 +73,35 @@
 
   <div class="row">
     <div class="col-sm-5">
-      <select class="form-select form-select-sm">
-        <option selected value="1">Show</option>
-        <option value="2">Hide</option>
+      <select class="form-select form-select-sm"
+        [ngModel]="rangeType"
+        (ngModelChange)="setHideShowType($event)">
+        <option selected [value]="null">-select-</option>
+        <option [value]="'show'">Show</option>
+        <option [value]="'hide'">Hide</option>
       </select>
     </div>
     <div class="col-sm-7">
-      <dyno-range></dyno-range>
+      <dyno-range
+        (range)="setHideShowRange($event)"></dyno-range>
     </div>
   </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary width-100"
+          (click)="setSelectedRange()"
+          title="Set selected"
+          [disabled]="!(rangeType && playRange && playRange.length > 0)"
+        >
+          <i class="bi bi-arrow-right"></i>&nbsp;<span
+            >Set</span
+          >
+        </button>
+    </div>
+  </div>
+
 </div>
 
 <div class="logical-container">

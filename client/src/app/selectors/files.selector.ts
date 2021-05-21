@@ -9,3 +9,12 @@ export const isCustom = createSelector(
   files => files.custom
 );
 
+export const globalMin = createSelector(
+  selectFileState,
+  files => files.min
+);
+
+export const globalMax = createSelector(
+  selectFileState,
+  files => files.max
+);

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FilesService } from '@/app/services/files.service';
 import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+
 import { AppState } from '@/app/reducers';
 import { DisplayActions } from '@/app/actions/action-types';
-import { Observable } from 'rxjs';
 import { isDisplayAll } from '@/app/selectors/display.selector';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'dyno-control-panel-index',
@@ -18,8 +20,12 @@ export class ControlPanelIndexComponent implements OnInit {
   public uploadCustom: boolean = false;
   public playSelected: boolean = false;
 
+  public selectedParams: boolean = false;
+  public rangeType: 'show'|'hide'|null = null;
+  public playRange: number[]= [];
 
   public displayAll$: Observable<'show'|'hide'|null>;
+  private subs = new SubSink();
 
   constructor(
     private store: Store<AppState>,
@@ -47,5 +53,20 @@ export class ControlPanelIndexComponent implements OnInit {
   public setFilesOption() {
     this.uploadCustom = !this.uploadCustom;
     this._filesService.setCustom(this.uploadCustom);
+  }
+
+  public setHideShowRange($event: any) {
+    console.log('setHideShowRange', $event);
+    this.playRange = [$event.from, $event.to];
+  }
+
+  public setHideShowType($event: any) {
+    this.rangeType = <'show'|'hide'|null>$event;
+  }
+
+
+  public setSelectedRange() {
+    console.log('setSelectedRange');
+    this.store.dispatch(DisplayActions.setRangeSelected({ range: this.playRange, selected: this.rangeType }));
   }
 }

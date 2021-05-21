@@ -6,6 +6,15 @@ export const selectDisplayState =
 
 export const isDisplayAll = createSelector(
   selectDisplayState,
-  files => files.all
+  display => display.all
 );
 
+export const isDisplaySelected = createSelector(
+  selectDisplayState,
+  display => display.selected
+);
+
+export const getRange = createSelector(
+  selectDisplayState,
+  display => display.range
+);

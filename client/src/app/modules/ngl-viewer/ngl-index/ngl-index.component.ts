@@ -92,6 +92,7 @@ export class NglIndexComponent implements OnInit, OnDestroy {
   }
 
   private showDynophore() {
+    this.removeDynophore();
     Object.keys(this.dynopherShapes).map(shapeId => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynopherShapes[shapeId]);
       this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });

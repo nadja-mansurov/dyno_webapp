@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NglIndexComponent } from './ngl-index/ngl-index.component';
-import { SelectedInfoComponent } from './selected-info/selected-info.component';
 
+import { NglIndexComponent } from '@modules/ngl-viewer/ngl-index/ngl-index.component';
+import { SelectedInfoComponent } from '@modules/ngl-viewer/selected-info/selected-info.component';
 
 
 @NgModule({
