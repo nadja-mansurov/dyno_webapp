@@ -38,6 +38,7 @@ const displayReducer = createReducer(
   }),
   on(DisplayActions.setRangeSelected, (state: IDisplayState, { range, selected }) => {
     let next = Object.assign({}, state);
+    next.all = null;
     next.range = range;
     next.selected = selected;
     return next;
