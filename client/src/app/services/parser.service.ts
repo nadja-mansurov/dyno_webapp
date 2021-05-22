@@ -8,6 +8,9 @@ import { Vector3 } from 'three';
 import { AdditionalPointModel } from '../models/additional-point.model';
 
 import { NGL } from '@/app/ngl.const';
+import { Store } from '@ngrx/store';
+import { AppState } from '../reducers';
+import { FilesActions } from '../actions/action-types';
 
 @Injectable({
   providedIn: 'any'
@@ -17,6 +20,7 @@ export class ParserService {
   private xmlParser: XmlParser = new XmlParser();
 
   constructor(
+    private store: Store<AppState>
   ) { }
 
   public parseDynophore(dynophoreFile: any):any {
@@ -61,16 +65,23 @@ export class ParserService {
 
   dynophoreDrawing(dynophore: any, hiddenIndecies: number[], atomsCoordsList?: DynophoreAtomModel[]) {
     let shapes: any = {};
+    let min = 1000000; // magic number
+    let max = 0;
     dynophore.featureClouds.map((featureCloud: any) => {
       let shape = new NGL.Shape(featureCloud.featureId);
 
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
+        if (item.frameIndex > max) {
+          max = item.frameIndex;
+        }
+        if (item.frameIndex < min) {
+          min = item.frameIndex;
+        }
         item.setVisibility(hiddenIndecies);
         if (!item.hidden) {
           shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
-
       /*
       featureCloud.involvedAtomSerials.map((item: number) => {
         const atom = atomsCoordsList[item];
@@ -88,6 +99,9 @@ export class ParserService {
 
       shapes[featureCloud.featureId] = shape;
     });
+
+    this.store.dispatch(FilesActions.setMin( { min: min }));
+    this.store.dispatch(FilesActions.setMax( { max: max }));
 
     return shapes;
   }

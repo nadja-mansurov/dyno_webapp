@@ -46,8 +46,19 @@ const filesReducer = createReducer(
     let next = Object.assign({}, state);
     next.custom = custom;
     return next;
-  })
+  }),
 
+  on(FilesActions.setMin, (state: IFileState, { min }) => {
+    let next = Object.assign({}, state);
+    next.min = min;
+    return next;
+  }),
+
+  on(FilesActions.setMax, (state: IFileState, { max }) => {
+    let next = Object.assign({}, state);
+    next.max = max;
+    return next;
+  })
 );
 
 export function FilesReducer(state: IFileState | undefined, action: Action) {
