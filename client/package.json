@@ -50,11 +50,8 @@
     "@angular-devkit/build-angular": "^12.0.0",
     "@angular/cli": "12.0.0",
     "@angular/compiler-cli": "12.0.0",
-<<<<<<< HEAD
     "@angular/localize": "^12.0.0",
     "@bahmutov/add-typescript-to-cypress": "^2.1.2",
-=======
->>>>>>> b8f66e7df0e62d92d2c13ed10f511653d75cceb0
     "@types/jasmine": "3.7.2",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.0.3",
@@ -65,14 +62,9 @@
     "angular-cli-ghpages": "*",
     "codelyzer": "6.0.2",
     "copyfiles": "^2.4.1",
-<<<<<<< HEAD
     "cypress": "^7.3.0",
     "eslint-plugin-chai-friendly": "^0.7.1",
     "eslint-plugin-cypress": "^2.11.3",
-=======
-    "eslint": "^7.26.0",
-    "eslint-config-google": "^0.14.0",
->>>>>>> b8f66e7df0e62d92d2c13ed10f511653d75cceb0
     "jasmine-core": "3.7.1",
     "jasmine-spec-reporter": "7.0.0",
     "jest": "^26.6.3",
