@@ -1,23 +1,26 @@
-<div class="input-group input-group-sm row">
-    <label for="inputPassword" class="col-sm-2 col-form-label g-0"><small>from</small></label>
-    <div class="col-sm-5">
+<div class="input-group input-group-sm">
+    <label for="inputPassword" class="col-sm-2 col-form-label"><small>from</small></label>
+    <div class="col-sm-4">
         <input [formControl]="fromControl"
           [min]="componentMin || 0"
           [max]="componentMax || 0"
-          type="number" size="4"
-          [ngClass]="{'is-invalid': fromControl.errors}"
-          class="form-control form-control-sm g-0"/>
+          type="number" size="3"
+          class="form-control form-control-sm g-0"
+          [ngClass]="{'is-invalid': fromControl.errors}"/>
     </div>
-    <label for="inputPassword" class="col-sm-1 col-form-label g-0"><small>to</small></label>
+    <label for="inputPassword" class="col-sm-2 col-form-label" style="text-align: center;"><small>to</small></label>
     <div class="col-sm-4">
         <input [formControl]="toControl"
           [min]="componentMin || 0"
           [max]="componentMax || 0"
-          [ngClass]="{'is-invalid': toControl.errors}"
-          type="number" size="4" class="form-control form-control-sm g-0"/>
+          type="number" size="3"
+          class="form-control form-control-sm g-0"
+          [ngClass]="{'is-invalid': toControl.errors}"/>
     </div>
 </div>
 
-<div class="alert alert-danger secondary row" role="alert" [hidden]="!fromControl.errors && !toControl.errors">
-  Range should be between {{componentMin}} and {{componentMax}}
+<div class="row">
+    <div class="alert alert-danger secondary" role="alert" [hidden]="!fromControl.errors && !toControl.errors">
+      Range should be between {{componentMin}} and {{componentMax}}
+    </div>
 </div>

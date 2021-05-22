@@ -72,7 +72,7 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-5">
+    <div class="col-sm-4">
       <select class="form-select form-select-sm"
         [ngModel]="rangeType"
         (ngModelChange)="setHideShowType($event)">
@@ -81,11 +81,12 @@
         <option [value]="'hide'">Hide</option>
       </select>
     </div>
-    <div class="col-sm-7">
+    <div class="col-sm-8">
       <dyno-range
         (range)="setHideShowRange($event)"></dyno-range>
     </div>
   </div>
+
   <div class="row">
     <div class="col-sm-12">
       <button
