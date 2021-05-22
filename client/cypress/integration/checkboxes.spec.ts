@@ -5,16 +5,17 @@ import { checkboxes } from '../page-object/checkboxes';
 
 
 
-describe('Checkboxes', () => {
+describe('Test of checkboxes', () => {
 
     beforeEach(() => {
         cy.visit('/');
     });
 
-    it('first start', () => {
+    it('should check the checkboxes', () => {
         checkboxes.uploadCustomFiles();
+        checkboxes.hidePreviousFrames();
+        checkboxes.playOnly();
     });
-
 });
 
 
