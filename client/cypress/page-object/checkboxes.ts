@@ -4,17 +4,23 @@ export class Checkboxes {
 
     // tslint:disable-next-line:typedef
     uploadCustomFiles() {
-        cy.get('#customFiles').check();
+        cy.get('input#customFiles')
+        .check()
+        .should('be.checked');
     }
 
     // tslint:disable-next-line:typedef
     hidePreviousFrames() {
-        cy.get('#hidePrevFrames').check();
+        cy.get('#hidePrevFrames')
+        .check()
+        .should('be.checked');
     }
 
     // tslint:disable-next-line:typedef
     playOnly() {
-        cy.get('#selectedFrames').check();
+        cy.get('#selectedFrames')
+        .check()
+        .should('be.checked');
     }
 
 }
