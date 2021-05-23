@@ -9,7 +9,8 @@ describe('Tests of display buttons', () => {
         cy.visit('/');
     });
 
-    it('Should click the display buttons', () => {
+    it('Should click the display buttons and trigger of display object', () => {
+        displayButtons.canvasDisplayObject();
         displayButtons.hideAllClouds();
         displayButtons.showAllClouds();
     });

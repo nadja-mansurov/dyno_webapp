@@ -26,6 +26,13 @@ export class DisplayButtons {
         .should('have.value', 'hide');
 
     }
+
+    // tslint:disable-next-line:typedef
+    canvasDisplayObject() {
+        cy.get('canvas')
+        .trigger('mousedown', {  button: 0, pageX: 600, pageY: 100 })
+        .trigger('mousemove', { which: 1, pageX: 600, pageY: 600 });
+    }
 }
 
 export const displayButtons = new DisplayButtons();
