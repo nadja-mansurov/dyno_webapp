@@ -63,7 +63,26 @@ export class ParserService {
     return pdbFile;
   }
 
-  dynophoreDrawing(dynophore: any, hiddenIndecies: number[], atomsCoordsList?: DynophoreAtomModel[]) {
+  getShowingIndecies(defRange: number[], selectedType: 'hide'|'show'|null, globalMin: number, globalMax: number) {
+    let range: number[] = [];
+    console.log(defRange, selectedType, globalMin, globalMax);
+    if (selectedType === 'show') {
+      for (let i = defRange[0]; i <= defRange[1]; i++) {
+        range.push(i);
+      }
+    } else if (selectedType === 'hide') {
+      for (let i = globalMin; i < defRange[0]; i++) {
+        range.push(i);
+      }
+      for (let i = defRange[1]; i <= globalMax; i++) {
+        range.push(i);
+      }
+    }
+
+    return range;
+  }
+
+  dynophoreDrawing(dynophore: any, atomsCoordsList?: DynophoreAtomModel[]) {
     let shapes: any = {};
     let min = 1000000; // magic number
     let max = 0;
@@ -77,7 +96,7 @@ export class ParserService {
         if (item.frameIndex < min) {
           min = item.frameIndex;
         }
-        item.setVisibility(hiddenIndecies);
+        item.setVisibility();
         if (!item.hidden) {
           shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
@@ -106,7 +125,7 @@ export class ParserService {
     return shapes;
   }
 
-  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], atomsCoordsList: DynophoreAtomModel[]) {
+  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], atomsCoordsList?: DynophoreAtomModel[]) {
     let shapes: any = {};
     dynophore.featureClouds.map((featureCloud: any) => {
       let shape = new NGL.Shape(featureCloud.featureId);
@@ -114,7 +133,7 @@ export class ParserService {
       let visibleIndex:any = null;
 
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
-        item.setVisibility(visibleIndecies, true);
+        item.setVisibility(visibleIndecies);
         if (!item.hidden) {
           visiblePosition = item.position;
           visibleIndex = item.frameIndex;
@@ -123,9 +142,9 @@ export class ParserService {
       });
 
       featureCloud.involvedAtomSerials.map((item: number) => {
-        const atom = atomsCoordsList[item];
+        //const atom = atomsCoordsList[item];
         if (!visibleIndex) return;
-        atom.addDynophore({
+        /*atom.addDynophore({
           dynophoreId: dynophore.id,
           featureCloudName: featureCloud.name,
           featureCloudId: featureCloud.featureId,
@@ -135,6 +154,7 @@ export class ParserService {
         });
         atom.setConnection();
         shape.addArrow(visiblePosition || atom.position1, atom.position2, atom.color, 0.05, `${atom.label} frameIndex ${visibleIndex}`);
+        */
       });
 
       shapes[featureCloud.featureId] = shape;

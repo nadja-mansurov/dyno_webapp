@@ -1,4 +1,5 @@
 import { FeatureCloudModel } from './feature-cloud.model';
+import { Vector3 } from 'three';
 
 export class DynophoreModel {
   id: string = '';
@@ -6,6 +7,7 @@ export class DynophoreModel {
   pharmacophoreType: string = '';
   featureClouds: FeatureCloudModel[] = [];
   allInvolvedAtoms: Array<number> = [];
+  center: Vector3 = new Vector3(0,0,0);
 
   constructor(data: any) {
     /** set common file data */
@@ -27,6 +29,8 @@ export class DynophoreModel {
       cloud.involvedAtomSerials.map(serial => {
         if (this.allInvolvedAtoms.indexOf(serial) < 0) this.allInvolvedAtoms.push(serial);
       });
+
+      this.center = new Vector3(cloud.x, cloud.y, cloud.z);
     });
 
   }

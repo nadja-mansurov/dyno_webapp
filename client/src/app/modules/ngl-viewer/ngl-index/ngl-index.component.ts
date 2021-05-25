@@ -8,7 +8,8 @@ import { FilesService } from '@/app/services/files.service';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { AppState } from '@/app/reducers';
-import { isDisplayAll } from '@/app/selectors/display.selector';
+import { isDisplayAll, isDisplaySelected, getRange } from '@/app/selectors/display.selector';
+import { globalMax, globalMin } from '@/app/selectors/files.selector';
 
 @Component({
   selector: 'dyno-ngl-index',
@@ -20,10 +21,20 @@ export class NglIndexComponent implements OnInit, OnDestroy {
   private subs = new SubSink();
   private structureComponent: any;
   private dynophore: any;
-  private dynopherShapes: any;
+  private dynophorShapes: any;
   private shapeComponents: any = {};
 
+  private range: number[] = [];
+  private isSelected: 'show'|'hide'|null = null;
+  private globalMax = 0;
+  private globalMin = 0;
+
   private displayAll$: Observable<'show'|'hide'|null>;
+  private isDisplaySelected$: Observable<'show'|'hide'|null>;
+  private isRange$: Observable<number[]|null>;
+
+  private globalMax$: Observable<number>;
+  private globalMin$: Observable<number>;
 
   constructor(
     private store: Store<AppState>,
@@ -31,12 +42,16 @@ export class NglIndexComponent implements OnInit, OnDestroy {
     private parserService: ParserService
   ) {
     this.displayAll$ = this.store.pipe(select(isDisplayAll));
+    this.isDisplaySelected$ = this.store.pipe(select(isDisplaySelected));
+    this.isRange$ = this.store.pipe(select(getRange));
+    this.globalMax$ = this.store.pipe(select(globalMax));
+    this.globalMin$ = this.store.pipe(select(globalMin));
   }
 
   ngOnInit(): void {
     this.stageInstance = new NGL.Stage('viewport');
     this.initPdbDcd();
-    this.initPml();
+    //this.initPml();
 
     this.subs.sink = this.displayAll$.subscribe(isAll => {
       if (isAll == 'show') {
@@ -44,6 +59,26 @@ export class NglIndexComponent implements OnInit, OnDestroy {
       } else if (isAll == 'hide') {
         this.removeDynophore();
       }
+    });
+    this.subs.sink = this.isDisplaySelected$.subscribe(isSelected => {
+      this.isSelected = isSelected;
+      if (this.isSelected && this.range.length > 0) {
+        this.toggleSelected();
+      }
+    });
+    this.subs.sink = this.isRange$.subscribe(range => {
+      if (range) {
+        this.range = range;
+      }
+      if (this.isSelected && this.range.length > 0) {
+        this.toggleSelected();
+      }
+    });
+    this.subs.sink = this.globalMax$.subscribe(globalMax => {
+      this.globalMax = globalMax;
+    });
+    this.subs.sink = this.globalMin$.subscribe(globalMin => {
+      this.globalMin = globalMin;
     });
   }
 
@@ -60,25 +95,23 @@ export class NglIndexComponent implements OnInit, OnDestroy {
 
         this.structureComponent.autoView();
         return this.filesService.uploadDcd();
+      }),
+      switchMap((dcdFile: any) => {
+        this.structureComponent.addTrajectory(dcdFile, {
+          initialFrame: 100,
+          defaultTimeout: 100,
+          defaultStep: undefined,
+          defaultInterpolateType: 'spline',
+          defaultDirection: 'forward',
+          centerPbc: false,
+          removePbc: false,
+          superpose: true,
+          sele: 'backbone and not hydrogen'
+        })
+        console.log('this.structureComponent', this.structureComponent);
+        return this.filesService.uploadPml()
       })
-    ).subscribe((dcdFile: any) => {
-      this.structureComponent.addTrajectory(dcdFile, {
-        initialFrame: 100,
-        defaultTimeout: 100,
-        defaultStep: undefined,
-        defaultInterpolateType: 'spline',
-        defaultDirection: 'forward',
-        centerPbc: false,
-        removePbc: false,
-        superpose: true,
-        sele: 'backbone and not hydrogen'
-      })
-      console.log('this.structureComponent', this.structureComponent);
-    });
-  }
-
-  private initPml() {
-    this.subs.sink = this.filesService.uploadPml().subscribe((pmlRaw: any) => {
+    ).subscribe((pmlRaw: any) => {
       this.dynophore = this.parserService.parseDynophore(pmlRaw);
       this.drawCloud();
       console.log('this.dynophore', this.dynophore);
@@ -86,24 +119,34 @@ export class NglIndexComponent implements OnInit, OnDestroy {
   }
 
   private drawCloud() {
-    this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, []);
+    this.dynophorShapes = this.parserService.dynophoreDrawing(this.dynophore, []);
 
     this.showDynophore();
   }
 
   private showDynophore() {
-    this.removeDynophore();
-    Object.keys(this.dynopherShapes).map(shapeId => {
-      this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynopherShapes[shapeId]);
+    const len = Object.keys(this.dynophorShapes).length;
+    Object.keys(this.dynophorShapes).map((shapeId, i) => {
+      this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophorShapes[shapeId]);
       this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
+      if (len == i+1) {
+        this.shapeComponents[shapeId].autoView();
+      }
     });
   }
 
   private removeDynophore() {
-    this.dynopherShapes = this.parserService.dynophoreDrawing(this.dynophore, []);
-    Object.keys(this.dynopherShapes).map(shapeId => {
+    this.dynophorShapes = this.parserService.dynophoreDrawing(this.dynophore, []);
+    Object.keys(this.dynophorShapes).map(shapeId => {
       this.stageInstance.removeComponent(this.shapeComponents[shapeId]);
     });
+  }
+
+  private toggleSelected() {
+    this.removeDynophore();
+    const range = this.parserService.getShowingIndecies(this.range, this.isSelected, this.globalMin, this.globalMax);
+    this.dynophorShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
+    this.showDynophore();
   }
 
 }
