@@ -57,7 +57,11 @@ export class ControlPanelIndexComponent implements OnInit {
 
   public setHideShowRange($event: any) {
     console.log('setHideShowRange', $event);
-    this.playRange = [$event.from, $event.to];
+    if ($event) {
+      this.playRange = [$event.from, $event.to];
+    } else {
+      this.playRange = [];
+    }
   }
 
   public setHideShowType($event: any) {

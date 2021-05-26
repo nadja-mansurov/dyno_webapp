@@ -71,10 +71,11 @@ export class RangeComponent implements OnInit, OnDestroy {
   }
 
   public setFrom(from: any) {
-    console.log('Error', this.fromControl.errors);
     if (!this.fromControl.errors) {
       this.from = from;
       this.emitRange();
+    } else {
+      this.emitRange(true);
     }
   }
 
@@ -82,10 +83,12 @@ export class RangeComponent implements OnInit, OnDestroy {
     if (!this.toControl.errors) {
       this.to = to;
       this.emitRange();
+    } else {
+      this.emitRange(true);
     }
   }
 
-  private emitRange() {
+  private emitRange(isError?: boolean) {
     if (!this.fromControl.errors && !this.toControl.errors) {
       const range: IRange = {
         from: this.from ? this.from : 0,
@@ -93,5 +96,9 @@ export class RangeComponent implements OnInit, OnDestroy {
       }
       this.range.emit(range);
     }
+    if (isError) {
+      this.range.emit();
+    }
+
   }
 }
