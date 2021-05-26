@@ -25,5 +25,8 @@ jobs:
       # Install NPM dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
-        uses: nadja-mansurov/dyno_webapp
+      - uses: nadja-mansurov/dyno_webapp@v2
+        with:
+          working-directory: client
+          build: npx cypress info
         
