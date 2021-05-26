@@ -21,7 +21,26 @@ export const initialPlayerState: IPlayerState = {
 const playerReducer = createReducer(
 
   initialPlayerState,
-
+  on(PlayerActions.setPlay, (state: IPlayerState, { playStatus }) => {
+    let next = Object.assign({}, state);
+    next.play = playStatus;
+    return next;
+  }),
+  on(PlayerActions.setCurrentFrame, (state: IPlayerState, { currentFrame }) => {
+    let next = Object.assign({}, state);
+    next.currentFrame = currentFrame;
+    return next;
+  }),
+  on(PlayerActions.setHidePast, (state: IPlayerState, { hidePast }) => {
+    let next = Object.assign({}, state);
+    next.hidePast = hidePast;
+    return next;
+  }),
+  on(PlayerActions.setRange, (state: IPlayerState, { range }) => {
+    let next = Object.assign({}, state);
+    next.range = range;
+    return next;
+  }),
 );
 
 export function PlayerReducer(state: IPlayerState | undefined, action: Action) {

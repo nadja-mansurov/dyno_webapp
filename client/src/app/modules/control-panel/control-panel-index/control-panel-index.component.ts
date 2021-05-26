@@ -4,9 +4,10 @@ import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { AppState } from '@/app/reducers';
-import { DisplayActions } from '@/app/actions/action-types';
+import { DisplayActions, PlayerActions } from '@/app/actions/action-types';
 import { isDisplayAll } from '@/app/selectors/display.selector';
 import { SubSink } from 'subsink';
+import { playSelector, hidePastSelector, currentFrameSelector } from '@/app/selectors/play.selector';
 
 @Component({
   selector: 'dyno-control-panel-index',
@@ -15,9 +16,10 @@ import { SubSink } from 'subsink';
 })
 export class ControlPanelIndexComponent implements OnInit {
   public allowToDraw: boolean = false;
-  public isPlay: boolean = false;
+  public playStatus: 'stop'|'pause'|'play' = 'stop';
 
   public uploadCustom: boolean = false;
+  public hidePast: boolean = false;
   public playSelected: boolean = false;
 
   public selectedParams: boolean = false;
@@ -25,6 +27,11 @@ export class ControlPanelIndexComponent implements OnInit {
   public playRange: number[]= [];
 
   public displayAll$: Observable<'show'|'hide'|null>;
+
+  public playStatus$: Observable<'stop'|'pause'|'play'>;
+  public hidePastStatus$: Observable<boolean>;
+  public currentFrame$: Observable<number|null>;
+
   private subs = new SubSink();
 
   constructor(
@@ -32,6 +39,9 @@ export class ControlPanelIndexComponent implements OnInit {
     private _filesService: FilesService
   ) {
     this.displayAll$ = this.store.pipe(select(isDisplayAll));
+    this.playStatus$ = this.store.pipe(select(playSelector));
+    this.hidePastStatus$ = this.store.pipe(select(hidePastSelector));
+    this.currentFrame$ = this.store.pipe(select(currentFrameSelector));
   }
 
   ngOnInit(): void {
@@ -46,8 +56,8 @@ export class ControlPanelIndexComponent implements OnInit {
 
   }
 
-  public play(isPlay: boolean) {
-
+  public play(status: 'play'|'pause'|'stop') {
+    this.store.dispatch(PlayerActions.setPlay({ playStatus: status }));
   }
 
   public setFilesOption() {
@@ -64,10 +74,14 @@ export class ControlPanelIndexComponent implements OnInit {
     }
   }
 
+  public setHidePast() {
+    this.hidePast = !this.hidePast;
+    this.store.dispatch(PlayerActions.setHidePast({ hidePast: this.hidePast }));
+  }
+
   public setHideShowType($event: any) {
     this.rangeType = <'show'|'hide'|null>$event;
   }
-
 
   public setSelectedRange() {
     console.log('setSelectedRange');
