@@ -53,10 +53,7 @@ export class ParserService {
       colorScheme: "element",
       crossSize: 0.75 })
 
-    let shapeComp = stageInstance.addComponentFromObject(new NGL.Shape(pdbFile),
-      {
-        backgroundColor: "white",
-      });
+    let shapeComp = stageInstance.addComponentFromObject(new NGL.Shape(pdbFile));
     shapeComp.addRepresentation('buffer', { opacity: 0.3 });
 
     pdbFile.autoView();
@@ -101,20 +98,6 @@ export class ParserService {
           shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
-      /*
-      featureCloud.involvedAtomSerials.map((item: number) => {
-        const atom = atomsCoordsList[item];
-        atom.addDynophore({
-          dynophoreId: dynophore.id,
-          featureCloudName: featureCloud.name,
-          featureCloudId: featureCloud.featureId,
-          id: featureCloud.id,
-          color: featureCloud.featureColor,
-          position: featureCloud.position
-        });
-        atom.setConnection();
-        shape.addArrow(atom.position1, atom.position2, atom.color, 0.05, `${atom.label}`);
-      });*/
 
       shapes[featureCloud.featureId] = shape;
     });
@@ -125,41 +108,24 @@ export class ParserService {
     return shapes;
   }
 
-  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], atomsCoordsList?: DynophoreAtomModel[]) {
+  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], showConnections?: boolean) {
     let shapes: any = {};
     dynophore.featureClouds.map((featureCloud: any) => {
       let shape = new NGL.Shape(featureCloud.featureId);
-      let visiblePosition:any = null;
-      let visibleIndex:any = null;
 
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         item.setVisibility(visibleIndecies);
         if (!item.hidden) {
-          visiblePosition = item.position;
-          visibleIndex = item.frameIndex;
           shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
-
-      featureCloud.involvedAtomSerials.map((item: number) => {
-        //const atom = atomsCoordsList[item];
-        if (!visibleIndex) return;
-        /*atom.addDynophore({
-          dynophoreId: dynophore.id,
-          featureCloudName: featureCloud.name,
-          featureCloudId: featureCloud.featureId,
-          id: featureCloud.id,
-          color: featureCloud.featureColor,
-          position: featureCloud.position
+/*
+      if (showConnections) {
+        featureCloud.involvedAtomSerials.map((item: number) => {
+          console.log('Test', item);
         });
-        atom.setConnection();
-        shape.addArrow(visiblePosition || atom.position1, atom.position2, atom.color, 0.05, `${atom.label} frameIndex ${visibleIndex}`);
-        */
-      });
-
+      } */
       shapes[featureCloud.featureId] = shape;
-
-
     });
 
     return shapes;
