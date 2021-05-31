@@ -21,6 +21,7 @@ export class ControlPanelIndexComponent implements OnInit {
   public uploadCustom: boolean = false;
   public hidePast: boolean = false;
   public playSelected: boolean = false;
+  public currentFrame: string = 'All';
 
   public selectedParams: boolean = false;
   public rangeType: 'show'|'hide'|null = null;
@@ -45,6 +46,13 @@ export class ControlPanelIndexComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentFrame$.subscribe(currentFrame => {
+      if (currentFrame || currentFrame === 0) {
+        this.currentFrame = currentFrame.toString();
+      } else {
+        this.currentFrame = 'All';
+      }
+    });
 
   }
 

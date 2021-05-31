@@ -16,8 +16,8 @@ import { FilesActions } from '../actions/action-types';
   providedIn: 'any'
 })
 export class ParserService {
-
   private xmlParser: XmlParser = new XmlParser();
+
 
   constructor(
     private store: Store<AppState>
@@ -79,13 +79,12 @@ export class ParserService {
     return range;
   }
 
-  dynophoreDrawing(dynophore: any, atomsCoordsList?: DynophoreAtomModel[]) {
+  dynophoreDrawing(dynophore: any) {
     let shapes: any = {};
     let min = 1000000; // magic number
     let max = 0;
     dynophore.featureClouds.map((featureCloud: any) => {
       let shape = new NGL.Shape(featureCloud.featureId);
-
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         if (item.frameIndex > max) {
           max = item.frameIndex;
@@ -98,7 +97,6 @@ export class ParserService {
           shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
-
       shapes[featureCloud.featureId] = shape;
     });
 
@@ -108,23 +106,35 @@ export class ParserService {
     return shapes;
   }
 
-  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], showConnections?: boolean) {
+  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], atomsCoordsList?: DynophoreAtomModel[]) {
     let shapes: any = {};
     dynophore.featureClouds.map((featureCloud: any) => {
       let shape = new NGL.Shape(featureCloud.featureId);
+      let position: any = null;
 
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         item.setVisibility(visibleIndecies);
         if (!item.hidden) {
+          position = item.position;
           shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
-/*
-      if (showConnections) {
+
+      if (atomsCoordsList) {
         featureCloud.involvedAtomSerials.map((item: number) => {
-          console.log('Test', item);
+          const atom = atomsCoordsList[item];
+          atom.addDynophore({
+            dynophoreId: dynophore.id,
+            featureCloudName: featureCloud.name,
+            featureCloudId: featureCloud.featureId,
+            id: featureCloud.id,
+            color: featureCloud.featureColor,
+            position: featureCloud.position
+          });
+          atom.setConnection();
+          shape.addArrow(position || atom.position1, atom.position2, atom.color, 0.05, `${atom.label}`);
         });
-      } */
+      }
       shapes[featureCloud.featureId] = shape;
     });
 
@@ -134,6 +144,7 @@ export class ParserService {
   additionalPointDrawing() {
 
   }
+
 
 };
 

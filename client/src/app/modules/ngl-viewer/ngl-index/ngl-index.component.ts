@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 
 import { switchMap } from 'rxjs/operators';
 import { SubSink } from 'subsink';
@@ -12,6 +12,7 @@ import { isDisplayAll, isDisplaySelected, getRange } from '@/app/selectors/displ
 import { globalMax, globalMin } from '@/app/selectors/files.selector';
 import { playSelector, currentFrameSelector } from '@/app/selectors/play.selector';
 import { PlayerActions, DisplayActions } from '@/app/actions/action-types';
+import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
 
 
 const PLAYER_TIMEOUT = 500;
@@ -21,12 +22,14 @@ const PLAYER_TIMEOUT = 500;
   templateUrl: './ngl-index.component.html',
   styleUrls: ['./ngl-index.component.scss']
 })
-export class NglIndexComponent implements OnInit, OnDestroy {
+export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  private atomsCoordsList: DynophoreAtomModel[] = [];
   private stageInstance: any;
   private subs = new SubSink();
   private structureComponent: any;
   private dynophore: any;
-  private dynophorShapes: any;
+  private dynophoreShapes: any;
   private shapeComponents: any = {};
   private player: any;
   private currentFrame: number|null = null;
@@ -63,13 +66,16 @@ export class NglIndexComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.stageInstance = new NGL.Stage('viewport');
-    this.initPdbDcd();
-    this.storeSubscription();
   }
 
   ngOnDestroy() {
     this.subs.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    this.stageInstance = new NGL.Stage('viewport');
+    this.initPdbDcd();
+    this.storeSubscription();
   }
 
   public clickOnView($event: any) {
@@ -92,10 +98,14 @@ export class NglIndexComponent implements OnInit, OnDestroy {
       switchMap((dcdFile: any) => {
         this.structureComponent.addTrajectory(dcdFile, {
           initialFrame: 0,
-          defaultTimeout: 0,
+          defaultTimeout: PLAYER_TIMEOUT,
           defaultStep: 1,
           defaultInterpolateType: 'spline',
           defaultDirection: 'forward',
+          centerPbc: false,
+          removePbc: false,
+          superpose: true,
+          sele: 'backbone and not hydrogen',
           defaultMode: 'loop'
         })
         console.log('this.structureComponent', this.structureComponent);
@@ -104,20 +114,22 @@ export class NglIndexComponent implements OnInit, OnDestroy {
       })
     ).subscribe((pmlRaw: any) => {
       this.dynophore = this.parserService.parseDynophore(pmlRaw);
+      this.atomsCoordsList =
+        this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
       this.drawCloud();
       this.structureComponent.autoView();
     });
   }
 
   private drawCloud() {
-    this.dynophorShapes = this.parserService.dynophoreDrawing(this.dynophore, []);
+    this.dynophoreShapes = this.parserService.dynophoreDrawing(this.dynophore);
     this.showDynophore();
   }
 
   private showDynophore() {
-    const len = Object.keys(this.dynophorShapes).length;
-    Object.keys(this.dynophorShapes).map((shapeId, i) => {
-      this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophorShapes[shapeId]);
+    const len = Object.keys(this.dynophoreShapes).length;
+    Object.keys(this.dynophoreShapes).map((shapeId, i) => {
+      this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
       this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
       if (len == i+1) {
         this.shapeComponents[shapeId].autoView();
@@ -126,7 +138,7 @@ export class NglIndexComponent implements OnInit, OnDestroy {
   }
 
   private removeDynophore() {
-    Object.keys(this.dynophorShapes).map(shapeId => {
+    Object.keys(this.dynophoreShapes).map(shapeId => {
       this.stageInstance.removeComponent(this.shapeComponents[shapeId]);
     });
   }
@@ -134,26 +146,32 @@ export class NglIndexComponent implements OnInit, OnDestroy {
   private toggleSelected() {
     this.removeDynophore();
     const range = this.parserService.getShowingIndecies(this.range, this.isSelected, this.globalMin, this.globalMax);
-    this.dynophorShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
+    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
     this.showDynophore();
   }
 
   private playDynophore(currentFrame: number) {
     if (!currentFrame) return;
+    this.removeDynophore();
     const range = [currentFrame, currentFrame + 1];
-    this.dynophorShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, true);
-    this.showDynophore();
+    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, this.atomsCoordsList);
+
+    Object.keys(this.dynophoreShapes).map((shapeId, i) => {
+      this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
+      this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
+    });
   }
 
   private togglePlayer(playStatus: 'play'|'pause'|'stop') {
-    /*this.player.setParameters({
-      start: this.currentFrame ? this.currentFrame : 0
-    });*/
     if (playStatus === 'play') {
       this.player.play();
-      this.interval = interval(PLAYER_TIMEOUT).subscribe(() => {
-        this.playDynophore(this.player.traj.currentFrame);
-        this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: this.player.traj.currentFrame}));
+      let curFrame = this.player.traj.currentFrame;
+      this.interval = interval(PLAYER_TIMEOUT/10).subscribe(() => {
+        if (this.player.traj.currentFrame !== curFrame) {
+          this.playDynophore(this.player.traj.currentFrame);
+          this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: this.player.traj.currentFrame}));
+          curFrame = this.player.traj.currentFrame;
+        }
       });
     } else if (playStatus === 'pause') {
       this.player.pause();
@@ -163,7 +181,7 @@ export class NglIndexComponent implements OnInit, OnDestroy {
     } else if (playStatus === 'stop') {
       this.player.stop();
       if (this.interval)  {
-        this.store.dispatch(DisplayActions.setAll({all: 'show'}));
+        //this.store.dispatch(DisplayActions.setAll({all: 'show'}));
         this.interval.unsubscribe();
       }
     }
@@ -185,8 +203,8 @@ export class NglIndexComponent implements OnInit, OnDestroy {
       if (!isAll) {
         return;
       }
-      if (!this.dynophorShapes) {
-        this.dynophorShapes = this.parserService.dynophoreDrawing(this.dynophore, []);
+      if (!this.dynophoreShapes) {
+        this.dynophoreShapes = this.parserService.dynophoreDrawing(this.dynophore);
       }
       if (isAll == 'show') {
         this.showDynophore();
