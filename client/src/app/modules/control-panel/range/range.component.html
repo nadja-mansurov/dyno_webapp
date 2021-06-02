@@ -1,0 +1,28 @@
+<div class="input-group input-group-sm">
+    <label for="inputPassword" class="col-sm-2 col-form-label"><small>from</small></label>
+    <div class="col-sm-4">
+        <input [formControl]="fromControl"
+          [min]="componentMin || 0"
+          [max]="componentMax || 0"
+          type="number" size="3"
+          class="form-control form-control-sm g-0"
+          [ngClass]="{'is-invalid': fromControl.errors}"/>
+    </div>
+    <label for="inputPassword" class="col-sm-2 col-form-label" style="text-align: center;"><small>to</small></label>
+    <div class="col-sm-4">
+        <input [formControl]="toControl"
+          [min]="componentMin || 0"
+          [max]="componentMax || 0"
+          type="number" size="3"
+          class="form-control form-control-sm g-0"
+          [ngClass]="{'is-invalid': toControl.errors}"/>
+    </div>
+</div>
+
+<div class="row my-0">
+  <div class="col-sm-12">
+      <div class="alert alert-danger secondary" role="alert" [hidden]="!fromControl.errors && !toControl.errors">
+        Range should be between {{componentMin}} and {{componentMax}}
+      </div>
+  </div>
+</div>

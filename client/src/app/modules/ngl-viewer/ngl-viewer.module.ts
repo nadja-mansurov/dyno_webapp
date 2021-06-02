@@ -1,29 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
 
-import { NglComponent } from '@ngl-viewer/ngl/ngl.component';
-
-export const viewerRoutes: Routes = [
-  {
-      path: '',
-      component: NglComponent
-  }
-]
+import { NglIndexComponent } from '@modules/ngl-viewer/ngl-index/ngl-index.component';
+import { SelectedInfoComponent } from '@modules/ngl-viewer/selected-info/selected-info.component';
 
 
 @NgModule({
   declarations: [
-    NglComponent
+    NglIndexComponent,
+    SelectedInfoComponent
   ],
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule.forChild(viewerRoutes)
+    CommonModule
   ],
   exports: [
-    RouterModule
+    NglIndexComponent
   ]
 })
 export class NglViewerModule { }

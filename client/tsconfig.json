@@ -1,4 +1,4 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
+
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -26,8 +26,9 @@
       "@views/*": ["src/app/views/*"],
       "@assets/*": ["src/app/assets/*"],
       "@modules/*": ["src/app/modules/*"],
+      "@models/*": ["src/app/models/*"],
 
-      "@dynophores-viewer/*": ["src/app/modules/dynophores-viewer/*"],
+      "@control-panel/*": ["src/app/modules/control-panel/*"],
       "@ngl-viewer/*": ["src/app/modules/ngl-viewer/*"]
     }
 

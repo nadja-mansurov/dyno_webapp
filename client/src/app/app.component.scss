@@ -1,33 +1,35 @@
-@import "node_modules/bootstrap/scss/bootstrap";
+@import "_variables";
 
 .site-header {
-  background-color: $gray-900;
+  background-color: $footerColor;
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
 
   a {
-    color: $gray-600;
+    color: $aColor;
     transition: color .15s ease-in-out;
   }
 
   a:hover, a.active {
-    color: $gray-200;
+    color: $aActiveColor;
     text-decoration: none;
   }
 }
 
 .site-footer {
-  background-color: $gray-900;
+  background-color: $footerColor;
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   backdrop-filter: saturate(180%) blur(20px);
+  color: $textColor;
 
   a {
-    color: $gray-600;
+    color: $aColor;
     transition: color .15s ease-in-out;
   }
 
   a:hover, a.active {
-    color: $gray-200;
+    color: $aActiveColor;
     text-decoration: none;
   }
 }
+

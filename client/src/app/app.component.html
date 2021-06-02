@@ -1,25 +1,8 @@
 <header class="site-header py-1  mb-2">
   <nav class="container d-flex flex-column flex-md-row justify-content-between">
-    <!--a
-      class="py-2 d-none d-md-inline-block"
-      routerLink="/"
-      [routerLinkActiveOptions]="{ exact: true }"
-      routerLinkActive="active"
-    >
-      Dynophores Webapp
-    </a>
-    <a
-      routerLink="/ngl"
-      class="py-2 d-none d-md-inline-block"
-      [routerLinkActiveOptions]="{ exact: true }"
-      routerLinkActive="active"
-    >
-      NGL-Viewer
-    </a-->
     <a
       routerLink="/"
       class="py-2 d-none d-md-inline-block"
-      [routerLinkActiveOptions]="{ exact: true }"
       routerLinkActive="active"
     >
       Dynophore-Viewer
@@ -27,10 +10,8 @@
   </nav>
 </header>
 
-<main class="mt-2 mb-2">
-  <div class="container d-flex align-content-start height-100">
-    <router-outlet></router-outlet>
-  </div>
+<main class="container d-flex align-content-start height-100">
+    <dyno-home></dyno-home>
 </main>
 
 <footer class="mt-auto site-footer py-1">

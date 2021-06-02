@@ -1,0 +1,184 @@
+<div class="logical-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="customFiles"
+          (change)="setFilesOption()"
+        />
+        <label class="form-check-label" for="flexCheckDefault">
+          Upload custom files
+        </label>
+      </div>
+      <div class="hideshow_container hidden" *ngIf="uploadCustom">
+        <div class="row">
+          <div class="col-sm-12">
+            <dyno-file-upload title="PDB file" type="pdb"></dyno-file-upload>
+            <dyno-file-upload title="PML file" type="pml"></dyno-file-upload>
+            <dyno-file-upload title="DCD file" type="dcd"></dyno-file-upload>
+          </div>
+          <div class="col-sm-12">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm width-100"
+              (click)="draw()"
+              title="Redraw All!"
+              [disabled]="!allowToDraw"
+            >
+              <i class="bi bi-brush-fill"></i>&nbsp;<span>Redraw All!</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="logical-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div
+        class="btn-group btn-group-sm width-100"
+        role="group"
+        aria-label="Zoom"
+      >
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="setCloudVisibility('hide')"
+          title="Hide all clouds"
+          [disabled]="(displayAll$ | async) == 'hide'"
+        >
+          <i class="bi bi-cloud-minus-fill"></i>&nbsp;<span
+            >Hide&nbsp;all&nbsp;clouds</span
+          >
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="setCloudVisibility('show')"
+          title="Show all clouds"
+          [disabled]="(displayAll$ | async) == 'show'"
+        >
+          <i class="bi bi-cloud-plus-fill"></i>&nbsp;<span
+            >Show&nbsp;all&nbsp;clouds</span
+          >
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <select
+        class="form-select form-select-sm"
+        [ngModel]="rangeType"
+        (ngModelChange)="setHideShowType($event)"
+      >
+        <option selected [value]="null">-select-</option>
+        <option [value]="'show'">Show</option>
+        <option [value]="'hide'">Hide</option>
+      </select>
+    </div>
+    <div class="col-sm-8">
+      <dyno-range (range)="setHideShowRange($event)"></dyno-range>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <button
+        type="button"
+        class="btn btn-sm btn-outline-secondary width-100"
+        (click)="setSelectedRange()"
+        title="Set selected"
+        [disabled]="!rangeType || !(playRange && playRange.length > 0)"
+      >
+        <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="logical-container">
+  <div class="row">
+    <div class="col-sm-8">
+      <div
+        class="btn-group btn-group-sm  width-100"
+        role="group"
+      >
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="play('play')"
+          [disabled]="(playStatus$ | async) === 'play'"
+          title="Play"
+        >
+          <i class="bi bi-play-fill"></i>&nbsp;<span>Play</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          (click)="play('pause')"
+          [disabled]="(playStatus$ | async) === 'pause'"
+          title="Pause"
+        >
+          <i class="bi bi-pause-fill"></i>&nbsp;<span>Pause</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          (click)="play('stop')"
+          [disabled]="(playStatus$ | async) === 'stop'"
+          title="Stop"
+        >
+          <i class="bi bi-stop-fill"></i>&nbsp;<span>Stop</span>
+        </button>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <small>Frame No: <strong>{{currentFrame}}</strong></small>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          (change)="setHidePast()"
+          id="hidePrevFrames"
+        />
+        <label class="form-check-label" for="hidePrevFrames">
+          Hide previous frames
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value=""
+          id="selectedFrames"
+          (change)="playSelected = !playSelected"
+        />
+        <label class="form-check-label" for="selectedFrames">
+          Play only...
+        </label>
+      </div>
+    </div>
+    <div class="hideshow_container hidden" *ngIf="playSelected">
+      <div class="row">
+        <div class="col-sm-5">Frames indicies</div>
+        <div class="col-sm-7"><dyno-range></dyno-range></div>
+      </div>
+    </div>
+  </div>
+</div>
