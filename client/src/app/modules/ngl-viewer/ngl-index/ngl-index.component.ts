@@ -96,17 +96,14 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.filesService.uploadDcd();
       }),
       switchMap((dcdFile: any) => {
+        console.log('dcdFile', dcdFile);
         this.structureComponent.addTrajectory(dcdFile, {
-          initialFrame: 0,
-          defaultTimeout: PLAYER_TIMEOUT,
-          defaultStep: 1,
-          defaultInterpolateType: 'spline',
-          defaultDirection: 'forward',
+          deltaTime: PLAYER_TIMEOUT,
+          timeOffset: 0,
+          removePeriodicity: false,
           centerPbc: false,
-          removePbc: false,
-          superpose: true,
-          sele: 'backbone and not hydrogen',
-          defaultMode: 'loop'
+          remo: false,
+          superpose: false
         })
         console.log('this.structureComponent', this.structureComponent);
         this.playerInit();
@@ -192,7 +189,16 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.stageInstance.eachComponent((item: any) => {
       if (item.type === 'structure') {
         const trajectoryElement = item.trajList[0];
-        this.player = new NGL.TrajectoryPlayer(trajectoryElement.trajectory, {step: 1, timeout: PLAYER_TIMEOUT});
+        this.player = new NGL.TrajectoryPlayer(trajectoryElement.trajectory, {
+          start: 0,
+          end: 100,
+          step: 1,
+          timeout: PLAYER_TIMEOUT,
+          interpolateType: 'spline',
+          interpolateStep: 1,
+          mode: 'loop',
+          direction: 'forward'
+        });
         //player.play();
       }
     });
