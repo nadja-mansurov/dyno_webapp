@@ -28,6 +28,8 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   private stageInstance: any;
   private subs = new SubSink();
   private structureComponent: any;
+  private trajectoryStructureComponent: any;
+
   private dynophore: any;
   private dynophoreShapes: any;
   private shapeComponents: any = {};
@@ -97,7 +99,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       switchMap((dcdFile: any) => {
         console.log('dcdFile', dcdFile);
-        this.structureComponent.addTrajectory(dcdFile, {
+        this.trajectoryStructureComponent = this.structureComponent.addTrajectory(dcdFile, {
           deltaTime: PLAYER_TIMEOUT,
           timeOffset: 0,
           removePeriodicity: false,
@@ -105,7 +107,10 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
           remo: false,
           superpose: false
         })
-        console.log('this.structureComponent', this.structureComponent);
+
+        this.trajectoryStructureComponent.signals.frameChanged.add(this.frameChangedListener, this);
+        this.structureComponent.signals.representationAdded.add(this.representationAddedListener, this);
+
         this.playerInit();
         return this.filesService.uploadPml()
       })
@@ -162,25 +167,10 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   private togglePlayer(playStatus: 'play'|'pause'|'stop') {
     if (playStatus === 'play') {
       this.player.play();
-      let curFrame = this.player.traj.currentFrame;
-      this.interval = interval(PLAYER_TIMEOUT/10).subscribe(() => {
-        if (this.player.traj.currentFrame !== curFrame) {
-          this.playDynophore(this.player.traj.currentFrame);
-          this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: this.player.traj.currentFrame}));
-          curFrame = this.player.traj.currentFrame;
-        }
-      });
     } else if (playStatus === 'pause') {
       this.player.pause();
-      if (this.interval)  {
-        this.interval.unsubscribe();
-      }
     } else if (playStatus === 'stop') {
       this.player.stop();
-      if (this.interval)  {
-        //this.store.dispatch(DisplayActions.setAll({all: 'show'}));
-        this.interval.unsubscribe();
-      }
     }
 
   }
@@ -247,5 +237,18 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subs.sink = this.currentFrame$.subscribe(currentFrame => {
       this.currentFrame = currentFrame;
     });
+  }
+
+  private frameChangedListener(frame: any) {
+    console.log('FRAME', frame);
+    if (frame < 0) {
+      return;
+    }
+    this.playDynophore(frame);
+    this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: frame}));
+  }
+
+  private representationAddedListener(representationComponent: any) {
+    console.log('representationComponent', representationComponent);
   }
 }
