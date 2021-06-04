@@ -47,7 +47,7 @@
             "scripts": []
           },
           "configurations": {
-            "production": {
+            "production-no-sw": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -72,7 +72,9 @@
                   "maximumWarning": "2mb",
                   "maximumError": "3mb"
                 }
-              ]
+              ],
+              "serviceWorker": false
+
             }
           }
         },
