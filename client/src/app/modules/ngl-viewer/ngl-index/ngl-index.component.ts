@@ -94,6 +94,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.structureComponent =
             this.parserService.structureDrawing(pdb, this.stageInstance);
 
+        console.log('test test', this.structureComponent);
         //this.structureComponent.autoView();
         return this.filesService.uploadDcd();
       }),
@@ -109,7 +110,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         })
 
         this.trajectoryStructureComponent.signals.frameChanged.add(this.frameChangedListener, this);
-        this.structureComponent.signals.representationAdded.add(this.representationAddedListener, this);
 
         this.playerInit();
         return this.filesService.uploadPml()
@@ -156,7 +156,10 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!currentFrame) return;
     this.removeDynophore();
     const range = [currentFrame, currentFrame + 1];
-    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, this.atomsCoordsList);
+
+    const atomCoords = this.parserService.parseAtomCoord(this.structureComponent.structure.getAtomData());
+
+    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, atomCoords);
 
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
@@ -248,7 +251,4 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: frame}));
   }
 
-  private representationAddedListener(representationComponent: any) {
-    console.log('representationComponent', representationComponent);
-  }
 }
