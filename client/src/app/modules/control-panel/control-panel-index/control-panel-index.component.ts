@@ -54,6 +54,10 @@ export class ControlPanelIndexComponent implements OnInit {
       }
     });
 
+    this.hidePastStatus$.subscribe(status => {
+      this.hidePast = status;
+    });
+
   }
 
   public setCloudVisibility(visibility: 'hide'|'show') {

@@ -10,7 +10,7 @@ import { Store, select } from '@ngrx/store';
 import { AppState } from '@/app/reducers';
 import { isDisplayAll, isDisplaySelected, getRange } from '@/app/selectors/display.selector';
 import { globalMax, globalMin } from '@/app/selectors/files.selector';
-import { playSelector, currentFrameSelector } from '@/app/selectors/play.selector';
+import { playSelector, currentFrameSelector, hidePastSelector, rangeSelector } from '@/app/selectors/play.selector';
 import { PlayerActions, DisplayActions } from '@/app/actions/action-types';
 import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
 
@@ -42,11 +42,15 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   private globalMin = 0;
   private playStatus: 'play'|'pause'|'stop' = 'stop';
   private interval: any;
+  private isPrevHidden = true;
+  private playRange = [0, 100];
 
   private displayAll$: Observable<'show'|'hide'|null>;
   private isDisplaySelected$: Observable<'show'|'hide'|null>;
   private isRange$: Observable<number[]|null>;
   private playStatus$: Observable<'play'|'pause'|'stop'>;
+  private hidePast$: Observable<boolean>;
+  private playRange$: Observable<number[]|null>;
   private currentFrame$: Observable<number|null>;
 
   private globalMax$: Observable<number>;
@@ -64,7 +68,10 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.globalMin$ = this.store.pipe(select(globalMin));
 
     this.playStatus$ = this.store.pipe(select(playSelector));
-    this.currentFrame$ = this.store.pipe(select(currentFrameSelector))
+    this.currentFrame$ = this.store.pipe(select(currentFrameSelector));
+    this.hidePast$ = this.store.pipe(select(hidePastSelector));
+    this.playRange$ = this.store.pipe(select(rangeSelector));
+
   }
 
   ngOnInit(): void {
@@ -94,6 +101,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.structureComponent =
             this.parserService.structureDrawing(pdb, this.stageInstance);
 
+        this.structureComponent.signals.disposed.add(this.matrixChangedListener, this);
         console.log('test test', this.structureComponent);
         //this.structureComponent.autoView();
         return this.filesService.uploadDcd();
@@ -154,12 +162,20 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private playDynophore(currentFrame: number) {
     if (!currentFrame) return;
+    let range = [currentFrame];
     this.removeDynophore();
-    const range = [currentFrame, currentFrame + 1];
+    if (!this.isPrevHidden) {
+      range = [];
+      for (let i = this.playRange[0]; i <= currentFrame; i++) {
+        range.push(i);
+      }
+    }
 
     const atomCoords = this.parserService.parseAtomCoord(this.structureComponent.structure.getAtomData());
 
     this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, atomCoords);
+
+
 
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
@@ -240,6 +256,13 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subs.sink = this.currentFrame$.subscribe(currentFrame => {
       this.currentFrame = currentFrame;
     });
+    this.subs.sink = this.hidePast$.subscribe(state => {
+      this.isPrevHidden = state;
+    });
+    this.subs.sink = this.playRange$.subscribe(state => {
+      this.playRange = state || [this.globalMin, this.globalMax];
+    });
+
   }
 
   private frameChangedListener(frame: any) {
@@ -251,4 +274,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: frame}));
   }
 
+  private matrixChangedListener(matrix: any) {
+    console.log('matrix changed', matrix);
+  }
 }

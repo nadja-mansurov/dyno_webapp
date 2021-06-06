@@ -11,6 +11,7 @@ import { NGL } from '@/app/ngl.const';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { FilesActions } from '../actions/action-types';
+import * as tinycolor from 'tinycolor2';
 
 @Injectable({
   providedIn: 'any'
@@ -83,7 +84,7 @@ export class ParserService {
     let shapes: any = {};
     let min = 1000000; // magic number
     let max = 0;
-    dynophore.featureClouds.map((featureCloud: any) => {
+    dynophore.featureClouds.map((featureCloud: FeatureCloudModel) => {
       let shape = new NGL.Shape(featureCloud.featureId);
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         if (item.frameIndex > max) {
@@ -94,7 +95,9 @@ export class ParserService {
         }
         item.setVisibility();
         if (!item.hidden) {
-          shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
+          shape.addSphere(item.position,
+              featureCloud.featureColor,
+              item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
       shapes[featureCloud.featureId] = shape;
@@ -130,7 +133,9 @@ export class ParserService {
         item.setVisibility(visibleIndecies);
         if (!item.hidden) {
           position = item.position;
-          shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
+          shape.addSphere(item.position,
+            item.opacity ? new Color(new tinycolor(featureCloud.featureColor.getHexString()).darken(1)) : featureCloud.featureColor,
+            item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
 
