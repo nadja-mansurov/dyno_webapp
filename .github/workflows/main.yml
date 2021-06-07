@@ -21,8 +21,7 @@ jobs:
      
     - run: npm install
     - run: npm test
-  # 
-    steps:
+  
     - uses: actions/checkout@v2
     - run: ng build --c=production-no-sw
     - run: npm run ci:cy-run
