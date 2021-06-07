@@ -38,10 +38,10 @@ jobs:
       # and run all Cypress tests
   #    - name: Build Prod App With No Service worker
   #      run: |
-          ng build --c=production-no-sw
+        #  ng build --c=production-no-sw
   #    - name: Run Cypress Test Suite
   #      run: |
-          npm run ci:cy-run
+        #  npm run ci:cy-run
       #- uses: nadja-mansurov/dyno_webapp@v2
       #  with:
       #    working-directory: client
