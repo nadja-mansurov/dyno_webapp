@@ -24,13 +24,7 @@ jobs:
   # 
     steps:
     - uses: actions/checkout@v2
-      # Install NPM dependencies, cache them correctly
-      # and run all Cypress tests
-    - name: Build Prod App With No Service worker
-        run: |
-          ng build --c=production-no-sw
-    - name: Run Cypress Test Suite
-        run: |
-          npm run ci:cy-run
+    - run: ng build --c=production-no-sw
+    - run: npm run ci:cy-run
       
         
