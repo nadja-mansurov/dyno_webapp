@@ -9,20 +9,23 @@ on:
 
 jobs:
   install:
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-latest    
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
-    - uses: cypress-io/github-action@v2
-      run: npm run start
 
+
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Build
+      run: npm run start
 
   cypress_run:
     runs-on: ubuntu-latest
-
     steps: 
     - name: Cypress_run
+    - uses: cypress-io/github-action@v2
       run: npm run cy:run 
 
     #steps:
