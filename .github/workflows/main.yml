@@ -13,10 +13,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    steps:
     - name: Cypress run
     - uses: cypress-io/github-action@v2.2.7
-
-    #- uses: main
+    
+    steps:
+    - uses: main
     - run: npm run build
     - run: npm run start
     - run: 'http://localhost:4200/'
