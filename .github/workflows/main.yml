@@ -20,17 +20,26 @@ jobs:
     - name: Install cy
       run: npm install cypress
 
-  cypress_run:
+  project_build:
     runs-on: ubuntu-latest
     needs: install-cy
     steps: 
     - name: Project_build
       run: npm run prestart
+
+  project_start:
+    runs-on: ubuntu-latest
+    needs: project_build
+    steps:     
     - name: Project_start
       run: npm run start
 
+  cypress_run_test:
+    runs-on: ubuntu-latest
+    needs: project_start
+    steps:     
     - name: Cypress_run_test 
-      run: npm run cy:run 
+      run: npm run run 
 
     #steps:
     #- name: Cypress run
