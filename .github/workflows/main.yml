@@ -21,6 +21,7 @@ jobs:
 
   cypress_run:
     runs-on: ubuntu-latest
+    needs: install-cy
     steps: 
     - name: Cypress_run
       run: npm run cy:run 
