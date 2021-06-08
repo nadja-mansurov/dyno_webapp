@@ -1,7 +1,6 @@
 
 name: CI
 
-
 on:
   push:
     branches: 
@@ -13,6 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
+    - uses: cypress-io/github-action@v2
 
 
   build:
@@ -25,7 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
     - name: Cypress_run
-    - uses: cypress-io/github-action@v2
       run: npm run cy:run 
 
     #steps:
