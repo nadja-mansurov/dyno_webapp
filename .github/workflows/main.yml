@@ -8,18 +8,14 @@ on:
       - feature/#1_add_cypress
 
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
+    
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-      #- run: npm run build
-      - run: npm run start
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      run: npm run build
+      # run: npm run start
 
     #steps:
     #- name: Cypress run
