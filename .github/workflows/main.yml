@@ -15,11 +15,11 @@ jobs:
         node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm test
+      - run: npm run build
+      - run: npm run start
 
     #steps:
     #- name: Cypress run
