@@ -8,6 +8,8 @@
     "prebuild": "npm run build:ngl:copy",
     "build": "ng build",
     "cy:run": "cypress run --headless --browser chrome",
+    "cypress:run": "npm cypress run",
+    "cypress:open": "npm cypress open",
     "test": "npx jest",
     "lint": "ng lint",
     "e2e": "ng e2e",

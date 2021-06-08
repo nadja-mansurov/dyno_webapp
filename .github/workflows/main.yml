@@ -19,8 +19,8 @@ jobs:
 
     steps: 
     - name: Cypress_run
-      run: cypress-io/github-action@v2.2.7
-      # run: npm run start
+      # run: cypress-io/github-action@v2
+      run: npm cypress run 
 
     #steps:
     #- name: Cypress run
