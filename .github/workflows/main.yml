@@ -18,14 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - run: npm run start
+    - name: build
+      run: npm run prestart
+      run: npm run start
 
   cypress_run:
     runs-on: ubuntu-latest
 
     steps: 
     - name: Cypress_run
-      # run: cypress-io/github-action@v2
       run: npm run cy:run 
 
     #steps:
