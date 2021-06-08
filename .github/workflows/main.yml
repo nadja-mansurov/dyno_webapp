@@ -14,12 +14,12 @@ jobs:
     steps:
     - uses: actions/setup-node@v2
   
-  build:
+  cypress_run:
     runs-on: ubuntu-latest
 
     steps: 
-    - name: Building
-      run: npm run build
+    - name: Cypress_run
+      run: cypress-io/github-action@v2.2.7
       # run: npm run start
 
     #steps:
