@@ -11,17 +11,17 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout
-    - uses: actions/checkout@v2
+      uses: actions/checkout@v2
 
     - name: Cypress run
     - uses: cypress-io/github-action@v2.2.7
       with:
-        working-directory: main
-        run: npm run build
-        run: npm run start
-        wait-on: 'http://localhost:4200/'
-        config: baseUrl=http://localhost:4200
-        spec: |
+      - working-directory: main
+      - run: npm run build
+      - run: npm run start
+      - run: 'http://localhost:4200/'
+      - run: baseUrl=http://localhost:4200
+      - run: |
             cypress/integration/checkboxes.spec.ts
             cypress/integration/displayButtons.spec.ts
 
