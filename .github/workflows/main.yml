@@ -25,7 +25,7 @@ jobs:
     needs: install-cy
     steps: 
     - name: Project_build
-      run: npm run prestart
+      run: npm run build
 
   project_start:
     runs-on: ubuntu-latest
