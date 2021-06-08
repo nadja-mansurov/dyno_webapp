@@ -12,15 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
+    - uses: cypress-io/github-action@v2
+      run: npm run start
 
-  build:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: build
-      run: npm run prestart
-      # run: npm run start
 
   cypress_run:
     runs-on: ubuntu-latest
