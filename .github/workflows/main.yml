@@ -17,8 +17,8 @@ jobs:
     - uses: cypress-io/github-action@v2.2.7
       with:
         working-directory: main
-        build: npm run build
-        start: npm run start
+        run: npm run build
+        run: npm run start
         wait-on: 'http://localhost:4200/'
         config: baseUrl=http://localhost:4200
         spec: |
