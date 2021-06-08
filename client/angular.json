@@ -47,7 +47,7 @@
             "scripts": []
           },
           "configurations": {
-            "production-no-sw": {
+            "production": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
