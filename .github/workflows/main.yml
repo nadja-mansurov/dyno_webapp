@@ -15,8 +15,8 @@ jobs:
 
     - name: Cypress run
     - uses: cypress-io/github-action@v2.2.7
-    
-    - uses: main
+
+    #- uses: main
     - run: npm run build
     - run: npm run start
     - run: 'http://localhost:4200/'
