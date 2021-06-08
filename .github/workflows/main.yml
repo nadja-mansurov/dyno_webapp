@@ -16,7 +16,22 @@ jobs:
     - name: Cypress run
     - uses: cypress-io/github-action@v2.2.7
       with:
-        browser: chrome
+        working-directory: main
+          build: npm run prebuild
+          start: npm run start
+          wait-on: 'http://localhost:4200/'
+          config: baseUrl=http://localhost:4200
+          spec: |
+            cypress/integration/checkboxes.spec.ts
+            cypress/integration/displayButtons.spec.ts
+
+
+
+
+
+
+
+        
 
    
       
