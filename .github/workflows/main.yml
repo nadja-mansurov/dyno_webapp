@@ -17,11 +17,11 @@ jobs:
     - uses: cypress-io/github-action@v2.2.7
       with:
         working-directory: main
-          build: npm build
-          start: npm run start
-          wait-on: 'http://localhost:4200/'
-          config: baseUrl=http://localhost:4200
-          spec: |
+        build: npm run build
+        start: npm run start
+        wait-on: 'http://localhost:4200/'
+        config: baseUrl=http://localhost:4200
+        spec: |
             cypress/integration/checkboxes.spec.ts
             cypress/integration/displayButtons.spec.ts
 
