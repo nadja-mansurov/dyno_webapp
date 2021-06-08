@@ -13,7 +13,13 @@ jobs:
     
     steps:
     - uses: actions/setup-node@v2
-  
+
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - run: npm run start
+
   cypress_run:
     runs-on: ubuntu-latest
 
