@@ -15,15 +15,15 @@ jobs:
 
     - name: Cypress run
     - uses: cypress-io/github-action@v2.2.7
-      with:
-      - working-directory: main
-      - run: npm run build
-      - run: npm run start
-      - run: 'http://localhost:4200/'
-      - run: baseUrl=http://localhost:4200
-      - run: |
-            cypress/integration/checkboxes.spec.ts
-            cypress/integration/displayButtons.spec.ts
+    
+    - uses: main
+    - run: npm run build
+    - run: npm run start
+    - run: 'http://localhost:4200/'
+    - run: baseUrl=http://localhost:4200
+    - run: |
+          cypress/integration/checkboxes.spec.ts
+          cypress/integration/displayButtons.spec.ts
 
 
 
