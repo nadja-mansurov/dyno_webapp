@@ -20,7 +20,7 @@ jobs:
     steps:
     - name: build
       run: npm run prestart
-      run: npm run start
+      # run: npm run start
 
   cypress_run:
     runs-on: ubuntu-latest
