@@ -20,7 +20,7 @@ jobs:
     steps: 
     - name: Cypress_run
       # run: cypress-io/github-action@v2
-      run: npm cypress:run 
+      run: npm run cy:run 
 
     #steps:
     #- name: Cypress run
