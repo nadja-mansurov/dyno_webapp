@@ -10,6 +10,7 @@ jobs:
   install:
     runs-on: ubuntu-latest    
     steps:
+    - uses: ./client
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
 
@@ -18,6 +19,7 @@ jobs:
     needs: install
     steps: 
     - name: Install cy
+    - uses: ./client
       run: npm install cypress
 
   cypress_run:
@@ -26,7 +28,9 @@ jobs:
     steps: 
     - name: Project_start
       run: npm run start
+
     - name: Cypress_run_test 
+    - uses: ./client
       run: npm run cy:run 
 
     #steps:
