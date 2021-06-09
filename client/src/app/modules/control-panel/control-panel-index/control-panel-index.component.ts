@@ -26,6 +26,7 @@ export class ControlPanelIndexComponent implements OnInit {
   public selectedParams: boolean = false;
   public rangeType: 'show'|'hide'|null = null;
   public playRange: number[]= [];
+  public showRange: number[]= [];
 
   public displayAll$: Observable<'show'|'hide'|null>;
 
@@ -80,9 +81,9 @@ export class ControlPanelIndexComponent implements OnInit {
   public setHideShowRange($event: any) {
     console.log('setHideShowRange', $event);
     if ($event) {
-      this.playRange = [$event.from, $event.to];
+      this.showRange = [$event.from, $event.to];
     } else {
-      this.playRange = [];
+      this.showRange = [];
     }
   }
 
@@ -96,7 +97,20 @@ export class ControlPanelIndexComponent implements OnInit {
   }
 
   public setSelectedRange() {
-    console.log('setSelectedRange');
-    this.store.dispatch(DisplayActions.setRangeSelected({ range: this.playRange, selected: this.rangeType }));
+    this.store.dispatch(DisplayActions.setRangeSelected({ range: this.showRange, selected: this.rangeType }));
+  }
+
+  public setPlayedRange() {
+    console.log('setPlayedRange');
+    this.store.dispatch(PlayerActions.setRange({ range: this.playRange }));
+  }
+
+  public setPlayRange($event: any) {
+    console.log('setPlayRange', $event);
+    if ($event) {
+      this.playRange = [$event.from, $event.to];
+    } else {
+      this.playRange = [];
+    }
   }
 }

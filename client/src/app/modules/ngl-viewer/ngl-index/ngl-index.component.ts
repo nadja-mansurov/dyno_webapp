@@ -175,8 +175,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, atomCoords);
 
-
-
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
       this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
@@ -185,6 +183,16 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private togglePlayer(playStatus: 'play'|'pause'|'stop') {
     if (playStatus === 'play') {
+      if (this.playRange[0] !== this.globalMin) {
+        this.player.setParameters({
+          start: this.playRange[0]
+        });
+      }
+      if (this.playRange[1] !== this.globalMax) {
+        this.player.setParameters({
+          end: this.playRange[1]
+        });
+      }
       this.player.play();
     } else if (playStatus === 'pause') {
       this.player.pause();

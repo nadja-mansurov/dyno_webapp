@@ -176,8 +176,19 @@
     </div>
     <div class="hideshow_container hidden" *ngIf="playSelected">
       <div class="row">
-        <div class="col-sm-5">Frames indicies</div>
-        <div class="col-sm-7"><dyno-range></dyno-range></div>
+        <div class="col-sm-12"><dyno-range (range)="setPlayRange($event)"></dyno-range></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary width-100"
+            (click)="setPlayedRange()"
+            title="Set for play"
+            [disabled]="!playSelected || !(playRange && playRange.length > 0)">
+            <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
