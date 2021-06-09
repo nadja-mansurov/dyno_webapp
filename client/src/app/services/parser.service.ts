@@ -4,7 +4,7 @@ import { XmlParser } from '@angular/compiler';
 import { FeatureCloudModel } from '../models/feature-cloud.model';
 import { DynophoreModel } from '../models/dynophore.model';
 import { DynophoreAtomModel } from '../models/dynophore-atom.model';
-import { Vector3 } from 'three';
+import { Vector3, Color } from 'three';
 import { AdditionalPointModel } from '../models/additional-point.model';
 
 import { NGL } from '@/app/ngl.const';
@@ -132,9 +132,10 @@ export class ParserService {
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         item.setVisibility(visibleIndecies);
         if (!item.hidden) {
+          const col = '#' + tinycolor(featureCloud.featureColor.getHexString()).darken(25).toHex();
           position = item.position;
           shape.addSphere(item.position,
-            item.opacity ? new Color(new tinycolor(featureCloud.featureColor.getHexString()).darken(1)) : featureCloud.featureColor,
+            item.opacity ? new Color(col) : featureCloud.featureColor,
             item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
