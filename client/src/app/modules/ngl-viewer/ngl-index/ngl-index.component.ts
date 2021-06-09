@@ -183,12 +183,12 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private togglePlayer(playStatus: 'play'|'pause'|'stop') {
     if (playStatus === 'play') {
-      if (this.playRange[0] !== this.globalMin) {
+      if (this.playRange[0] && this.playRange[0] !== this.globalMin) {
         this.player.setParameters({
           start: this.playRange[0]
         });
       }
-      if (this.playRange[1] !== this.globalMax) {
+      if (this.playRange[1] && this.playRange[1] !== this.globalMax) {
         this.player.setParameters({
           end: this.playRange[1]
         });
