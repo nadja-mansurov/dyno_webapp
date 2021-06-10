@@ -18,3 +18,11 @@ export const globalMax = createSelector(
   selectFileState,
   files => files.max
 );
+
+export const isReadyToDraw = createSelector(
+  selectFileState,
+  files => {
+    if (files.custom && files.pdbFile && files.pmlFile && files.dcdFile) return true;
+    return false;
+  }
+);

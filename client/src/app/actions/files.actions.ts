@@ -7,6 +7,9 @@ export const setFile = createAction(
   props<{ blob: any, fileType: 'pdb' | 'pml' | 'dcd' }>()
 );
 
+export const removeFiles = createAction(
+  "[File Action] All files removeFiles"
+);
 export const pdbUpload = createAction(
   "[File Action] Pdb file upload",
   props<{ pdbFile: any }>()
@@ -21,7 +24,6 @@ export const dcdUpload = createAction(
   "[File Action] Dcd file upload",
   props<{ dcdFile: any }>()
 );
-
 export const setCustom = createAction(
   "[File Action] Set custom file",
   props<{ custom: boolean }>()

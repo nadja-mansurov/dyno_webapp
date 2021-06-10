@@ -1,14 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FilesService } from '@/app/services/files.service';
+import { SubSink } from 'subsink';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { FILE_TYPES } from '@/app/const/fileTypes.const';
 import { AppState } from '@/app/reducers';
 import { DisplayActions, PlayerActions, FilesActions } from '@/app/actions/action-types';
+
 import { isDisplayAll } from '@/app/selectors/display.selector';
-import { SubSink } from 'subsink';
 import { playSelector, hidePastSelector, currentFrameSelector } from '@/app/selectors/play.selector';
+import { isReadyToDraw } from '@/app/selectors/files.selector';
+
+
 
 @Component({
   selector: 'dyno-control-panel-index',
@@ -36,6 +40,8 @@ export class ControlPanelIndexComponent implements OnInit {
   public currentFrame$: Observable<number|null>;
   public fileTypes: Array<"pdb" | "pml" | "dcd"> = [];
 
+  public isReadyToDraw$: Observable<boolean>
+
   private subs = new SubSink();
 
   constructor(
@@ -46,6 +52,7 @@ export class ControlPanelIndexComponent implements OnInit {
     this.playStatus$ = this.store.pipe(select(playSelector));
     this.hidePastStatus$ = this.store.pipe(select(hidePastSelector));
     this.currentFrame$ = this.store.pipe(select(currentFrameSelector));
+    this.isReadyToDraw$ = this.store.pipe(select(isReadyToDraw));
   }
 
   ngOnInit(): void {
@@ -75,6 +82,17 @@ export class ControlPanelIndexComponent implements OnInit {
       blob: $event,
       fileType: <'pdb' | 'pml' | 'dcd'>type
     }));
+  }
+
+  public removeAll() {
+    this.fileTypes = [];
+    this.store.dispatch(FilesActions.removeFiles());
+    // TODO: clear without rerendering component
+    setTimeout(() => {
+      Object.keys(FILE_TYPES).map(item => {
+        this.fileTypes.push(<"pdb" | "pml" | "dcd">item);
+      });
+    }, 100);
   }
 
   public draw() {

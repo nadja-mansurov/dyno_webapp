@@ -21,7 +21,6 @@ export class FileUploadComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('this.type', this.type);
     if (!this.type) {
       this.error = true;
       return;

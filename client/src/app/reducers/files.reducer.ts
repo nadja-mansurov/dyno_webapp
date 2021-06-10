@@ -34,6 +34,14 @@ const filesReducer = createReducer(
     return next;
   }),
 
+  on(FilesActions.removeFiles, (state: IFileState) => {
+    let next = Object.assign({}, state);
+    next.pdbFile = undefined;
+    next.pmlFile = undefined;
+    next.dcdFile = undefined;
+    return next;
+  }),
+
   on(FilesActions.pdbUpload, (state: IFileState, { pdbFile }) => {
     let next = Object.assign({}, state);
     next.pdbFile = pdbFile;

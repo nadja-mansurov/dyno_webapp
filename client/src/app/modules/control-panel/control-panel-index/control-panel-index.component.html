@@ -14,7 +14,7 @@
       </div>
       <div class="hideshow_container hidden" *ngIf="uploadCustom">
         <div class="row">
-          <div class="col-sm-12">
+          <div class="col-sm-12" *ngIf="fileTypes && fileTypes.length === 3">
             <dyno-file-upload
               *ngFor="let f_type of fileTypes"
               [type]="f_type"
@@ -27,9 +27,20 @@
               class="btn btn-primary btn-sm width-100"
               (click)="draw()"
               title="Redraw All!"
-              [disabled]="!allowToDraw"
+              [disabled]="!(isReadyToDraw$ | async)"
             >
-              <i class="bi bi-brush-fill"></i>&nbsp;<span>Redraw All!</span>
+              <i class="bi bi-brush-fill"></i>&nbsp;<span>Redraw all!</span>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm width-100"
+              (click)="removeAll()"
+              title="Clear All!">
+              <i class="bi bi-erase-fill"></i>&nbsp;<span>Remove files (back to default)</span>
             </button>
           </div>
         </div>
