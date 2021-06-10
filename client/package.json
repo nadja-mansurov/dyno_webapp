@@ -51,27 +51,6 @@
     "zone.js": "0.11.4"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "@angular-devkit/build-angular": "^12.0.0",
-    "@angular/cli": "12.0.0",
-    "@angular/compiler-cli": "12.0.0",
-    "@angular/localize": "^12.0.0",
-    "@bahmutov/add-typescript-to-cypress": "^2.1.2",
-    "@types/jasmine": "3.7.2",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^15.12.2",
-    "@types/three": "^0.128.0",
-    "@types/xml2js": "^0.4.8",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.23.0",
-    "angular-cli-ghpages": "^0.6.2",
-    "angular-http-server": "^1.10.0",
-    "codelyzer": "6.0.2",
-    "copyfiles": "^2.4.1",
-    "cypress": "^7.5.0",
-    "eslint-plugin-chai-friendly": "^0.7.1",
-    "eslint-plugin-cypress": "^2.11.3",
-=======
     "@angular-devkit/build-angular": "12.0.3",
     "@angular/cli": "12.0.3",
     "@angular/compiler-cli": "12.0.3",
@@ -88,7 +67,6 @@
     "copyfiles": "^2.4.1",
     "eslint": "^7.28.0",
     "eslint-config-google": "^0.14.0",
->>>>>>> 5a66608a634444458aff4f0ac380f7a1bbe13670
     "jasmine-core": "3.7.1",
     "jasmine-spec-reporter": "7.0.0",
     "jest": "^27.0.4",
