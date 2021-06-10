@@ -27,7 +27,7 @@ jobs:
     - name: npm install
       run: npm install    
     - name: Project_start
-      run: npm buildaot
+      run: npm run deploy
 
   cypress_run_test:
     runs-on: ubuntu-latest
