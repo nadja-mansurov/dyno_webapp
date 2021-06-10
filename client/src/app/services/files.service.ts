@@ -9,8 +9,7 @@ import { environment } from '@/environments/environment';
 import { FilesActions } from '@/app/actions/action-types';
 
 import { AppState } from '@/app/reducers';
-import { DynophoreModel } from '@/app/models/dynophore.model';
-import { IDynophore } from '../modules/_dynophores-viewer/models/dynophore.model';
+import { DynophoreModel, IDynophore } from '@/app/models/dynophore.model';
 
 @Injectable({
   providedIn: 'any'
