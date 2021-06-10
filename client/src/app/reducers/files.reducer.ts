@@ -9,6 +9,8 @@ import {
 import { FilesActions } from '@/app/actions/action-types';
 import { IFileState } from '@/app/reducers/interfaces';
 
+import { FILE_TYPES } from '@/app/const/fileTypes.const';
+
 
 
 export const initialFilesState: IFileState = {
@@ -23,6 +25,14 @@ export const initialFilesState: IFileState = {
 const filesReducer = createReducer(
 
   initialFilesState,
+
+  on(FilesActions.setFile, (state: IFileState, { blob, fileType }) => {
+    let next = Object.assign({}, state);
+    if (fileType === FILE_TYPES.pdb ) next.pdbFile = blob;
+    if (fileType === FILE_TYPES.pml ) next.pmlFile = blob;
+    if (fileType === FILE_TYPES.dcd ) next.dcdFile = blob;
+    return next;
+  }),
 
   on(FilesActions.pdbUpload, (state: IFileState, { pdbFile }) => {
     let next = Object.assign({}, state);

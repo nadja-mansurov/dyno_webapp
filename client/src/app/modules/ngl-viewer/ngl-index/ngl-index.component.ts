@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 
 import { switchMap } from 'rxjs/operators';
 import { SubSink } from 'subsink';
-import { NGL } from '@/app/ngl.const';
+import { NGL } from '@/app/const/ngl.const';
 import { ParserService } from '@/app/services/parser.service';
 import { FilesService } from '@/app/services/files.service';
 import { Observable, interval } from 'rxjs';

@@ -3,7 +3,7 @@ import { Store, select } from '@ngrx/store';
 import { HttpClient, HttpRequest, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { XmlParser } from '@angular/compiler';
 import { Observable, BehaviorSubject, combineLatest, of, from } from 'rxjs';
-import { NGL } from '@/app/ngl.const';
+import { NGL } from '@/app/const/ngl.const';
 
 import { environment } from '@/environments/environment';
 import { FilesActions } from '@/app/actions/action-types';

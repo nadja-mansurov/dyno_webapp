@@ -1,6 +1,11 @@
 
+
 import {createAction, props} from '@ngrx/store';
 
+export const setFile = createAction(
+  "[File Action] File upload",
+  props<{ blob: any, fileType: 'pdb' | 'pml' | 'dcd' }>()
+);
 
 export const pdbUpload = createAction(
   "[File Action] Pdb file upload",

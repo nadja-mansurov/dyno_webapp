@@ -15,9 +15,11 @@
       <div class="hideshow_container hidden" *ngIf="uploadCustom">
         <div class="row">
           <div class="col-sm-12">
-            <dyno-file-upload title="PDB file" type="pdb"></dyno-file-upload>
-            <dyno-file-upload title="PML file" type="pml"></dyno-file-upload>
-            <dyno-file-upload title="DCD file" type="dcd"></dyno-file-upload>
+            <dyno-file-upload
+              *ngFor="let f_type of fileTypes"
+              [type]="f_type"
+              (setFile)="setFile($event, f_type)"
+            ></dyno-file-upload>
           </div>
           <div class="col-sm-12">
             <button
@@ -105,10 +107,7 @@
 <div class="logical-container">
   <div class="row">
     <div class="col-sm-8">
-      <div
-        class="btn-group btn-group-sm  width-100"
-        role="group"
-      >
+      <div class="btn-group btn-group-sm  width-100" role="group">
         <button
           type="button"
           class="btn btn-sm btn-outline-primary"
@@ -139,7 +138,9 @@
       </div>
     </div>
     <div class="col-sm-4">
-      <small>Frame No: <strong>{{currentFrame}}</strong></small>
+      <small
+        >Frame No: <strong>{{ currentFrame }}</strong></small
+      >
     </div>
   </div>
 
@@ -176,7 +177,9 @@
     </div>
     <div class="hideshow_container hidden" *ngIf="playSelected">
       <div class="row">
-        <div class="col-sm-12"><dyno-range (range)="setPlayRange($event)"></dyno-range></div>
+        <div class="col-sm-12">
+          <dyno-range (range)="setPlayRange($event)"></dyno-range>
+        </div>
       </div>
       <div class="row">
         <div class="col-sm-12">
@@ -185,7 +188,8 @@
             class="btn btn-sm btn-outline-secondary width-100"
             (click)="setPlayedRange()"
             title="Set for play"
-            [disabled]="!playSelected || !(playRange && playRange.length > 0)">
+            [disabled]="!playSelected || !(playRange && playRange.length > 0)"
+          >
             <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
           </button>
         </div>

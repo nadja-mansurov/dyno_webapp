@@ -3,8 +3,9 @@ import { FilesService } from '@/app/services/files.service';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
+import { FILE_TYPES } from '@/app/const/fileTypes.const';
 import { AppState } from '@/app/reducers';
-import { DisplayActions, PlayerActions } from '@/app/actions/action-types';
+import { DisplayActions, PlayerActions, FilesActions } from '@/app/actions/action-types';
 import { isDisplayAll } from '@/app/selectors/display.selector';
 import { SubSink } from 'subsink';
 import { playSelector, hidePastSelector, currentFrameSelector } from '@/app/selectors/play.selector';
@@ -33,6 +34,7 @@ export class ControlPanelIndexComponent implements OnInit {
   public playStatus$: Observable<'stop'|'pause'|'play'>;
   public hidePastStatus$: Observable<boolean>;
   public currentFrame$: Observable<number|null>;
+  public fileTypes: Array<"pdb" | "pml" | "dcd"> = [];
 
   private subs = new SubSink();
 
@@ -59,10 +61,20 @@ export class ControlPanelIndexComponent implements OnInit {
       this.hidePast = status;
     });
 
+    Object.keys(FILE_TYPES).map(item => {
+      this.fileTypes.push(<"pdb" | "pml" | "dcd">item);
+    });
   }
 
   public setCloudVisibility(visibility: 'hide'|'show') {
     this.store.dispatch(DisplayActions.setAll({ all: visibility }));
+  }
+
+  public setFile($event: any, type: 'pdb' | 'pml' | 'dcd') {
+    this.store.dispatch(FilesActions.setFile({
+      blob: $event,
+      fileType: <'pdb' | 'pml' | 'dcd'>type
+    }));
   }
 
   public draw() {
