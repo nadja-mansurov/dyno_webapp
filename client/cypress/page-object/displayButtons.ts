@@ -33,6 +33,27 @@ export class DisplayButtons {
         .trigger('mousedown', {  button: 0, pageX: 600, pageY: 100 })
         .trigger('mousemove', { which: 1, pageX: 600, pageY: 600 });
     }
+
+    // tslint:disable-next-line:typedef
+    playBtn() {
+        cy.get('button[title="Play"]')
+        .click()
+        .should('be.disabled');
+    }
+
+    // tslint:disable-next-line:typedef
+    pauseBtn() {
+        cy.get('button[title="Pause"]')
+        .click()
+        .should('be.disabled');
+    }
+
+    // tslint:disable-next-line:typedef
+    stopBtn() {
+        cy.get('button[title="Stop"]')
+        .click()
+        .should('be.disabled');
+    }
 }
 
 export const displayButtons = new DisplayButtons();

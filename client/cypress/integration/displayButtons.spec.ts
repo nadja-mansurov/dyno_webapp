@@ -18,4 +18,11 @@ describe('Tests of display buttons', () => {
     it('Should check the select menu', () => {
         displayButtons.selectMenu('Show', 'Hide');
     });
+
+    it('Should check the buttons block', () => {
+        displayButtons.playBtn();
+        displayButtons.pauseBtn();
+        displayButtons.stopBtn();
+
+    });
 });
