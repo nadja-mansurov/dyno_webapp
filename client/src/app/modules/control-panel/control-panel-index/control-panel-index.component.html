@@ -5,7 +5,6 @@
         <input
           class="form-check-input"
           type="checkbox"
-          value=""
           id="customFiles"
           (change)="setFilesOption()"
         />
@@ -73,64 +72,74 @@
 
   <div class="row">
     <div class="col-sm-4">
-      <select class="form-select form-select-sm"
+      <select
+        class="form-select form-select-sm"
         [ngModel]="rangeType"
-        (ngModelChange)="setHideShowType($event)">
+        (ngModelChange)="setHideShowType($event)"
+      >
         <option selected [value]="null">-select-</option>
         <option [value]="'show'">Show</option>
         <option [value]="'hide'">Hide</option>
       </select>
     </div>
     <div class="col-sm-8">
-      <dyno-range
-        (range)="setHideShowRange($event)"></dyno-range>
+      <dyno-range (range)="setHideShowRange($event)"></dyno-range>
     </div>
   </div>
 
   <div class="row">
     <div class="col-sm-12">
       <button
-          type="button"
-          class="btn btn-sm btn-outline-secondary width-100"
-          (click)="setSelectedRange()"
-          title="Set selected"
-          [disabled]="!(rangeType && playRange && playRange.length > 0)"
-        >
-          <i class="bi bi-arrow-right"></i>&nbsp;<span
-            >Set</span
-          >
-        </button>
+        type="button"
+        class="btn btn-sm btn-outline-secondary width-100"
+        (click)="setSelectedRange()"
+        title="Set selected"
+        [disabled]="!rangeType || !(playRange && playRange.length > 0)"
+      >
+        <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
+      </button>
     </div>
   </div>
-
 </div>
 
 <div class="logical-container">
   <div class="row">
-    <div class="col-sm-4">
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-primary width-100"
-        (click)="play(!isPlay)"
-        [disabled]="isPlay"
-        title="Play"
+    <div class="col-sm-8">
+      <div
+        class="btn-group btn-group-sm  width-100"
+        role="group"
       >
-        <i class="bi bi-play-fill"></i>&nbsp;<span>Play</span>
-      </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-primary"
+          (click)="play('play')"
+          [disabled]="(playStatus$ | async) === 'play'"
+          title="Play"
+        >
+          <i class="bi bi-play-fill"></i>&nbsp;<span>Play</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          (click)="play('pause')"
+          [disabled]="(playStatus$ | async) === 'pause'"
+          title="Pause"
+        >
+          <i class="bi bi-pause-fill"></i>&nbsp;<span>Pause</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary"
+          (click)="play('stop')"
+          [disabled]="(playStatus$ | async) === 'stop'"
+          title="Stop"
+        >
+          <i class="bi bi-stop-fill"></i>&nbsp;<span>Stop</span>
+        </button>
+      </div>
     </div>
     <div class="col-sm-4">
-      <button
-        type="button"
-        class="btn btn-sm btn-outline-secondary width-100"
-        (click)="play(!isPlay)"
-        [disabled]="!isPlay"
-        title="Stop"
-      >
-        <i class="bi bi-stop-fill"></i>&nbsp;<span>Stop</span>
-      </button>
-    </div>
-    <div class="col-sm-4">
-        <small>Frame No: <strong>All</strong></small>
+      <small>Frame No: <strong>{{currentFrame}}</strong></small>
     </div>
   </div>
 
@@ -140,7 +149,7 @@
         <input
           class="form-check-input"
           type="checkbox"
-          value=""
+          (change)="setHidePast()"
           id="hidePrevFrames"
         />
         <label class="form-check-label" for="hidePrevFrames">
@@ -167,8 +176,19 @@
     </div>
     <div class="hideshow_container hidden" *ngIf="playSelected">
       <div class="row">
-        <div class="col-sm-5">Frames indicies</div>
-        <div class="col-sm-7"><dyno-range></dyno-range></div>
+        <div class="col-sm-12"><dyno-range (range)="setPlayRange($event)"></dyno-range></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary width-100"
+            (click)="setPlayedRange()"
+            title="Set for play"
+            [disabled]="!playSelected || !(playRange && playRange.length > 0)">
+            <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

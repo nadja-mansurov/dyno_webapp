@@ -10,7 +10,8 @@ export class AdditionalPointModel {
   x: number = 0.0;
   y: number = 0.0;
   z: number = 0.0;
-  hidden?: boolean = false;
+  hidden? = false;
+  opacity? = false;
 
   constructor(data: any, center: Vector3) {
     let x, y, z;
@@ -34,11 +35,22 @@ export class AdditionalPointModel {
     this.distance = center.distanceTo(this.position);
   }
 
-  setVisibility(frames: number[], isVisible?: boolean) {
+  setVisibility(frames?: number[]) {
+    if (!frames) {
+      this.hidden = false;
+      return;
+    }
+
+    const max = Math.max(...frames);
+
     if (frames.indexOf(this.frameIndex) > -1) {
-      this.hidden = !isVisible;
+      this.hidden = false;
+      if (this.frameIndex !== max) {
+        this.opacity = true;
+      }
     } else {
-      this.hidden = isVisible;
+      this.hidden = true;
+      this.opacity = false;
     }
   }
 
