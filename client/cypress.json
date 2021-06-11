@@ -3,7 +3,5 @@
     "viewportWidth": 1920,
     "viewportHeight": 1080,
     "video": false,
-    "pageLoadTimeout": 60000,
-    "defaultCommandTimeout": 60000,
     "chromeWebSecurity": false
 }

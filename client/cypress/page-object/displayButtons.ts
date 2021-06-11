@@ -41,6 +41,9 @@ export class DisplayButtons {
         .should('be.disabled');
     }
 
+
+    // ########## Frame Block ########
+
     // tslint:disable-next-line:typedef
     pauseBtn() {
         cy.get('button[title="Pause"]')
@@ -53,6 +56,23 @@ export class DisplayButtons {
         cy.get('button[title="Stop"]')
         .click()
         .should('be.disabled');
+    }
+
+    // tslint:disable-next-line:typedef
+    playOnlyCheckbox() {
+        cy.get('#selectedFrames').check();
+    }
+
+    // tslint:disable-next-line:typedef
+    formControl() {
+        cy.get('.form-control')
+        .eq(2)
+        .clear()
+        .type('1');
+        cy.get('.form-control')
+        .eq(3)
+        .clear()
+        .type('3');
     }
 }
 

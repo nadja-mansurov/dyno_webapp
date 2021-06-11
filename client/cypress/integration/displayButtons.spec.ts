@@ -19,10 +19,12 @@ describe('Tests of display buttons', () => {
         displayButtons.selectMenu('Show', 'Hide');
     });
 
-    it('Should check the buttons block', () => {
+    it('Should check the buttons Frame block', () => {
         displayButtons.playBtn();
         displayButtons.pauseBtn();
         displayButtons.stopBtn();
+        displayButtons.playOnlyCheckbox();
+        displayButtons.formControl();
 
     });
 });
