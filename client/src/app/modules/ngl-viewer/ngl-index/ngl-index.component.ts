@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 
 import { switchMap } from 'rxjs/operators';
 import { SubSink } from 'subsink';
-import { NGL } from '@/app/ngl.const';
+import { NGL } from '@/app/const/ngl.const';
 import { ParserService } from '@/app/services/parser.service';
 import { FilesService } from '@/app/services/files.service';
 import { Observable, interval } from 'rxjs';
@@ -83,6 +83,11 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     this.stageInstance = new NGL.Stage('viewport');
+
+    this.subs.sink = this.filesService.isCustom$.subscribe(isCustom => {
+      this.clearStage(isCustom);
+      this.initPdbDcd(isCustom);
+    });
     this.initPdbDcd();
     this.storeSubscription();
   }
@@ -94,8 +99,8 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     }*/
   }
 
-  private initPdbDcd() {
-    this.subs.sink = this.filesService.uploadPdb(this.stageInstance).pipe(
+  private initPdbDcd(isCustom?: boolean) {
+    this.subs.sink = this.filesService.uploadPdb(this.stageInstance, isCustom).pipe(
       switchMap(pdb => {
         console.log('pdb', pdb);
         this.structureComponent =
@@ -104,7 +109,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.structureComponent.signals.disposed.add(this.matrixChangedListener, this);
         console.log('test test', this.structureComponent);
         //this.structureComponent.autoView();
-        return this.filesService.uploadDcd();
+        return this.filesService.uploadDcd(isCustom);
       }),
       switchMap((dcdFile: any) => {
         console.log('dcdFile', dcdFile);
@@ -120,7 +125,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.trajectoryStructureComponent.signals.frameChanged.add(this.frameChangedListener, this);
 
         this.playerInit();
-        return this.filesService.uploadPml()
+        return this.filesService.uploadPml(isCustom)
       })
     ).subscribe((pmlRaw: any) => {
       this.dynophore = this.parserService.parseDynophore(pmlRaw);
@@ -204,7 +209,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private playerInit() {
     this.stageInstance.eachComponent((item: any) => {
-      if (item.type === 'structure') {
+      if (item.type === 'structure' && item.trajList && item.trajList.length > 0) {
         const trajectoryElement = item.trajList[0];
         this.player = new NGL.TrajectoryPlayer(trajectoryElement.trajectory, {
           start: 0,
@@ -270,7 +275,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subs.sink = this.playRange$.subscribe(state => {
       this.playRange = state || [this.globalMin, this.globalMax];
     });
-
   }
 
   private frameChangedListener(frame: any) {
@@ -284,5 +288,12 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private matrixChangedListener(matrix: any) {
     console.log('matrix changed', matrix);
+  }
+
+  private clearStage(isCustom?: boolean) {
+    if (isCustom) {
+      this.stageInstance.removeAllComponents();
+    }
+
   }
 }

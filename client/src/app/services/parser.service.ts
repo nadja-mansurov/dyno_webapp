@@ -7,7 +7,7 @@ import { DynophoreAtomModel } from '../models/dynophore-atom.model';
 import { Vector3, Color } from 'three';
 import { AdditionalPointModel } from '../models/additional-point.model';
 
-import { NGL } from '@/app/ngl.const';
+import { NGL } from '@/app/const/ngl.const';
 import { Store } from '@ngrx/store';
 import { AppState } from '../reducers';
 import { FilesActions } from '../actions/action-types';
