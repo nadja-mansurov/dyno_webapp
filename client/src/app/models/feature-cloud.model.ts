@@ -31,6 +31,7 @@ export class FeatureCloudModel {
   position: Vector3 = new Vector3(0, 0, 0);
   additionalPoints: AdditionalPointModel[] = [];
   frameIndecies: number[] = [];
+  frameIndeciesDict?: any;
   x: number = 0.0;
   y: number = 0.0;
   z: number = 0.0;
@@ -54,6 +55,7 @@ export class FeatureCloudModel {
         this.additionalPoints.push(point);
         if (this.frameIndecies.indexOf(point.frameIndex) < 0) {
           this.frameIndecies.push(point.frameIndex);
+          this.frameIndeciesDict = true;
         }
       }
     });
