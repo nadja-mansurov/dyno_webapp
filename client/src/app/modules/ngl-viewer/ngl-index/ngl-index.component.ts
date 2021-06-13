@@ -1,17 +1,18 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-
+import { Observable, interval } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
 import { SubSink } from 'subsink';
+
 import { NGL } from '@/app/const/ngl.const';
 import { ParserService } from '@/app/services/parser.service';
 import { FilesService } from '@/app/services/files.service';
-import { Observable, interval } from 'rxjs';
-import { Store, select } from '@ngrx/store';
+
 import { AppState } from '@/app/reducers';
 import { isDisplayAll, isDisplaySelected, getRange } from '@/app/selectors/display.selector';
 import { globalMax, globalMin } from '@/app/selectors/files.selector';
 import { playSelector, currentFrameSelector, hidePastSelector, rangeSelector } from '@/app/selectors/play.selector';
-import { PlayerActions, DisplayActions } from '@/app/actions/action-types';
+import { PlayerActions, DisplayActions, SelectionActions } from '@/app/actions/action-types';
 import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
 
 
@@ -92,13 +93,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.storeSubscription();
   }
 
-  public clickOnView($event: any) {
-    console.log('clickOnView', $event);
-    /*if (this.player && this.playStatus === 'play') {
-      this.store.dispatch(PlayerActions.setPlay({ playStatus: 'pause' }));
-    }*/
-  }
-
   private initPdbDcd(isCustom?: boolean) {
     this.subs.sink = this.filesService.uploadPdb(this.stageInstance, isCustom).pipe(
       switchMap(pdb => {
@@ -107,7 +101,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
             this.parserService.structureDrawing(pdb, this.stageInstance);
 
         this.structureComponent.signals.disposed.add(this.matrixChangedListener, this);
-        console.log('test test', this.structureComponent);
+        this.stageInstance.signals.clicked.add(this.stageClicked, this);
         //this.structureComponent.autoView();
         return this.filesService.uploadDcd(isCustom);
       }),
@@ -290,10 +284,18 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('matrix changed', matrix);
   }
 
+  private stageClicked(clicked: any) {
+    console.log('clicked', clicked);
+    if (clicked?.picker?.shape?.featureCloud) {
+      this.store.dispatch(SelectionActions.setSelected({ selected: clicked?.picker?.shape?.featureCloud }));
+    } else {
+      this.store.dispatch(SelectionActions.removeSelected());
+    }
+  }
+
   private clearStage(isCustom?: boolean) {
     if (isCustom) {
       this.stageInstance.removeAllComponents();
     }
-
   }
 }

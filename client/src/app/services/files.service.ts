@@ -62,7 +62,6 @@ export class FilesService {
   }
 
   public uploadPdb(stageInstance: any, isCustom?: boolean) {
-    console.log('uploadPdb', this.customPdbUri);
     let pdbRequest = from(stageInstance.loadFile(isCustom ? this.customPdbUri : this.defaultPdbUri, {
       defaultRepresentation: true,
       ext: "pdb",
@@ -84,8 +83,6 @@ export class FilesService {
   }
 
   public uploadDcd(isCustom?: boolean) {
-    console.log('this.customDcdUri', this.customDcdUri);
-    console.log('isCustom', isCustom);
     let dcdRequest = from(NGL.autoLoad(isCustom ? this.customDcdUri : this.defaultDcdUri, {
       ext: 'dcd',
       defaultRepresentation: true

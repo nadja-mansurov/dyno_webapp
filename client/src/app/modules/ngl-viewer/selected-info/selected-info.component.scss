@@ -1,0 +1,10 @@
+@import "_variables.scss";
+
+.occurances {
+  cursor: pointer;
+  color: $notPresent;
+}
+
+.isPresent {
+  color: $present;
+}

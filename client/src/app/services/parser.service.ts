@@ -1,17 +1,19 @@
 
 import { Injectable } from '@angular/core';
 import { XmlParser } from '@angular/compiler';
-import { FeatureCloudModel } from '../models/feature-cloud.model';
-import { DynophoreModel } from '../models/dynophore.model';
-import { DynophoreAtomModel } from '../models/dynophore-atom.model';
-import { Vector3, Color } from 'three';
-import { AdditionalPointModel } from '../models/additional-point.model';
-
-import { NGL } from '@/app/const/ngl.const';
-import { Store } from '@ngrx/store';
-import { AppState } from '../reducers';
-import { FilesActions } from '../actions/action-types';
 import * as tinycolor from 'tinycolor2';
+import { Vector3, Color } from 'three';
+import { Store } from '@ngrx/store';
+import { NGL } from '@/app/const/ngl.const';
+
+import { FeatureCloudModel } from '@/app/models/feature-cloud.model';
+import { DynophoreModel } from '@/app/models/dynophore.model';
+import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
+import { AdditionalPointModel } from '@/app/models/additional-point.model';
+
+import { AppState } from '@/app/reducers';
+import { FilesActions } from '@/app/actions/action-types';
+import { ISelectionState } from '@/app/reducers/interfaces';
 
 @Injectable({
   providedIn: 'any'
@@ -99,6 +101,13 @@ export class ParserService {
               featureCloud.featureColor,
               item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
+        shape.featureCloud = {
+          name: featureCloud.name,
+          id: featureCloud.id,
+          involvedAtomSerials: featureCloud.involvedAtomSerials,
+          frameIndecies: featureCloud.frameIndecies,
+          frameIndeciesDict: featureCloud.frameIndeciesDict
+        } as ISelectionState;
       });
       shapes[featureCloud.featureId] = shape;
     });
