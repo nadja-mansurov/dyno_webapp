@@ -9,6 +9,21 @@ export const isCustom = createSelector(
   files => files.custom
 );
 
+export const getPdbFile = createSelector(
+  selectFileState,
+  files => files.pdbFile
+);
+
+export const getPmlFile = createSelector(
+  selectFileState,
+  files => files.pmlFile
+);
+
+export const getDcdFile = createSelector(
+  selectFileState,
+  files => files.dcdFile
+);
+
 export const globalMin = createSelector(
   selectFileState,
   files => files.min

@@ -96,7 +96,7 @@ export class ControlPanelIndexComponent implements OnInit {
   }
 
   public draw() {
-
+    this._filesService.updateFiles(true);
   }
 
   public play(status: 'play'|'pause'|'stop') {
@@ -106,6 +106,9 @@ export class ControlPanelIndexComponent implements OnInit {
   public setFilesOption() {
     this.uploadCustom = !this.uploadCustom;
     this._filesService.setCustom(this.uploadCustom);
+    if (!this.uploadCustom) {
+      this._filesService.updateFiles(false);
+    }
   }
 
   public setHideShowRange($event: any) {
