@@ -20,7 +20,7 @@ import { ISelectionState } from '@/app/reducers/interfaces';
 })
 export class ParserService {
   private xmlParser: XmlParser = new XmlParser();
-
+  private featureClouds: any = {};
 
   constructor(
     private store: Store<AppState>
@@ -101,13 +101,23 @@ export class ParserService {
               featureCloud.featureColor,
               item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
-        shape.featureCloud = {
+
+        this.featureClouds[shape.name] = {
           name: featureCloud.name,
           id: featureCloud.id,
           involvedAtomSerials: featureCloud.involvedAtomSerials,
           frameIndecies: featureCloud.frameIndecies,
           frameIndeciesDict: featureCloud.frameIndeciesDict
         } as ISelectionState;
+
+        /*
+        shape.featureCloud = {
+          name: featureCloud.name,
+          id: featureCloud.id,
+          involvedAtomSerials: featureCloud.involvedAtomSerials,
+          frameIndecies: featureCloud.frameIndecies,
+          frameIndeciesDict: featureCloud.frameIndeciesDict
+        } as ISelectionState;*/
       });
       shapes[featureCloud.featureId] = shape;
     });
@@ -165,6 +175,14 @@ export class ParserService {
 
   }
 
+  getFeatureCloudInfo(name: string) {
+    if (!this.featureClouds[name]) return null;
+    return this.featureClouds[name];
+  }
+
+  clearFeatureClouds() {
+    this.featureClouds = {};
+  }
 
 };
 

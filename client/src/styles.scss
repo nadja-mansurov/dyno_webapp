@@ -28,6 +28,15 @@ main {
 }
 
 
+.occurances {
+  cursor: pointer;
+  color: $notPresent;
+}
+
+.isPresent {
+  color: $present;
+}
+
 
 @media (max-width: 1399px) {
   .invisible-1399 {
