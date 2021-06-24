@@ -92,7 +92,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       this.storeSubscription();
 
-    }, 500);
+    });
   }
 
   private initPdbDcd(isCustom?: boolean) {
