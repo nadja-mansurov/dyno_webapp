@@ -37,7 +37,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   private player: any;
   private currentFrame: number|null = null;
 
-  private range: number[] = [];
+  private range: number[] = [0, 100];
   private isSelected: 'show'|'hide'|null = null;
   private globalMax = 0;
   private globalMin = 0;
@@ -88,8 +88,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subs.sink = this.filesService.isCustom$.subscribe(isCustom => {
       this.clearStage(isCustom);
       this.initPdbDcd(isCustom);
-    });
-    this.initPdbDcd();
+    })
     this.storeSubscription();
   }
 
@@ -100,7 +99,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.structureComponent =
             this.parserService.structureDrawing(pdb, this.stageInstance);
 
-        this.structureComponent.signals.disposed.add(this.matrixChangedListener, this);
         this.stageInstance.signals.clicked.add(this.stageClicked, this);
         //this.structureComponent.autoView();
         return this.filesService.uploadDcd(isCustom);
@@ -118,7 +116,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.trajectoryStructureComponent.signals.frameChanged.add(this.frameChangedListener, this);
 
-        this.playerInit();
         return this.filesService.uploadPml(isCustom)
       })
     ).subscribe((pmlRaw: any) => {
@@ -127,6 +124,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
       this.drawCloud();
       this.structureComponent.autoView();
+      this.playerInit();
     });
   }
 
@@ -140,9 +138,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
       this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
-      if (len == i+1) {
-        this.shapeComponents[shapeId].autoView();
-      }
     });
   }
 
@@ -152,11 +147,17 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private toggleSelected() {
+  private toggleSelected(isAll?: 'show'|'hide') {
     this.removeDynophore();
-    const range = this.parserService.getShowingIndecies(this.range, this.isSelected, this.globalMin, this.globalMax);
-    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
-    this.showDynophore();
+    if (this.isSelected) {
+      const range = this.parserService.getShowingIndecies(this.range, this.isSelected, this.globalMin, this.globalMax);
+      this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
+      this.showDynophore();
+    } else if (isAll) {
+      const range = this.parserService.getShowingIndecies([this.globalMin, this.globalMax], isAll, this.globalMin, this.globalMax);
+      this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
+      this.showDynophore();
+    }
   }
 
   private playDynophore(currentFrame: number) {
@@ -203,11 +204,11 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private playerInit() {
     this.stageInstance.eachComponent((item: any) => {
-      if (item.type === 'structure' && item.trajList && item.trajList.length > 0) {
+      if (item.type === 'structure') {
         const trajectoryElement = item.trajList[0];
         this.player = new NGL.TrajectoryPlayer(trajectoryElement.trajectory, {
-          start: 0,
-          end: 100,
+          start: this.globalMin,
+          end: this.globalMax,
           step: 1,
           timeout: PLAYER_TIMEOUT,
           interpolateType: 'spline',
@@ -215,7 +216,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
           mode: 'loop',
           direction: 'forward'
         });
-        //player.play();
       }
     });
   }
@@ -229,9 +229,9 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dynophoreShapes = this.parserService.dynophoreDrawing(this.dynophore);
       }
       if (isAll == 'show') {
-        this.showDynophore();
+        this.toggleSelected('show');
       } else if (isAll == 'hide') {
-        this.removeDynophore();
+        this.toggleSelected('hide');
       }
     });
     this.subs.sink = this.isDisplaySelected$.subscribe(isSelected => {
@@ -272,7 +272,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private frameChangedListener(frame: any) {
-    console.log('FRAME', frame);
     if (frame < 0) {
       return;
     }
@@ -280,14 +279,10 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: frame}));
   }
 
-  private matrixChangedListener(matrix: any) {
-    console.log('matrix changed', matrix);
-  }
-
   private stageClicked(clicked: any) {
     console.log('clicked', clicked);
-    if (clicked?.picker?.shape?.featureCloud) {
-      this.store.dispatch(SelectionActions.setSelected({ selected: clicked?.picker?.shape?.featureCloud }));
+    if (clicked?.picker?.shape?.name) {
+      this.store.dispatch(SelectionActions.setSelected({ selected: this.parserService.getFeatureCloudInfo(clicked?.picker?.shape?.name) }));
     } else {
       this.store.dispatch(SelectionActions.removeSelected());
     }
@@ -295,6 +290,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private clearStage(isCustom?: boolean) {
     if (isCustom) {
+      this.parserService.clearFeatureClouds();
       this.stageInstance.removeAllComponents();
     }
   }

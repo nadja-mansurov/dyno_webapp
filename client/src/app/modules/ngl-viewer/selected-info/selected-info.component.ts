@@ -55,7 +55,7 @@ export class SelectedInfoComponent implements OnInit, OnDestroy {
         return this.selected$;
       })
     ).subscribe((selected:ISelectionState) => {
-      console.log(this.globalFrames);
+      //console.log(this.globalFrames);
       this.selected = selected;
     });
   }

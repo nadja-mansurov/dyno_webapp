@@ -12,6 +12,7 @@ export interface IFeatureCloud {
   involvedAtomSerials: number[];
   position: Vector3;
   additionalPoints: IAdditionalPoint[];
+  elementName?: string|null;
   minima?: Vector3;
   maxima?: Vector3;
   x: number;
@@ -31,6 +32,7 @@ export class FeatureCloudModel {
   position: Vector3 = new Vector3(0, 0, 0);
   additionalPoints: AdditionalPointModel[] = [];
   frameIndecies: number[] = [];
+  elementName?: string|null;
   frameIndeciesDict?: any;
   x: number = 0.0;
   y: number = 0.0;
@@ -60,6 +62,17 @@ export class FeatureCloudModel {
       }
     });
     this.frameIndecies.sort((n1,n2) => n1 - n2);
+  }
+
+  set nglName(name: string|null) {
+    this.elementName = name;
+  }
+
+  get nglName(): string|null {
+    if (!this.elementName){
+      return null;
+    }
+    return this.elementName;
   }
 
   renderPosition(pos:any): Vector3 {
