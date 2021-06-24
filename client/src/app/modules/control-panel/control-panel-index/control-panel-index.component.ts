@@ -112,7 +112,6 @@ export class ControlPanelIndexComponent implements OnInit {
   }
 
   public setHideShowRange($event: any) {
-    console.log('setHideShowRange', $event);
     if ($event) {
       this.showRange = [$event.from, $event.to];
     } else {
@@ -134,12 +133,10 @@ export class ControlPanelIndexComponent implements OnInit {
   }
 
   public setPlayedRange() {
-    console.log('setPlayedRange');
     this.store.dispatch(PlayerActions.setRange({ range: this.playRange }));
   }
 
   public setPlayRange($event: any) {
-    console.log('setPlayRange', $event);
     if ($event) {
       this.playRange = [$event.from, $event.to];
     } else {

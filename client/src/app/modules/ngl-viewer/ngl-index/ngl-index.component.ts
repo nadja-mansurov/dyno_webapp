@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Observable, interval } from 'rxjs';
+import { Observable, interval, asyncScheduler } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Store, select } from '@ngrx/store';
 import { SubSink } from 'subsink';
@@ -83,28 +83,28 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.stageInstance = new NGL.Stage('viewport');
+    asyncScheduler.schedule(() => {
+      this.stageInstance = new NGL.Stage('viewport');
 
-    this.subs.sink = this.filesService.isCustom$.subscribe(isCustom => {
-      this.clearStage(isCustom);
-      this.initPdbDcd(isCustom);
-    })
-    this.storeSubscription();
+      this.subs.sink = this.filesService.isCustom$.subscribe(isCustom => {
+        this.clearStage(isCustom);
+        this.initPdbDcd(isCustom);
+      })
+      this.storeSubscription();
+
+    }, 500);
   }
 
   private initPdbDcd(isCustom?: boolean) {
     this.subs.sink = this.filesService.uploadPdb(this.stageInstance, isCustom).pipe(
       switchMap(pdb => {
-        console.log('pdb', pdb);
         this.structureComponent =
             this.parserService.structureDrawing(pdb, this.stageInstance);
 
         this.stageInstance.signals.clicked.add(this.stageClicked, this);
-        //this.structureComponent.autoView();
         return this.filesService.uploadDcd(isCustom);
       }),
       switchMap((dcdFile: any) => {
-        console.log('dcdFile', dcdFile);
         this.trajectoryStructureComponent = this.structureComponent.addTrajectory(dcdFile, {
           deltaTime: PLAYER_TIMEOUT,
           timeOffset: 0,
@@ -134,7 +134,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private showDynophore() {
-    const len = Object.keys(this.dynophoreShapes).length;
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
       this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
@@ -281,7 +280,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private stageClicked(clicked: any) {
-    console.log('clicked', clicked);
     if (clicked?.picker?.shape?.name) {
       this.store.dispatch(SelectionActions.setSelected({ selected: this.parserService.getFeatureCloudInfo(clicked?.picker?.shape?.name) }));
     } else {

@@ -106,14 +106,14 @@ export class FilesService {
       from(instance.loadFile(this.defaultPdbUri, {
         defaultRepresentation: true
       })).subscribe(file => {
-        console.log('file', file)
+        //console.log('file', file)
         this.store.dispatch(FilesActions.pdbUpload({ pdbFile: file }))
       });
 
       from(NGL.autoLoad(this.defaultDcdUri, {
         defaultRepresentation: true
       })).subscribe(file => {
-        console.log('file', file)
+        //console.log('file', file)
         this.store.dispatch(FilesActions.dcdUpload({ dcdFile: file }))
       });
     }
