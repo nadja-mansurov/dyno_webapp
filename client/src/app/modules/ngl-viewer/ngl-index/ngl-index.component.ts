@@ -147,13 +147,15 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private toggleSelected() {
+  private toggleSelected(isAll?: 'show'|'hide') {
     this.removeDynophore();
     if (this.isSelected) {
       const range = this.parserService.getShowingIndecies(this.range, this.isSelected, this.globalMin, this.globalMax);
       this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
       this.showDynophore();
-    } else {
+    } else if (isAll) {
+      const range = this.parserService.getShowingIndecies([this.globalMin, this.globalMax], isAll, this.globalMin, this.globalMax);
+      this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
       this.showDynophore();
     }
   }
@@ -227,9 +229,9 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dynophoreShapes = this.parserService.dynophoreDrawing(this.dynophore);
       }
       if (isAll == 'show') {
-        this.showDynophore();
+        this.toggleSelected('show');
       } else if (isAll == 'hide') {
-        this.removeDynophore();
+        this.toggleSelected('hide');
       }
     });
     this.subs.sink = this.isDisplaySelected$.subscribe(isSelected => {
