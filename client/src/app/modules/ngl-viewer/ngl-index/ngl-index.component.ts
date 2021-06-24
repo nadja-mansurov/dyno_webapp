@@ -99,7 +99,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.structureComponent =
             this.parserService.structureDrawing(pdb, this.stageInstance);
 
-        this.structureComponent.signals.disposed.add(this.matrixChangedListener, this);
         this.stageInstance.signals.clicked.add(this.stageClicked, this);
         //this.structureComponent.autoView();
         return this.filesService.uploadDcd(isCustom);
@@ -137,19 +136,9 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   private showDynophore() {
     const len = Object.keys(this.dynophoreShapes).length;
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
-      if (!this.shapeComponents[shapeId]) {
-        this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
-        this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
-      }
-      this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId])
-      if (len == i+1) {
-        this.shapeComponents[shapeId].autoView();
-      }
+      this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
+      this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
     });
-    /*
-    this.stageInstance.eachComponent((item: any) => {
-      console.log('showDynophore this.dynophoreShapes item', item);
-    });*/
   }
 
   private removeDynophore() {
@@ -286,10 +275,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.playDynophore(frame);
     this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: frame}));
-  }
-
-  private matrixChangedListener(matrix: any) {
-    console.log('matrix changed', matrix);
   }
 
   private stageClicked(clicked: any) {

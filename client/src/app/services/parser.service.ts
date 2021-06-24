@@ -65,7 +65,6 @@ export class ParserService {
 
   getShowingIndecies(defRange: number[], selectedType: 'hide'|'show'|null, globalMin: number, globalMax: number) {
     let range: number[] = [];
-    console.log(defRange, selectedType, globalMin, globalMax);
     if (selectedType === 'show') {
       for (let i = defRange[0]; i <= defRange[1]; i++) {
         range.push(i);
@@ -110,14 +109,6 @@ export class ParserService {
           frameIndeciesDict: featureCloud.frameIndeciesDict
         } as ISelectionState;
 
-        /*
-        shape.featureCloud = {
-          name: featureCloud.name,
-          id: featureCloud.id,
-          involvedAtomSerials: featureCloud.involvedAtomSerials,
-          frameIndecies: featureCloud.frameIndecies,
-          frameIndeciesDict: featureCloud.frameIndeciesDict
-        } as ISelectionState;*/
       });
       shapes[featureCloud.featureId] = shape;
     });
@@ -151,10 +142,12 @@ export class ParserService {
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         item.setVisibility(visibleIndecies);
         if (!item.hidden) {
-          const col = '#' + tinycolor(featureCloud.featureColor.getHexString()).darken(25).toHex();
+          const tinyColor = '#' + tinycolor(featureCloud.featureColor.getHexString()).darken(25).toHex();
+          const cloudColor = item.opacity && atomsCoordsList ? new Color(tinyColor) : featureCloud.featureColor
+
           position = item.position;
           shape.addSphere(item.position,
-            item.opacity ? new Color(col) : featureCloud.featureColor,
+            cloudColor,
             item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
