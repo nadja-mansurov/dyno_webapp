@@ -198,6 +198,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
       this.player.pause();
     } else if (playStatus === 'stop') {
       this.player.stop();
+      this.toggleSelected('show');
     }
 
   }

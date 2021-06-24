@@ -1,4 +1,4 @@
-<div class="logical-container" *ngIf="selected && selected.id; else nothingIsSelected">
+<div class="logical-container info-block" *ngIf="selected && selected.id; else nothingIsSelected">
   <div class="row">
     <div class="col-sm-12">Feature name: {{selected.name}} (id: {{selected.id}})</div>
   </div>
@@ -8,10 +8,10 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-sm-12">Superfeature occurances</div>
+    <div class="col-sm-12">Superfeature occurrences</div>
   </div>
   <div class="row">
-    <div class="col-sm-12" class="occurances">
+    <div class="col-sm-12" class="occurrences">
         <span *ngFor="let frame of globalFrames; let i = index">
           <span *ngIf="selected.frameIndecies[frame]" [title]="frame + ' is present'" class="isPresent">.</span>
           <span *ngIf="!selected.frameIndecies[frame]" [title]="frame + ' is not present'">.</span>
@@ -21,9 +21,14 @@
 </div>
 
 <ng-template #nothingIsSelected>
-    <div class="logical-container">
+    <div class="logical-container info-block">
       <div class="alert alert-primary" role="alert">
-        Select feature cloud to display involved atoms and frames
+        Select feature cloud to display:
+        <ul class="mb-0">
+          <li>feature name</li>
+          <li>involved atom serials</li>
+          <li>superfeature occurrences (frames numbers)</li>
+        </ul>
       </div>
     </div>
 </ng-template>
