@@ -11,8 +11,8 @@ describe('Tests of display buttons', () => {
 
     it('Should click the display buttons and trigger of display object', () => {
         displayButtons.canvasDisplayObject();
-        displayButtons.hideAllClouds();
-        displayButtons.showAllClouds();
+        displayButtons.hideAllCloudsCheck();
+        displayButtons.showAllCloudsCheck();
     });
 
     it('Should check the select menu', () => {
