@@ -14,7 +14,7 @@ import { IPlayerState } from '@/app/reducers/interfaces';
 export const initialPlayerState: IPlayerState = {
   play: 'stop',
   currentFrame: null,
-  hidePast: true,
+  hidePast: false,
   range: [0,0]
 };
 

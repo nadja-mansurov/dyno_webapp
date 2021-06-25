@@ -1,17 +1,18 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-
+import { Observable, interval, asyncScheduler } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { Store, select } from '@ngrx/store';
 import { SubSink } from 'subsink';
-import { NGL } from '@/app/ngl.const';
+
+import { NGL } from '@/app/const/ngl.const';
 import { ParserService } from '@/app/services/parser.service';
 import { FilesService } from '@/app/services/files.service';
-import { Observable, interval } from 'rxjs';
-import { Store, select } from '@ngrx/store';
+
 import { AppState } from '@/app/reducers';
 import { isDisplayAll, isDisplaySelected, getRange } from '@/app/selectors/display.selector';
 import { globalMax, globalMin } from '@/app/selectors/files.selector';
-import { playSelector, currentFrameSelector } from '@/app/selectors/play.selector';
-import { PlayerActions, DisplayActions } from '@/app/actions/action-types';
+import { playSelector, currentFrameSelector, hidePastSelector, rangeSelector } from '@/app/selectors/play.selector';
+import { PlayerActions, DisplayActions, SelectionActions } from '@/app/actions/action-types';
 import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
 
 
@@ -28,23 +29,29 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   private stageInstance: any;
   private subs = new SubSink();
   private structureComponent: any;
+  private trajectoryStructureComponent: any;
+
   private dynophore: any;
   private dynophoreShapes: any;
   private shapeComponents: any = {};
   private player: any;
   private currentFrame: number|null = null;
 
-  private range: number[] = [];
+  private range: number[] = [0, 100];
   private isSelected: 'show'|'hide'|null = null;
   private globalMax = 0;
   private globalMin = 0;
   private playStatus: 'play'|'pause'|'stop' = 'stop';
   private interval: any;
+  private isPrevHidden = true;
+  private playRange = [0, 100];
 
   private displayAll$: Observable<'show'|'hide'|null>;
   private isDisplaySelected$: Observable<'show'|'hide'|null>;
   private isRange$: Observable<number[]|null>;
   private playStatus$: Observable<'play'|'pause'|'stop'>;
+  private hidePast$: Observable<boolean>;
+  private playRange$: Observable<number[]|null>;
   private currentFrame$: Observable<number|null>;
 
   private globalMax$: Observable<number>;
@@ -62,7 +69,10 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.globalMin$ = this.store.pipe(select(globalMin));
 
     this.playStatus$ = this.store.pipe(select(playSelector));
-    this.currentFrame$ = this.store.pipe(select(currentFrameSelector))
+    this.currentFrame$ = this.store.pipe(select(currentFrameSelector));
+    this.hidePast$ = this.store.pipe(select(hidePastSelector));
+    this.playRange$ = this.store.pipe(select(rangeSelector));
+
   }
 
   ngOnInit(): void {
@@ -73,31 +83,29 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.stageInstance = new NGL.Stage('viewport');
-    this.initPdbDcd();
-    this.storeSubscription();
+    asyncScheduler.schedule(() => {
+      this.stageInstance = new NGL.Stage('viewport');
+
+      this.subs.sink = this.filesService.isCustom$.subscribe(isCustom => {
+        this.clearStage(isCustom);
+        this.initPdbDcd(isCustom);
+      })
+      this.storeSubscription();
+
+    });
   }
 
-  public clickOnView($event: any) {
-    console.log('clickOnView', $event);
-    /*if (this.player && this.playStatus === 'play') {
-      this.store.dispatch(PlayerActions.setPlay({ playStatus: 'pause' }));
-    }*/
-  }
-
-  private initPdbDcd() {
-    this.subs.sink = this.filesService.uploadPdb(this.stageInstance).pipe(
+  private initPdbDcd(isCustom?: boolean) {
+    this.subs.sink = this.filesService.uploadPdb(this.stageInstance, isCustom).pipe(
       switchMap(pdb => {
-        console.log('pdb', pdb);
         this.structureComponent =
             this.parserService.structureDrawing(pdb, this.stageInstance);
 
-        //this.structureComponent.autoView();
-        return this.filesService.uploadDcd();
+        this.stageInstance.signals.clicked.add(this.stageClicked, this);
+        return this.filesService.uploadDcd(isCustom);
       }),
       switchMap((dcdFile: any) => {
-        console.log('dcdFile', dcdFile);
-        this.structureComponent.addTrajectory(dcdFile, {
+        this.trajectoryStructureComponent = this.structureComponent.addTrajectory(dcdFile, {
           deltaTime: PLAYER_TIMEOUT,
           timeOffset: 0,
           removePeriodicity: false,
@@ -105,9 +113,10 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
           remo: false,
           superpose: false
         })
-        console.log('this.structureComponent', this.structureComponent);
-        this.playerInit();
-        return this.filesService.uploadPml()
+
+        this.trajectoryStructureComponent.signals.frameChanged.add(this.frameChangedListener, this);
+
+        return this.filesService.uploadPml(isCustom)
       })
     ).subscribe((pmlRaw: any) => {
       this.dynophore = this.parserService.parseDynophore(pmlRaw);
@@ -115,6 +124,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.parserService.getAtomDynophoreInteractions(this.dynophore.allInvolvedAtoms, this.structureComponent);
       this.drawCloud();
       this.structureComponent.autoView();
+      this.playerInit();
     });
   }
 
@@ -124,13 +134,9 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private showDynophore() {
-    const len = Object.keys(this.dynophoreShapes).length;
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
       this.shapeComponents[shapeId].addRepresentation('buffer', { opacity: 0.9 });
-      if (len == i+1) {
-        this.shapeComponents[shapeId].autoView();
-      }
     });
   }
 
@@ -140,18 +146,33 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  private toggleSelected() {
+  private toggleSelected(isAll?: 'show'|'hide') {
     this.removeDynophore();
-    const range = this.parserService.getShowingIndecies(this.range, this.isSelected, this.globalMin, this.globalMax);
-    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
-    this.showDynophore();
+    if (this.isSelected) {
+      const range = this.parserService.getShowingIndecies(this.range, this.isSelected, this.globalMin, this.globalMax);
+      this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
+      this.showDynophore();
+    } else if (isAll) {
+      const range = this.parserService.getShowingIndecies([this.globalMin, this.globalMax], isAll, this.globalMin, this.globalMax);
+      this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range);
+      this.showDynophore();
+    }
   }
 
   private playDynophore(currentFrame: number) {
     if (!currentFrame) return;
+    let range = [currentFrame];
     this.removeDynophore();
-    const range = [currentFrame, currentFrame + 1];
-    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, this.atomsCoordsList);
+    if (!this.isPrevHidden) {
+      range = [];
+      for (let i = this.playRange[0]; i <= currentFrame; i++) {
+        range.push(i);
+      }
+    }
+
+    const atomCoords = this.parserService.parseAtomCoord(this.structureComponent.structure.getAtomData());
+
+    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, atomCoords);
 
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
       this.shapeComponents[shapeId] = this.stageInstance.addComponentFromObject(this.dynophoreShapes[shapeId]);
@@ -161,26 +182,22 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private togglePlayer(playStatus: 'play'|'pause'|'stop') {
     if (playStatus === 'play') {
+      if (this.playRange[0] && this.playRange[0] !== this.globalMin) {
+        this.player.setParameters({
+          start: this.playRange[0]
+        });
+      }
+      if (this.playRange[1] && this.playRange[1] !== this.globalMax) {
+        this.player.setParameters({
+          end: this.playRange[1]
+        });
+      }
       this.player.play();
-      let curFrame = this.player.traj.currentFrame;
-      this.interval = interval(PLAYER_TIMEOUT/10).subscribe(() => {
-        if (this.player.traj.currentFrame !== curFrame) {
-          this.playDynophore(this.player.traj.currentFrame);
-          this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: this.player.traj.currentFrame}));
-          curFrame = this.player.traj.currentFrame;
-        }
-      });
     } else if (playStatus === 'pause') {
       this.player.pause();
-      if (this.interval)  {
-        this.interval.unsubscribe();
-      }
     } else if (playStatus === 'stop') {
       this.player.stop();
-      if (this.interval)  {
-        //this.store.dispatch(DisplayActions.setAll({all: 'show'}));
-        this.interval.unsubscribe();
-      }
+      this.toggleSelected('show');
     }
 
   }
@@ -190,8 +207,8 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
       if (item.type === 'structure') {
         const trajectoryElement = item.trajList[0];
         this.player = new NGL.TrajectoryPlayer(trajectoryElement.trajectory, {
-          start: 0,
-          end: 100,
+          start: this.globalMin,
+          end: this.globalMax,
           step: 1,
           timeout: PLAYER_TIMEOUT,
           interpolateType: 'spline',
@@ -199,7 +216,6 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
           mode: 'loop',
           direction: 'forward'
         });
-        //player.play();
       }
     });
   }
@@ -213,9 +229,9 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dynophoreShapes = this.parserService.dynophoreDrawing(this.dynophore);
       }
       if (isAll == 'show') {
-        this.showDynophore();
+        this.toggleSelected('show');
       } else if (isAll == 'hide') {
-        this.removeDynophore();
+        this.toggleSelected('hide');
       }
     });
     this.subs.sink = this.isDisplaySelected$.subscribe(isSelected => {
@@ -247,5 +263,34 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     this.subs.sink = this.currentFrame$.subscribe(currentFrame => {
       this.currentFrame = currentFrame;
     });
+    this.subs.sink = this.hidePast$.subscribe(state => {
+      this.isPrevHidden = state;
+    });
+    this.subs.sink = this.playRange$.subscribe(state => {
+      this.playRange = state || [this.globalMin, this.globalMax];
+    });
+  }
+
+  private frameChangedListener(frame: any) {
+    if (frame < 0) {
+      return;
+    }
+    this.playDynophore(frame);
+    this.store.dispatch(PlayerActions.setCurrentFrame({currentFrame: frame}));
+  }
+
+  private stageClicked(clicked: any) {
+    if (clicked?.picker?.shape?.name) {
+      this.store.dispatch(SelectionActions.setSelected({ selected: this.parserService.getFeatureCloudInfo(clicked?.picker?.shape?.name) }));
+    } else {
+      this.store.dispatch(SelectionActions.removeSelected());
+    }
+  }
+
+  private clearStage(isCustom?: boolean) {
+    if (isCustom) {
+      this.parserService.clearFeatureClouds();
+      this.stageInstance.removeAllComponents();
+    }
   }
 }

@@ -1,6 +1,24 @@
 import { Vector3, Color } from 'three';
-import { AdditionalPointModel } from './additional-point.model';
+import { AdditionalPointModel, IAdditionalPoint } from './additional-point.model';
 
+export interface IFeatureCloud {
+  id: string;
+  name: string;
+  featureColor: Color;
+  featureId: string;
+  optional: boolean;
+  disabled: boolean;
+  weight: number;
+  involvedAtomSerials: number[];
+  position: Vector3;
+  additionalPoints: IAdditionalPoint[];
+  elementName?: string|null;
+  minima?: Vector3;
+  maxima?: Vector3;
+  x: number;
+  y: number;
+  z: number;
+};
 
 export class FeatureCloudModel {
   id: string = '';
@@ -14,6 +32,8 @@ export class FeatureCloudModel {
   position: Vector3 = new Vector3(0, 0, 0);
   additionalPoints: AdditionalPointModel[] = [];
   frameIndecies: number[] = [];
+  elementName?: string|null;
+  frameIndeciesDict?: any;
   x: number = 0.0;
   y: number = 0.0;
   z: number = 0.0;
@@ -37,10 +57,22 @@ export class FeatureCloudModel {
         this.additionalPoints.push(point);
         if (this.frameIndecies.indexOf(point.frameIndex) < 0) {
           this.frameIndecies.push(point.frameIndex);
+          this.frameIndeciesDict = true;
         }
       }
     });
     this.frameIndecies.sort((n1,n2) => n1 - n2);
+  }
+
+  set nglName(name: string|null) {
+    this.elementName = name;
+  }
+
+  get nglName(): string|null {
+    if (!this.elementName){
+      return null;
+    }
+    return this.elementName;
   }
 
   renderPosition(pos:any): Vector3 {

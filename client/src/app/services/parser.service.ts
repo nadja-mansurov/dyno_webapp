@@ -1,23 +1,26 @@
 
 import { Injectable } from '@angular/core';
 import { XmlParser } from '@angular/compiler';
-import { FeatureCloudModel } from '../models/feature-cloud.model';
-import { DynophoreModel } from '../models/dynophore.model';
-import { DynophoreAtomModel } from '../models/dynophore-atom.model';
-import { Vector3 } from 'three';
-import { AdditionalPointModel } from '../models/additional-point.model';
-
-import { NGL } from '@/app/ngl.const';
+import * as tinycolor from 'tinycolor2';
+import { Vector3, Color } from 'three';
 import { Store } from '@ngrx/store';
-import { AppState } from '../reducers';
-import { FilesActions } from '../actions/action-types';
+import { NGL } from '@/app/const/ngl.const';
+
+import { FeatureCloudModel } from '@/app/models/feature-cloud.model';
+import { DynophoreModel } from '@/app/models/dynophore.model';
+import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
+import { AdditionalPointModel } from '@/app/models/additional-point.model';
+
+import { AppState } from '@/app/reducers';
+import { FilesActions } from '@/app/actions/action-types';
+import { ISelectionState } from '@/app/reducers/interfaces';
 
 @Injectable({
   providedIn: 'any'
 })
 export class ParserService {
   private xmlParser: XmlParser = new XmlParser();
-
+  private featureClouds: any = {};
 
   constructor(
     private store: Store<AppState>
@@ -62,7 +65,6 @@ export class ParserService {
 
   getShowingIndecies(defRange: number[], selectedType: 'hide'|'show'|null, globalMin: number, globalMax: number) {
     let range: number[] = [];
-    console.log(defRange, selectedType, globalMin, globalMax);
     if (selectedType === 'show') {
       for (let i = defRange[0]; i <= defRange[1]; i++) {
         range.push(i);
@@ -83,7 +85,7 @@ export class ParserService {
     let shapes: any = {};
     let min = 1000000; // magic number
     let max = 0;
-    dynophore.featureClouds.map((featureCloud: any) => {
+    dynophore.featureClouds.map((featureCloud: FeatureCloudModel) => {
       let shape = new NGL.Shape(featureCloud.featureId);
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         if (item.frameIndex > max) {
@@ -94,8 +96,19 @@ export class ParserService {
         }
         item.setVisibility();
         if (!item.hidden) {
-          shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
+          shape.addSphere(item.position,
+              featureCloud.featureColor,
+              item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
+
+        this.featureClouds[shape.name] = {
+          name: featureCloud.name,
+          id: featureCloud.id,
+          involvedAtomSerials: featureCloud.involvedAtomSerials,
+          frameIndecies: featureCloud.frameIndecies,
+          frameIndeciesDict: featureCloud.frameIndeciesDict
+        } as ISelectionState;
+
       });
       shapes[featureCloud.featureId] = shape;
     });
@@ -106,7 +119,21 @@ export class ParserService {
     return shapes;
   }
 
-  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], atomsCoordsList?: DynophoreAtomModel[]) {
+  parseAtomCoord(atomData: any) {
+    const atomIndicies = atomData.index;
+    const atomPositions = atomData.position;
+
+    let res: any = {};
+    let i = 0;
+
+    atomIndicies.map((item: any) => {
+      res[item] = new Vector3(atomPositions[i], atomPositions[i+1], atomPositions[i+2]);
+      i = i + 3;
+    });
+    return res;
+  }
+
+  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], atomsCoordsList?: any) {
     let shapes: any = {};
     dynophore.featureClouds.map((featureCloud: any) => {
       let shape = new NGL.Shape(featureCloud.featureId);
@@ -115,24 +142,20 @@ export class ParserService {
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
         item.setVisibility(visibleIndecies);
         if (!item.hidden) {
+          const tinyColor = '#' + tinycolor(featureCloud.featureColor.getHexString()).darken(25).toHex();
+          const cloudColor = item.opacity && atomsCoordsList ? new Color(tinyColor) : featureCloud.featureColor
+
           position = item.position;
-          shape.addSphere(item.position, featureCloud.featureColor, item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
+          shape.addSphere(item.position,
+            cloudColor,
+            item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
         }
       });
 
-      if (atomsCoordsList) {
+      if (atomsCoordsList && position) {
         featureCloud.involvedAtomSerials.map((item: number) => {
-          const atom = atomsCoordsList[item];
-          atom.addDynophore({
-            dynophoreId: dynophore.id,
-            featureCloudName: featureCloud.name,
-            featureCloudId: featureCloud.featureId,
-            id: featureCloud.id,
-            color: featureCloud.featureColor,
-            position: featureCloud.position
-          });
-          atom.setConnection();
-          shape.addArrow(position || atom.position1, atom.position2, atom.color, 0.05, `${atom.label}`);
+          const atomPosition = atomsCoordsList[item];
+          shape.addArrow(position, atomPosition, featureCloud.featureColor, 0.05, `${featureCloud.name}`);
         });
       }
       shapes[featureCloud.featureId] = shape;
@@ -145,6 +168,14 @@ export class ParserService {
 
   }
 
+  getFeatureCloudInfo(name: string) {
+    if (!this.featureClouds[name]) return null;
+    return this.featureClouds[name];
+  }
+
+  clearFeatureClouds() {
+    this.featureClouds = {};
+  }
 
 };
 
