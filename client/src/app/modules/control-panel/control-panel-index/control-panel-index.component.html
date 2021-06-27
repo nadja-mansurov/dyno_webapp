@@ -39,8 +39,11 @@
               type="button"
               class="btn btn-secondary btn-sm width-100"
               (click)="removeAll()"
-              title="Clear All!">
-              <i class="bi bi-erase-fill"></i>&nbsp;<span>Remove files (back to default)</span>
+              title="Clear All!"
+            >
+              <i class="bi bi-erase-fill"></i>&nbsp;<span
+                >Remove files (back to default)</span
+              >
             </button>
           </div>
         </div>
@@ -179,7 +182,7 @@
           type="checkbox"
           value=""
           id="selectedFrames"
-          (change)="playSelected = !playSelected"
+          (change)="setPlayOnly()"
         />
         <label class="form-check-label" for="selectedFrames">
           Play only...
@@ -204,6 +207,27 @@
             <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="logical-container">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="form-check">
+          <input
+          class="form-check-input"
+          type="checkbox"
+          id="helpShow"
+            (change)="helpShow = !helpShow"
+          />
+          <label class="form-check-label" for="helpShow">
+            Show help
+          </label>
+          <div class="hideshow_container hidden" *ngIf="helpShow">
+            <dyno-help-index></dyno-help-index>
+          </div>
       </div>
     </div>
   </div>
