@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FilesService } from '@/app/services/files.service';
+import { SubSink } from 'subsink';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
+import { FILE_TYPES } from '@/app/const/fileTypes.const';
 import { AppState } from '@/app/reducers';
-import { DisplayActions, PlayerActions } from '@/app/actions/action-types';
+import { DisplayActions, PlayerActions, FilesActions } from '@/app/actions/action-types';
+
 import { isDisplayAll } from '@/app/selectors/display.selector';
-import { SubSink } from 'subsink';
 import { playSelector, hidePastSelector, currentFrameSelector } from '@/app/selectors/play.selector';
+import { isReadyToDraw } from '@/app/selectors/files.selector';
+
+
 
 @Component({
   selector: 'dyno-control-panel-index',
@@ -15,6 +20,7 @@ import { playSelector, hidePastSelector, currentFrameSelector } from '@/app/sele
   styleUrls: ['./control-panel-index.component.scss']
 })
 export class ControlPanelIndexComponent implements OnInit {
+  public helpShow: boolean = false;
   public allowToDraw: boolean = false;
   public playStatus: 'stop'|'pause'|'play' = 'stop';
 
@@ -33,6 +39,9 @@ export class ControlPanelIndexComponent implements OnInit {
   public playStatus$: Observable<'stop'|'pause'|'play'>;
   public hidePastStatus$: Observable<boolean>;
   public currentFrame$: Observable<number|null>;
+  public fileTypes: Array<"pdb" | "pml" | "dcd"> = [];
+
+  public isReadyToDraw$: Observable<boolean>
 
   private subs = new SubSink();
 
@@ -44,6 +53,7 @@ export class ControlPanelIndexComponent implements OnInit {
     this.playStatus$ = this.store.pipe(select(playSelector));
     this.hidePastStatus$ = this.store.pipe(select(hidePastSelector));
     this.currentFrame$ = this.store.pipe(select(currentFrameSelector));
+    this.isReadyToDraw$ = this.store.pipe(select(isReadyToDraw));
   }
 
   ngOnInit(): void {
@@ -59,14 +69,35 @@ export class ControlPanelIndexComponent implements OnInit {
       this.hidePast = status;
     });
 
+    Object.keys(FILE_TYPES).map(item => {
+      this.fileTypes.push(<"pdb" | "pml" | "dcd">item);
+    });
   }
 
   public setCloudVisibility(visibility: 'hide'|'show') {
     this.store.dispatch(DisplayActions.setAll({ all: visibility }));
   }
 
-  public draw() {
+  public setFile($event: any, type: 'pdb' | 'pml' | 'dcd') {
+    this.store.dispatch(FilesActions.setFile({
+      blob: $event,
+      fileType: <'pdb' | 'pml' | 'dcd'>type
+    }));
+  }
 
+  public removeAll() {
+    this.fileTypes = [];
+    this.store.dispatch(FilesActions.removeFiles());
+    // TODO: clear without rerendering component
+    setTimeout(() => {
+      Object.keys(FILE_TYPES).map(item => {
+        this.fileTypes.push(<"pdb" | "pml" | "dcd">item);
+      });
+    }, 100);
+  }
+
+  public draw() {
+    this._filesService.updateFiles(true);
   }
 
   public play(status: 'play'|'pause'|'stop') {
@@ -76,10 +107,12 @@ export class ControlPanelIndexComponent implements OnInit {
   public setFilesOption() {
     this.uploadCustom = !this.uploadCustom;
     this._filesService.setCustom(this.uploadCustom);
+    if (!this.uploadCustom) {
+      this._filesService.updateFiles(false);
+    }
   }
 
   public setHideShowRange($event: any) {
-    console.log('setHideShowRange', $event);
     if ($event) {
       this.showRange = [$event.from, $event.to];
     } else {
@@ -101,16 +134,22 @@ export class ControlPanelIndexComponent implements OnInit {
   }
 
   public setPlayedRange() {
-    console.log('setPlayedRange');
     this.store.dispatch(PlayerActions.setRange({ range: this.playRange }));
   }
 
   public setPlayRange($event: any) {
-    console.log('setPlayRange', $event);
     if ($event) {
       this.playRange = [$event.from, $event.to];
     } else {
       this.playRange = [];
+    }
+  }
+
+  public setPlayOnly() {
+    this.playSelected = !this.playSelected;
+    if (!this.playSelected) {
+      this.playRange = [];
+      this.setPlayedRange();
     }
   }
 }

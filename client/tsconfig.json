@@ -29,7 +29,8 @@
       "@models/*": ["src/app/models/*"],
 
       "@control-panel/*": ["src/app/modules/control-panel/*"],
-      "@ngl-viewer/*": ["src/app/modules/ngl-viewer/*"]
+      "@ngl-viewer/*": ["src/app/modules/ngl-viewer/*"],
+      "@ngl-help/*": ["src/app/modules/ngl-help/*"]
     }
 
   },

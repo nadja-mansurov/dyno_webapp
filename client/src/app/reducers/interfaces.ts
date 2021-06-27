@@ -24,5 +24,9 @@ export interface IDisplayState {
 }
 
 export interface ISelectionState {
-  feature: FeatureCloudModel|null
+  frameIndecies: Array<number>,
+  id: string|null,
+  involvedAtomSerials: Array<number>,
+  name: string|null,
+  frameIndeciesDict: any
 }
