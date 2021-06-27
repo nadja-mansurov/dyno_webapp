@@ -1,0 +1,14 @@
+
+<div class="logical-container">
+
+  <ng-container *ngFor="let block of content">
+    <h6>{{block.name}}</h6>
+    <ul>
+      <li *ngFor="let text of block.text">
+        {{text.text}} <small *ngIf="text.hasIssue" class="link-warning">{{text.issue}}</small>
+      </li>
+    </ul>
+  </ng-container>
+
+</div>
+
