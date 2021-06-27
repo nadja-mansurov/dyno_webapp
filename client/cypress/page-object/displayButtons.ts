@@ -32,6 +32,11 @@ export class DisplayButtons {
         return cy.get('button[title="Hide all clouds"]');
     }
 
+    // tslint:disable-next-line:typedef
+    selectMenu() {
+        return cy.get('.form-select');
+    }
+
      // tslint:disable-next-line:typedef
      showAllClouds() {
         return cy.get('button[title="Show all clouds"]');
@@ -67,11 +72,11 @@ export class DisplayButtons {
     }
 
     // tslint:disable-next-line:typedef
-    selectMenu(Show: string , Hide: string) {
-        cy.get('.form-select')
+    selectMenuAction(Show: string , Hide: string) {
+        this.selectMenu()
         .select(Show)
         .should('have.value', 'show');
-        cy.get('.form-select')
+        this.selectMenu()
         .select(Hide)
         .should('have.value', 'hide');
     }

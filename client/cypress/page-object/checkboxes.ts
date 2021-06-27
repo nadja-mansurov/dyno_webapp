@@ -1,24 +1,37 @@
 /// <reference types="Cypress" />
 
 export class Checkboxes {
+    // tslint:disable-next-line:typedef
+    inputCustomFiles() {
+        return cy.get('input#customFiles');
+    }
 
     // tslint:disable-next-line:typedef
+    hidePreviousFramesCheckbox() {
+        return cy.get('#hidePrevFrames');
+    }
+
+    // tslint:disable-next-line:typedef
+    playOnlyCheckbox() {
+       return cy.get('#selectedFrames');
+    }
+    // tslint:disable-next-line:typedef
     uploadCustomFiles() {
-        cy.get('input#customFiles')
+        this.inputCustomFiles()
         .check()
         .should('be.checked');
     }
 
     // tslint:disable-next-line:typedef
     hidePreviousFrames() {
-        cy.get('#hidePrevFrames')
+        this.hidePreviousFramesCheckbox()
         .check()
         .should('be.checked');
     }
 
     // tslint:disable-next-line:typedef
     playOnly() {
-        cy.get('#selectedFrames')
+        this.playOnlyCheckbox()
         .check()
         .should('be.checked');
     }

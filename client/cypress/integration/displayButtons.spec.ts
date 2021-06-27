@@ -16,7 +16,7 @@ describe('Tests of display buttons', () => {
     });
 
     it('Should check the select menu', () => {
-        displayButtons.selectMenu('Show', 'Hide');
+        displayButtons.selectMenuAction('Show', 'Hide');
     });
 
     it.only('Should check the buttons Frame block', () => {
