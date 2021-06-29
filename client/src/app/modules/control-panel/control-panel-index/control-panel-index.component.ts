@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FilesService } from '@/app/services/files.service';
 import { SubSink } from 'subsink';
 import { Store, select } from '@ngrx/store';
@@ -19,7 +19,7 @@ import { isReadyToDraw } from '@/app/selectors/files.selector';
   templateUrl: './control-panel-index.component.html',
   styleUrls: ['./control-panel-index.component.scss']
 })
-export class ControlPanelIndexComponent implements OnInit {
+export class ControlPanelIndexComponent implements OnInit, OnDestroy {
   public helpShow: boolean = false;
   public allowToDraw: boolean = false;
   public playStatus: 'stop'|'pause'|'play' = 'stop';
@@ -57,7 +57,7 @@ export class ControlPanelIndexComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentFrame$.subscribe(currentFrame => {
+    this.subs.sink = this.currentFrame$.subscribe(currentFrame => {
       if (currentFrame || currentFrame === 0) {
         this.currentFrame = currentFrame.toString();
       } else {
@@ -65,13 +65,17 @@ export class ControlPanelIndexComponent implements OnInit {
       }
     });
 
-    this.hidePastStatus$.subscribe(status => {
+    this.subs.sink = this.hidePastStatus$.subscribe(status => {
       this.hidePast = status;
     });
 
     Object.keys(FILE_TYPES).map(item => {
       this.fileTypes.push(<"pdb" | "pml" | "dcd">item);
     });
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 
   public setCloudVisibility(visibility: 'hide'|'show') {
