@@ -120,7 +120,7 @@ export class DisplayButtons {
             cy.wrap(formControl).find('.form-control').eq(3).clear().type('3');
             this.play().click();
             this.setForPlay().click();
-            this.stop().click();
+            this.stop().click({force: true});
         });
     }
     // tslint:disable-next-line:typedef
@@ -133,7 +133,7 @@ export class DisplayButtons {
             cy.wrap(formControl).find('.form-control').eq(3).clear().type('100');
             this.play().click({force: true});
             this.setForPlay().click();
-            this.stop().click();
+            this.stop().click({force: true});
         });
     }
 

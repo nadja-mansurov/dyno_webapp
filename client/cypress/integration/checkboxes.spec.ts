@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 
 
-import { checkboxes } from '../page-object/checkboxes';
+import { checkboxes } from '@cypress/page-object/checkboxes';
 
 
 

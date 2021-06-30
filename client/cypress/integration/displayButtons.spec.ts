@@ -1,7 +1,7 @@
 /// <reference types="Cypress" />
 
 
-import { displayButtons } from '../page-object/displayButtons';
+import { displayButtons } from '@cypress/page-object/displayButtons';
 
 describe('Tests of display buttons', () => {
 

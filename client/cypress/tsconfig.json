@@ -3,5 +3,12 @@
   "include": [
     "../node_modules/cypress",
     "*/*.ts"
-  ]
+  ],
+  "compilerOptions": {
+    "baseUrl": "..",
+    "paths": {
+      "@cypress/*": ["cypress/*"],
+      "@page_object/*":["cypress/page-object/*"]
+    }
+  }
 }
