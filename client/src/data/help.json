@@ -1,0 +1,73 @@
+{
+  "header": "Help",
+  "content": [
+    {
+      "name": "Upload block",
+      "text": [
+        {
+          "text": "Set 'Upload custom files'",
+          "hasIssue": false
+        },
+        {
+          "text": "All three file-boxes to be selected",
+          "hasIssue": false
+        },
+        {
+          "text": "Click 'Redraw all!'",
+          "hasIssue": false
+        },
+        {
+          "text": "If you want to back to default, click 'Remove files'",
+          "hasIssue": false
+        }
+      ]
+    },
+    {
+      "name": "Hide/Show all clouds block",
+      "text": [
+        {
+          "text": "To hide all clouds, click button 'Hide all clouds'",
+          "hasIssue": false
+        },
+        {
+          "text": "To show all clouds, click button 'Show all clouds'",
+          "hasIssue": true,
+          "issue": "KNOWN BUG: if you set frame numbers using selector, you may need to click 'Hide all clouds' and only then 'Show all cloud'"
+        },
+        {
+          "text": "Select 'Hide' or 'Show' and numbers of frames, then click 'Set' - only selected frames for each clouds will be displayed",
+          "hasIssue": false
+        }
+      ]
+    },
+    {
+      "name": "Play block",
+      "text": [
+        {
+          "text": "Click play to play all frames. Previous frames are darken than current for each cloud",
+          "hasIssue": false
+        },
+        {
+          "text": "Pause means that you have freeze current frame",
+          "hasIssue": false
+        },
+        {
+          "text": "Stop means that viewer goes back the first frame",
+          "hasIssue": false
+        },
+        {
+          "text": "Set checkbox 'Hide previous frames' to display only current frame",
+          "hasIssue": false
+        },
+        {
+          "text": "'Play only...' opens block where you can set frames to play",
+          "hasIssue": false
+        },
+        {
+          "text": "Write frames to play, click 'Set' and then 'Play'",
+          "hasIssue": false
+        }
+      ]
+    }
+  ]
+}

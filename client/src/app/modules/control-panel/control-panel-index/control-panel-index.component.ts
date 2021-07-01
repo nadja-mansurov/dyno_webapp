@@ -20,6 +20,7 @@ import { isReadyToDraw } from '@/app/selectors/files.selector';
   styleUrls: ['./control-panel-index.component.scss']
 })
 export class ControlPanelIndexComponent implements OnInit {
+  public helpShow: boolean = false;
   public allowToDraw: boolean = false;
   public playStatus: 'stop'|'pause'|'play' = 'stop';
 
@@ -141,6 +142,14 @@ export class ControlPanelIndexComponent implements OnInit {
       this.playRange = [$event.from, $event.to];
     } else {
       this.playRange = [];
+    }
+  }
+
+  public setPlayOnly() {
+    this.playSelected = !this.playSelected;
+    if (!this.playSelected) {
+      this.playRange = [];
+      this.setPlayedRange();
     }
   }
 }
