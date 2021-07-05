@@ -15,14 +15,7 @@
           run: npm install -g bats
         - name: Software version
           run: bats -v 
-    unit_test:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2    
-        - uses: colbyhill21/angular-full-ci/@v1.0
-          with:
-            working_directory: client
-            testcommand: test
+    
                 
         
 
