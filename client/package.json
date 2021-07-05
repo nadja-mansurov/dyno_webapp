@@ -10,7 +10,7 @@
     "cy:run": "cypress run --headless --browser chrome",
     "cypress:run": "cypress run",
     "cypress:open": "cypress open",
-    "test": "npx jest",
+    "test": "jest",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "deploy:clear": "rm -rf ../../../nadja-mansurov.github.io/dynophores_webclient",

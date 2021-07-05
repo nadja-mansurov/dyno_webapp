@@ -56,7 +56,7 @@ Testing is finished if the following conditions are completed:
 
 
 
-#### Risk Assessment: ####
+#### Risk Assessment ####
 
 
 
