@@ -2,11 +2,8 @@
   name: CI
 
   on: [push]
-  
-
   jobs:
     test:
-      name: Running Unit Tests
       runs-on: ubuntu-latest
 
       steps:
@@ -16,9 +13,9 @@
           with:
             node-version: '14'
         - name: Install npm
-          run: npm install
-        - name: Unit Test
-          run: npm test     
+          run: npm install -g bats
+        - name: Software version
+          run: bats -v     
         
 
 
