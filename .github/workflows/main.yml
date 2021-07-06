@@ -6,8 +6,6 @@
       branches:
         - "feature/#1_add_cypress"
 
-
-
   jobs:
     unit_test:
       runs-on: ubuntu-latest
@@ -24,23 +22,23 @@
           working-directory: ./client
           run: npm test 
 
-    cypress:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - uses: bahmutov/npm-install@v1
-          with:
-            working-directory: ./client
-        - name: Start server in the background
-          working-directory: ./client
-          run: npm start
+    #cypress:
+      #runs-on: ubuntu-latest
+      #steps:
+    #  - uses: actions/checkout@v2
+    #    - uses: bahmutov/npm-install@v1
+    #      with:
+    #        working-directory: ./client
+    #    - name: Start server in the background
+    #      working-directory: ./client
+    #      run: npm start
 
-        - uses: cypress-io/github-action@v2
-          with:
-            working-directory: ./client
-        - name: Cypress
-          working-directory: ./client
-          run: npm cypress run
+    #    - uses: cypress-io/github-action@v2
+    #      with:
+    #        working-directory: ./client
+    #    - name: Cypress
+    #      working-directory: ./client
+    #      run: npm cypress run
             
               
                           
