@@ -25,19 +25,21 @@ export class FileUploadComponent implements OnInit {
       this.error = true;
       return;
     }
+    this.title = this.type.toUpperCase() + ' file';
     this.error = false;
 
     if (this.type === FILE_TYPES.pdb) {
+      this.title = 'Protein Data Bank (*.pdb)';
       this.acceptedTypes = '.pdb,.PDB';
     }
     if (this.type === FILE_TYPES.pml) {
+      this.title = 'LigandScout (*.pml)';
       this.acceptedTypes = '.pml,.PML';
     }
     if (this.type === FILE_TYPES.dcd) {
+      this.title = 'Trajectory (*.dcd)';
       this.acceptedTypes = '.dcd,.DCD';
     }
-
-    this.title = this.type.toUpperCase() + ' file';
   }
 
   onFileSelected($event: any) {

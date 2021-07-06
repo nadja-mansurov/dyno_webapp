@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FilesService } from '@/app/services/files.service';
 import { SubSink } from 'subsink';
 import { Store, select } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import { FILE_TYPES } from '@/app/const/fileTypes.const';
 import { AppState } from '@/app/reducers';
@@ -11,6 +11,7 @@ import { DisplayActions, PlayerActions, FilesActions } from '@/app/actions/actio
 import { isDisplayAll } from '@/app/selectors/display.selector';
 import { playSelector, hidePastSelector, currentFrameSelector } from '@/app/selectors/play.selector';
 import { isReadyToDraw } from '@/app/selectors/files.selector';
+import { tabSelected } from '@/app/selectors/tab.selector';
 
 
 
@@ -33,6 +34,7 @@ export class ControlPanelIndexComponent implements OnInit {
   public playRange: number[]= [];
   public showRange: number[]= [];
 
+  public tabSelected$: Observable<'ngl'|'chart'>;
   public displayAll$: Observable<'show'|'hide'|null>;
 
   public playStatus$: Observable<'stop'|'pause'|'play'>;
@@ -44,6 +46,7 @@ export class ControlPanelIndexComponent implements OnInit {
 
   private subs = new SubSink();
 
+
   constructor(
     private store: Store<AppState>,
     private _filesService: FilesService
@@ -53,6 +56,7 @@ export class ControlPanelIndexComponent implements OnInit {
     this.hidePastStatus$ = this.store.pipe(select(hidePastSelector));
     this.currentFrame$ = this.store.pipe(select(currentFrameSelector));
     this.isReadyToDraw$ = this.store.pipe(select(isReadyToDraw));
+    this.tabSelected$ = this.store.pipe(select(tabSelected));
   }
 
   ngOnInit(): void {

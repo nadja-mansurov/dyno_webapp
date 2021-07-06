@@ -1,5 +1,3 @@
-import { FeatureCloudModel } from '@models/feature-cloud.model';
-
 
 export interface IFileState {
   pdbFile: any,
@@ -29,4 +27,8 @@ export interface ISelectionState {
   involvedAtomSerials: Array<number>,
   name: string|null,
   frameIndeciesDict: any
+}
+
+export interface ITabState {
+  tab: 'ngl'|'chart'
 }

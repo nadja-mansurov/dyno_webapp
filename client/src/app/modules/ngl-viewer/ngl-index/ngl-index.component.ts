@@ -14,6 +14,7 @@ import { globalMax, globalMin } from '@/app/selectors/files.selector';
 import { playSelector, currentFrameSelector, hidePastSelector, rangeSelector } from '@/app/selectors/play.selector';
 import { PlayerActions, DisplayActions, SelectionActions } from '@/app/actions/action-types';
 import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
+import { TIMEOUT } from 'dns';
 
 
 const PLAYER_TIMEOUT = 500;
@@ -92,7 +93,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
       })
       this.storeSubscription();
 
-    });
+    }, PLAYER_TIMEOUT);
   }
 
   private initPdbDcd(isCustom?: boolean) {
