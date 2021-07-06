@@ -28,10 +28,15 @@
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-        - name: Install dependencies 
+        - uses: bahmutov/npm-install@v1
+          with:
+            working-directory: ./client
+        - name: Start server in the background
+          run: npm start &
+          
         - uses: cypress-io/github-action@v2
           with:
-            working-directory: ./client 
+            working-directory: ./client
         - name: Cypress
           working-directory: ./client
           run: npm cypress run
