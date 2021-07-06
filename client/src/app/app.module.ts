@@ -9,6 +9,7 @@ import { AppRoutingModule } from '@/app/app-routing.module';
 import { AppComponent } from '@/app/app.component';
 import { NglViewerModule } from '@ngl-viewer/ngl-viewer.module';
 import { ControlPanelModule } from '@control-panel/control-panel.module';
+import { FramesViewerModule } from '@frames-viewer/frames-viewer.module';
 import { HomeComponent } from '@/app/views/home/home.component';
 
 import { metaReducers, reducers } from '@/app/reducers';
@@ -25,6 +26,7 @@ import { metaReducers, reducers } from '@/app/reducers';
     AppRoutingModule,
     NglViewerModule,
     ControlPanelModule,
+    FramesViewerModule,
     StoreModule.forRoot(reducers, {
       metaReducers,
       runtimeChecks : {

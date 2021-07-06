@@ -30,6 +30,7 @@
 
       "@control-panel/*": ["src/app/modules/control-panel/*"],
       "@ngl-viewer/*": ["src/app/modules/ngl-viewer/*"],
+      "@frames-viewer/*": ["src/app/modules/frames-viewer/*"],
       "@ngl-help/*": ["src/app/modules/ngl-help/*"]
     }
 
