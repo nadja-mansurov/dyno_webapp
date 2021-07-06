@@ -28,11 +28,10 @@
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
-        - name: Install dependencies
-          working-directory: ./client 
+        - name: Install dependencies 
         - uses: cypress-io/github-action@v2
           with:
-            browser: chrome
+            working-directory: ./client 
         - name: Cypress
           working-directory: ./client
           run: npm cypress run
