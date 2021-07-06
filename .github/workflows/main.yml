@@ -28,30 +28,9 @@
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2 
-        - name: Setup node   
-          uses: actions/setup-node@v2
+        - name: Cypress run
+          working-directory: ./client
+        - uses: cypress-io/github-action@v2
           with:
-            node-version: '14'
-        - name: Install npm
-          working-directory: ./client
-          run: npm ci
-        - name: Run server localhost:4200
-          working-directory: ./client
-          run: npm start 
-        - name: Cypress tests on the chrome browser
-          working-directory: ./client
-          run: npx cypress run --headless --browser chrome               
-                
-        
-
-
-
-
-
-
-
-        
-
-   
-      
-        
+            browser: chrome              
+    
