@@ -1,0 +1,59 @@
+
+  name: Unit_Test
+
+  on: 
+    push: 
+      branches:
+        - "feature/#1_add_cypress"
+
+
+
+  unit:
+    unit_test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2 
+        - name: Setup node   
+          uses: actions/setup-node@v2
+          with:
+            node-version: '14'
+        - name: Install npm
+          working-directory: ./client
+          run: npm ci
+        - name: Unit test
+          working-directory: ./client
+          run: npm test 
+
+
+  cypress:
+    cypress_test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2 
+        - name: Setup node   
+          uses: actions/setup-node@v2
+          with:
+            node-version: '14'
+        - name: Install npm
+          working-directory: ./client
+          run: npm ci
+        - name: Run server localhost:4200
+          working-directory: ./client
+          run: npm start 
+        - name: Cypress tests
+          working-directory: ./client
+          run: npx cypress run     
+                
+        
+
+
+
+
+
+
+
+        
+
+   
+      
+        
