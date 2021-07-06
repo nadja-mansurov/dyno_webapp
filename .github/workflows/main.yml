@@ -1,7 +1,13 @@
 
   name: CI
 
-  on: [push]
+  on: 
+    push: 
+      branches:
+        - "feature/#1_add_cypress"
+
+
+        
   jobs:
     test:
       runs-on: ubuntu-latest
@@ -12,9 +18,9 @@
           with:
             node-version: '14'
         - name: Install npm
-          run: npm install -g bats
-        - name: Software version
-          run: bats -v 
+          run: npm ci
+        - name: Unit test
+          run: npm test 
     
                 
         
