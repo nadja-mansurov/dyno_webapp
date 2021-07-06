@@ -27,7 +27,9 @@
     cypress:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v2 
+        - uses: actions/checkout@v2
+        - name: Install dependencies
+          working-directory: ./client 
         - uses: cypress-io/github-action@v2
           with:
             browser: chrome
