@@ -185,7 +185,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
     if (playStatus === 'play') {
       if (this.playRange[0] && this.playRange[0] !== this.globalMin) {
         this.player.setParameters({
-          start: this.playRange[0]
+          start: this.playRange[0] - 1
         });
       }
       if (this.playRange[1] && this.playRange[1] !== this.globalMax) {
@@ -268,7 +268,11 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isPrevHidden = state;
     });
     this.subs.sink = this.playRange$.subscribe(state => {
-      this.playRange = state || [this.globalMin, this.globalMax];
+      this.playRange = state && state.length > 0 ? state : [this.globalMin, this.globalMax];
+      if (this.player) {
+        this.togglePlayer('stop');
+        this.store.dispatch(PlayerActions.setPlay({ playStatus: 'stop' }));
+      }
     });
   }
 

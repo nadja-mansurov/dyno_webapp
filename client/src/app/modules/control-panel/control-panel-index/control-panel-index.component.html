@@ -39,8 +39,11 @@
               type="button"
               class="btn btn-secondary btn-sm width-100"
               (click)="removeAll()"
-              title="Clear All!">
-              <i class="bi bi-erase-fill"></i>&nbsp;<span>Remove files (back to default)</span>
+              title="Clear All!"
+            >
+              <i class="bi bi-erase-fill"></i>&nbsp;<span
+                >Remove files (back to default)</span
+              >
             </button>
           </div>
         </div>
@@ -48,178 +51,202 @@
     </div>
   </div>
 </div>
-<ng-container *ngIf="(tabSelected$ | async) === 'ngl'; then nglViewer; else framesViewer">
-
+<ng-container
+  *ngIf="(tabSelected$ | async) === 'ngl'; then nglViewer; else framesViewer"
+>
 </ng-container>
 
 <ng-template #nglViewer>
-    <div class="logical-container">
+  <div class="logical-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div
+          class="btn-group btn-group-sm width-100"
+          role="group"
+          aria-label="Zoom"
+        >
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="setCloudVisibility('hide')"
+            title="Hide all clouds"
+            [disabled]="(displayAll$ | async) == 'hide'"
+          >
+            <i class="bi bi-cloud-minus-fill"></i>&nbsp;<span
+              >Hide&nbsp;all&nbsp;clouds</span
+            >
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="setCloudVisibility('show')"
+            title="Show all clouds"
+            [disabled]="(displayAll$ | async) == 'show'"
+          >
+            <i class="bi bi-cloud-plus-fill"></i>&nbsp;<span
+              >Show&nbsp;all&nbsp;clouds</span
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4">
+        <select
+          class="form-select form-select-sm"
+          [ngModel]="rangeType"
+          (ngModelChange)="setHideShowType($event)"
+        >
+          <option selected [value]="null">-select-</option>
+          <option [value]="'show'">Show</option>
+          <option [value]="'hide'">Hide</option>
+        </select>
+      </div>
+      <div class="col-sm-8">
+        <dyno-range (range)="setHideShowRange($event)"></dyno-range>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <button
+          type="button"
+          class="btn btn-sm btn-outline-secondary width-100"
+          (click)="setSelectedRange()"
+          title="Set selected"
+          [disabled]="!rangeType || !(showRange && showRange.length > 0)"
+        >
+          <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="logical-container">
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="btn-group btn-group-sm  width-100" role="group">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary"
+            (click)="play('play')"
+            [disabled]="(playStatus$ | async) === 'play'"
+            title="Play"
+          >
+            <i class="bi bi-play-fill"></i>&nbsp;<span>Play</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            (click)="play('pause')"
+            [disabled]="(playStatus$ | async) === 'pause'"
+            title="Pause"
+          >
+            <i class="bi bi-pause-fill"></i>&nbsp;<span>Pause</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            (click)="play('stop')"
+            [disabled]="(playStatus$ | async) === 'stop'"
+            title="Stop"
+          >
+            <i class="bi bi-stop-fill"></i>&nbsp;<span>Stop</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <small
+          >Frame No: <strong>{{ currentFrame }}</strong></small
+        >
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            (change)="setHidePast()"
+            id="hidePrevFrames"
+          />
+          <label class="form-check-label" for="hidePrevFrames">
+            Hide previous frames
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            value=""
+            id="selectedFrames"
+            (change)="playSelected = !playSelected"
+          />
+          <label class="form-check-label" for="selectedFrames">
+            Play only...
+          </label>
+        </div>
+      </div>
+      <div class="hideshow_container hidden" *ngIf="playSelected">
         <div class="row">
           <div class="col-sm-12">
-            <div
-              class="btn-group btn-group-sm width-100"
-              role="group"
-              aria-label="Zoom"
-            >
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                (click)="setCloudVisibility('hide')"
-                title="Hide all clouds"
-                [disabled]="(displayAll$ | async) == 'hide'"
-              >
-                <i class="bi bi-cloud-minus-fill"></i>&nbsp;<span
-                  >Hide&nbsp;all&nbsp;clouds</span
-                >
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary"
-                (click)="setCloudVisibility('show')"
-                title="Show all clouds"
-                [disabled]="(displayAll$ | async) == 'show'"
-              >
-                <i class="bi bi-cloud-plus-fill"></i>&nbsp;<span
-                  >Show&nbsp;all&nbsp;clouds</span
-                >
-              </button>
-            </div>
+            <dyno-range (range)="setPlayRange($event)"></dyno-range>
           </div>
         </div>
-
-        <div class="row">
-          <div class="col-sm-4">
-            <select
-              class="form-select form-select-sm"
-              [ngModel]="rangeType"
-              (ngModelChange)="setHideShowType($event)"
-            >
-              <option selected [value]="null">-select-</option>
-              <option [value]="'show'">Show</option>
-              <option [value]="'hide'">Hide</option>
-            </select>
-          </div>
-          <div class="col-sm-8">
-            <dyno-range (range)="setHideShowRange($event)"></dyno-range>
-          </div>
-        </div>
-
         <div class="row">
           <div class="col-sm-12">
             <button
               type="button"
               class="btn btn-sm btn-outline-secondary width-100"
-              (click)="setSelectedRange()"
-              title="Set selected"
-              [disabled]="!rangeType || !(showRange && showRange.length > 0)"
+              (click)="setPlayedRange()"
+              title="Set for play"
+              [disabled]="!playSelected || !(playRange && playRange.length > 0)"
             >
               <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
             </button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="logical-container">
-        <div class="row">
-          <div class="col-sm-8">
-            <div class="btn-group btn-group-sm  width-100" role="group">
-              <button
-                type="button"
-                class="btn btn-sm btn-outline-primary"
-                (click)="play('play')"
-                [disabled]="(playStatus$ | async) === 'play'"
-                title="Play"
-              >
-                <i class="bi bi-play-fill"></i>&nbsp;<span>Play</span>
-              </button>
-              <button
-                type="button"
-                class="btn btn-sm btn-outline-secondary"
-                (click)="play('pause')"
-                [disabled]="(playStatus$ | async) === 'pause'"
-                title="Pause"
-              >
-                <i class="bi bi-pause-fill"></i>&nbsp;<span>Pause</span>
-              </button>
-              <button
-                type="button"
-                class="btn btn-sm btn-outline-secondary"
-                (click)="play('stop')"
-                [disabled]="(playStatus$ | async) === 'stop'"
-                title="Stop"
-              >
-                <i class="bi bi-stop-fill"></i>&nbsp;<span>Stop</span>
-              </button>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <small
-              >Frame No: <strong>{{ currentFrame }}</strong></small
-            >
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                (change)="setHidePast()"
-                id="hidePrevFrames"
-              />
-              <label class="form-check-label" for="hidePrevFrames">
-                Hide previous frames
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value=""
-                id="selectedFrames"
-                (change)="playSelected = !playSelected"
-              />
-              <label class="form-check-label" for="selectedFrames">
-                Play only...
-              </label>
-            </div>
-          </div>
-          <div class="hideshow_container hidden" *ngIf="playSelected">
-            <div class="row">
-              <div class="col-sm-12">
-                <dyno-range (range)="setPlayRange($event)"></dyno-range>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-secondary width-100"
-                  (click)="setPlayedRange()"
-                  title="Set for play"
-                  [disabled]="!playSelected || !(playRange && playRange.length > 0)"
-                >
-                  <i class="bi bi-arrow-right"></i>&nbsp;<span>Set</span>
-                </button>
-              </div>
-            </div>
+  <div class="logical-container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="helpShow"
+            (change)="helpShow = !helpShow"
+          />
+          <label class="form-check-label" for="helpShow">
+            Show help
+          </label>
+          <div class="hideshow_container hidden" *ngIf="helpShow">
+            <dyno-help-index></dyno-help-index>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 </ng-template>
 
 <ng-template #framesViewer>
-    <div class="logical-container">
-        <div class="row">
-          <div class="col-sm-8">
-            <button type="button" class="btn btn-outline-light" disabled="disabled">Download json</button>
-          </div>
+  <div class="logical-container">
+    <div class="row">
+      <div class="col-sm-8">
+        <button type="button" class="btn btn-outline-light" disabled="disabled">
+          Download json
+        </button>
       </div>
     </div>
+  </div>
 </ng-template>
