@@ -29,8 +29,10 @@
       steps:
         - uses: actions/checkout@v2 
         - name: Cypress run
-          working-directory: ./client
         - uses: cypress-io/github-action@v2
           with:
-            browser: chrome              
+            working-directory: ./client
+            browser: chrome
+              
+                          
     
