@@ -32,8 +32,8 @@
           with:
             working-directory: ./client
         - name: Start server in the background
-          run: npm start &
-          
+          run: npm start
+
         - uses: cypress-io/github-action@v2
           with:
             working-directory: ./client
