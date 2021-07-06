@@ -21,6 +21,7 @@
           working-directory: ./client
           run: npm ci
         - name: Unit test
+          working-directory: ./client
           run: npm test 
     
                 
