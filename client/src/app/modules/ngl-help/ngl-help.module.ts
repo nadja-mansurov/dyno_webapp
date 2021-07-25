@@ -3,16 +3,15 @@ import { CommonModule } from '@angular/common';
 import { HelpIndexComponent } from '@ngl-help/help-index/help-index.component';
 
 
-
 @NgModule({
   declarations: [
-    HelpIndexComponent
+    HelpIndexComponent,
   ],
   imports: [
-    CommonModule
+    CommonModule,
   ],
   exports: [
-    HelpIndexComponent
-  ]
+    HelpIndexComponent,
+  ],
 })
 export class NglHelpModule { }

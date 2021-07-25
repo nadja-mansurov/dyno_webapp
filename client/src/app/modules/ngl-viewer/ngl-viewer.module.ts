@@ -8,13 +8,13 @@ import { SelectedInfoComponent } from '@modules/ngl-viewer/selected-info/selecte
 @NgModule({
   declarations: [
     NglIndexComponent,
-    SelectedInfoComponent
+    SelectedInfoComponent,
   ],
   imports: [
-    CommonModule
+    CommonModule,
   ],
   exports: [
-    NglIndexComponent
-  ]
+    NglIndexComponent,
+  ],
 })
 export class NglViewerModule { }

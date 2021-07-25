@@ -1,9 +1,7 @@
 import {
   ActionReducer,
   ActionReducerMap,
-  createFeatureSelector,
-  createSelector,
-  MetaReducer
+  MetaReducer,
 } from '@ngrx/store';
 import { environment } from '@/environments/environment';
 
@@ -23,23 +21,26 @@ export interface AppState {
 }
 
 export const reducers: ActionReducerMap<AppState> = {
-    files: FilesReducer,
-    player: PlayerReducer,
-    display: DisplayReducer,
-    selection: SelectionReducer,
-    tab: TabReducer
+  files: FilesReducer,
+  player: PlayerReducer,
+  display: DisplayReducer,
+  selection: SelectionReducer,
+  tab: TabReducer,
 };
 
 export function logger(reducer:ActionReducer<any>)
     : ActionReducer<any> {
-    return (state, action) => {
-        //console.log("state before: ", state);
-        //console.log("action", action);
-        const after = reducer(state, action);
-        console.log("state after: ", after);
 
-        return after;
-    }
+  return (state, action) => {
+
+    // console.log("state before: ", state);
+    // console.log("action", action);
+    const after = reducer(state, action);
+    console.log('state after: ', after);
+
+    return after;
+
+  };
 
 }
 

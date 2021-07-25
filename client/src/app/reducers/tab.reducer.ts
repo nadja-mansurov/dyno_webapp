@@ -2,35 +2,34 @@
 import {
   createReducer,
   on,
-  State,
-  Action
+  Action,
 } from '@ngrx/store';
-//import {User} from '../model/user.model';
+// import {User} from '../model/user.model';
 import { TabActions } from '@/app/actions/action-types';
 import { ITabState } from '@/app/reducers/interfaces';
 
-import { FILE_TYPES } from '@/app/const/fileTypes.const';
-import { statement } from '@babel/template';
-
-
 
 export const initialTabState: ITabState = {
-  tab: 'ngl'
+  tab: 'ngl',
 };
 
 const tabReducer = createReducer(
 
-  initialTabState,
+    initialTabState,
 
-  on(TabActions.setTab, (state: ITabState, { tab }) => {
-    console.log('set tab', tab);
-    let next = { ...state };
-    next.tab = tab;
-    return next;
-  }),
+    on(TabActions.setTab, (state: ITabState, { tab }) => {
+
+      console.log('set tab', tab);
+      const next = { ...state };
+      next.tab = tab;
+      return next;
+
+    }),
 
 );
 
 export function TabReducer(state: ITabState | undefined, action: Action) {
+
   return tabReducer(state, action);
+
 }

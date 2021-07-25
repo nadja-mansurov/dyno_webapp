@@ -3,16 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ViewerComponent } from './viewer/viewer.component';
 
 
-
 @NgModule({
   declarations: [
-    ViewerComponent
+    ViewerComponent,
   ],
   imports: [
-    CommonModule
+    CommonModule,
   ],
   exports: [
-    ViewerComponent
-  ]
+    ViewerComponent,
+  ],
 })
 export class FramesViewerModule { }
