@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HelpIndexComponent } from '@ngl-help/help-index/help-index.component';
+import { ViewerComponent } from './viewer/viewer.component';
 
 
 @NgModule({
   declarations: [
-    HelpIndexComponent,
+    ViewerComponent,
   ],
   imports: [
     CommonModule,
   ],
   exports: [
-    HelpIndexComponent,
+    ViewerComponent,
   ],
 })
-export class NglHelpModule { }
+export class FramesViewerModule { }
