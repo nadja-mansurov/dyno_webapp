@@ -1,5 +1,5 @@
 # dyno_webapp
-
+[![Unit_Test](https://github.com/nadja-mansurov/dyno_webapp/actions/workflows/main.yml/badge.svg)](https://github.com/nadja-mansurov/dyno_webapp/actions/workflows/main.yml)
 ## online demo page 
 https://nadja-mansurov.github.io/dynophores_webclient/
 
