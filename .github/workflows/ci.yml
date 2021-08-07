@@ -8,10 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Folders 1
-        run: ls
-      - name: Go to client Folder
-        run: cd client
       - name: Cache node_modules
         uses: actions/cache@v1
         with:
@@ -23,11 +19,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "14.x"
-      - name: Folders 2
-        run: ls
       - run: cd client && npm ci
-      - name: Folders 3
-        run: ls
+      - name: tsc
+        uses: icrawl/action-tsc@v1
       - name: Build
         run: cd client && npm run build
       - name: Upload Build Folder
