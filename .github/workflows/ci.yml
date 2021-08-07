@@ -7,9 +7,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Folders
+        run: ls
       - name: Go to client Folder
         run: cd client
-      - uses: actions/checkout@v2
       - name: Cache node_modules
         uses: actions/cache@v1
         with:
