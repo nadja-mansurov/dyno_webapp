@@ -16,3 +16,31 @@
 .scroll {
   overflow-y: auto;
 }
+
+.viewer-container {
+  position: relative;
+}
+
+.scale-button {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  z-index: 101;
+}
+
+.full-size {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+
+  .viewport {
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+  }
+}
