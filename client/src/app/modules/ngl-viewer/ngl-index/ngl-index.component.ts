@@ -26,6 +26,7 @@ const PLAYER_TIMEOUT = 500;
 export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public isFullSize = false;
+  public bTitle = 'Full Screen';
 
   private stageSize = [];
   private atomsCoordsList: DynophoreAtomModel[] = [];
@@ -110,7 +111,15 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.isFullSize = !this.isFullSize;
 
-    console.log(this.stageInstance);
+    if (this.isFullSize) {
+
+      this.bTitle = 'Close Full Screen';
+
+    } else {
+
+      this.bTitle = 'Full Screen';
+
+    }
 
     asyncScheduler.schedule(() => {
 

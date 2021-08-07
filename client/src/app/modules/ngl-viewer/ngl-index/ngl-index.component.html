@@ -4,7 +4,8 @@
 <div class='row'>
   <div class='col-sm-12 viewer-container'
     [ngClass]="{'full-size': isFullSize}">
-      <button class='btn btn-outline-secondary scale-button' (click)="toggleFullSize()">
+      <button class='btn btn-outline-secondary scale-button' (click)="toggleFullSize()"
+        [attr.title]="bTitle">
         <i class='bi'
           [ngClass]="{'bi-fullscreen': !isFullSize,
                       'bi-fullscreen-exit': isFullSize}"></i>
