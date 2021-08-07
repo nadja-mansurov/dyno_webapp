@@ -22,9 +22,10 @@ jobs:
       - name: Install Typescript
         run: npm i typescript -g
       - run: cd client && npm ci
-      - name: npm install and npm run build
+      - name: Install and build
         run: |
           cd client
+          typescript --version
           npm i
           npm run buildaot
       - name: Push Build to Releases
