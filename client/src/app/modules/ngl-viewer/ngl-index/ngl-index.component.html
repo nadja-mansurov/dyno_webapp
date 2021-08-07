@@ -2,7 +2,13 @@
 <dyno-selected-info></dyno-selected-info>
 
 <div class='row'>
-  <div class='col-sm-12'>
+  <div class='col-sm-12 viewer-container'
+    [ngClass]="{'full-size': isFullSize}">
+      <button class='btn btn-outline-secondary scale-button' (click)="toggleFullSize()">
+        <i class='bi'
+          [ngClass]="{'bi-fullscreen': !isFullSize,
+                      'bi-fullscreen-exit': isFullSize}"></i>
+      </button>
       <div id='viewport'
         class='viewport'></div>
   </div>
