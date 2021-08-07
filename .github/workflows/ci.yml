@@ -33,14 +33,6 @@ jobs:
         with:
           name: code-build
           path: client/dist/dynophores_webclient
-      - name: Copy
-        uses: andstor/copycat-action@v3
-        with:
-          personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          src_path: client/README.md
-          src_branch: workflow
-          dst_path: /dynophores_webclient/
-          dst_owner: nadja-mansurov
-          dst_repo_name: nadja-mansurov.github.io
-          dst_branch: gh-pages
-          clean: true
+      - name: Trigger deploy
+        run: |
+          curl -XPOST -u "${{ secrets.PAT_USERNAME }}:${{ secrets.PAT_TOKEN }}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/nadja-mansurov/nadja-mansurov.github.io/dispatches --data '{"event_type": "build_application"}'
