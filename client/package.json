@@ -77,5 +77,8 @@
     "karma-jasmine-html-reporter": "1.6.0",
     "protractor": "7.0.0",
     "ts-node": "10.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^4.2.3"
   }
 }
