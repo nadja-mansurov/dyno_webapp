@@ -27,11 +27,6 @@ jobs:
         run: |
           cd client
           npm run buildaot
-      - name: Push Build to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "client/dist/*"
-          token: ${{ secrets.PERSONAL_TOKEN }}
       - name: Copy
         uses: andstor/copycat-action@v3
         env:
