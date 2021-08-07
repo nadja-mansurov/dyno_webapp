@@ -29,7 +29,7 @@ jobs:
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
           src_path: client/dist
-          src_branch: ${{ GITHUB_REF }}
+          src_branch: $GITHUB_REF
           dst_path: /dynophores_webclient/
           dst_owner: nadja-mansurov
           dst_repo_name: nadja-mansurov.github.io
