@@ -23,6 +23,8 @@ jobs:
       
       - name: Copy
         uses: andstor/copycat-action@v3
+        env:
+          GITHUB_REF: ${{ toJSON(github.head_ref) }}
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
           src_path: client/dist
