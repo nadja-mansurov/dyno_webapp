@@ -33,7 +33,7 @@ jobs:
           GITHUB_REF: ${{ toJSON(github.head_ref) }}
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          src_path: client/dist
+          src_path: /client/dist/*
           src_branch: main
           dst_path: /dynophores_webclient/
           dst_owner: nadja-mansurov
