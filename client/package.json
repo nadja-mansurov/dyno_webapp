@@ -5,7 +5,6 @@
     "ng": "ng",
     "prestart": "npm run build:ngl:copy",
     "start": "npm run lint && ng serve",
-    "prebuild": "npm run build:ngl:copy",
     "build": "ng build",
     "test": "npx jest",
     "lint": "eslint '**/*.ts'",
