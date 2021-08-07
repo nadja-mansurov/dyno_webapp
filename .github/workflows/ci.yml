@@ -27,6 +27,11 @@ jobs:
         run: |
           cd client
           npm run buildaot
+      - name: Folder
+        run: |
+          ls
+          cd client
+          ls
       - name: Copy
         uses: andstor/copycat-action@v3
         env:
