@@ -19,8 +19,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "14.x"
-      - run: npm ci & npm build
-      
+      - run: npm ci
+      - name: Build
+        if: github.event_name == 'push'
+        run: npm run build
+      - name: Upload Build Folder
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-build
+          path: build
       - name: Copy
         uses: andstor/copycat-action@v3
         env:
