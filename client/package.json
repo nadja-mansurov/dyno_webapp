@@ -10,6 +10,7 @@
     "lint": "eslint '**/*.ts'",
     "e2e": "ng e2e",
 
+    "buildaot": "ng build --configuration production --output-path dist/dynophores_webclient --base-href /dynophores_webclient/",
     "update": "rm -rf node_modules  && rm -rf package-lock.json && npm i && npm audit fix --force",
     "update:all": "ncu -u && npm i",
     "build:ngl:dts": "cd node_modules/ngl && npm run dts",
