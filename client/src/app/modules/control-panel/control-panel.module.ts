@@ -9,22 +9,21 @@ import { RangeComponent } from '@modules/control-panel/range/range.component';
 import { FileUploadComponent } from '@modules/control-panel/file-upload/file-upload.component';
 
 
-
 @NgModule({
   declarations: [
     ControlPanelIndexComponent,
     RangeComponent,
-    FileUploadComponent
+    FileUploadComponent,
   ],
   imports: [
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
     NglHelpModule,
-    CommonModule
+    CommonModule,
   ],
   exports: [
-    ControlPanelIndexComponent
-  ]
+    ControlPanelIndexComponent,
+  ],
 })
 export class ControlPanelModule { }

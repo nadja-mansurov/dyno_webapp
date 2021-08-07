@@ -1,19 +1,45 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "google"
+  "env": {
+      "browser": true,
+      "es2021": true
+  },
+  "extends": [
+      "google"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "module"
+  },
+  "plugins": [
+      "@typescript-eslint"
+  ],
+  "ignorePatterns": [
+    "e2e/",
+    "node_modules/",
+    "polyfills.ts",
+    "test.ts",
+    "**/*.spec.ts"
+  ],
+  "rules": {
+    "max-len": ["error",
+      {
+        "code": 120,
+        "tabWidth": 4,
+        "ignoreComments": true
+      }
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "rules": {
-    }
+    "object-curly-spacing": ["error", "always"],
+    "new-cap": ["error", { "capIsNew": false }],
+    "padded-blocks": ["error", "always"],
+    "require-jsdoc": ["error", {
+      "require": {
+          "FunctionDeclaration": false,
+          "MethodDefinition": false,
+          "ClassDeclaration": false,
+          "ArrowFunctionExpression": false,
+          "FunctionExpression": false
+      }
+    }]
+  }
 }

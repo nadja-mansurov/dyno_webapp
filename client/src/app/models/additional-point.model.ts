@@ -16,6 +16,7 @@ export interface IAdditionalPoint {
 
 
 export class AdditionalPointModel {
+
   position: Vector3 = new Vector3(0, 0, 0);
   weigth: number = 0.0;
   frameIndex: number = 0;
@@ -29,44 +30,64 @@ export class AdditionalPointModel {
   opacity? = false;
 
   constructor(data: any, center: Vector3) {
-    let x, y, z;
+
+    let x; let y; let z;
     data.map((item: any) => {
+
       if (item.name === 'weight') this.weigth = item.value;
       if (item.name === 'frameIndex') this.frameIndex = +item.value;
       if (item.name === 'x3') {
+
         this.x = x = item.value;
         this.bufferArray[0] = x;
+
       }
       if (item.name === 'y3') {
+
         this.y = y = item.value;
         this.bufferArray[1] = y;
+
       }
       if (item.name === 'z3') {
+
         this.z = z = item.value;
         this.bufferArray[2] = z;
+
       }
+
     });
     this.position = new Vector3(x, y, z);
     this.distance = center.distanceTo(this.position);
+
   }
 
   setVisibility(frames?: number[]) {
+
     if (!frames) {
+
       this.hidden = false;
       return;
+
     }
 
     const max = Math.max(...frames);
 
     if (frames.indexOf(this.frameIndex) > -1) {
+
       this.hidden = false;
       if (this.frameIndex !== max) {
+
         this.opacity = true;
+
       }
+
     } else {
+
       this.hidden = true;
       this.opacity = false;
+
     }
+
   }
 
 }

@@ -3,6 +3,13 @@
       <dyno-control-panel-index></dyno-control-panel-index>
     </div>
     <div class="col-sm-8">
-      <dyno-ngl-index></dyno-ngl-index>
+      <div class="row">
+        <div class="col-sm-12">
+          <button type="button" class="btn btn-outline-secondary view-selector"
+            (click)="toggleView()">{{buttonHeader}}</button>
+        </div>
+      </div>
+      <dyno-ngl-index *ngIf="pageType === 'ngl'"></dyno-ngl-index>
+      <dyno-viewer *ngIf="pageType === 'chart'"></dyno-viewer>
     </div>
   </div>
