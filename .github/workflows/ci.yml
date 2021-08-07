@@ -32,13 +32,15 @@ jobs:
           ls
           cd client
           ls
+          cd dist
+          ls
       - name: Copy
         uses: andstor/copycat-action@v3
         env:
           GITHUB_REF: ${{ toJSON(github.head_ref) }}
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          src_path: client/dist/*
+          src_path: client/dist/dynophores_webclient/*
           src_branch: main
           dst_path: dynophores_webclient
           dst_owner: nadja-mansurov
