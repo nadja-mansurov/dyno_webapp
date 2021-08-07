@@ -20,15 +20,16 @@ jobs:
         with:
           node-version: "14.x"
       - run: cd client && npm ci
-      - name: tsc
-        uses: icrawl/action-tsc@v1
-      - name: Build
-        run: cd client && npm run build
-      - name: Upload Build Folder
-        uses: actions/upload-artifact@v1
+      - name: npm install and npm run build
+        run: |
+          cd client
+          npm i
+          npm run build
+      - name: Push Build to Releases
+        uses: ncipollo/release-action@v1
         with:
-          name: code-build
-          path: build
+          artifacts: "client/dist/*"
+          token: ${{ secrets.PERSONAL_TOKEN }}
       - name: Copy
         uses: andstor/copycat-action@v3
         env:
