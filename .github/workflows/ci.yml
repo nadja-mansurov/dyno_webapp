@@ -43,4 +43,3 @@ jobs:
           dst_owner: nadja-mansurov
           dst_repo_name: nadja-mansurov.github.io
           dst_branch: gh-pages
-          clean: true
