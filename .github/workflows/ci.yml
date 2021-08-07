@@ -27,11 +27,17 @@ jobs:
         run: |
           cd client
           npm run buildaot
+      - name: Upload Build Folder
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-build
+          path: client/dist/dynophores_webclient
       - name: Copy
         uses: andstor/copycat-action@v3
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          src_path: client/.
+          src_path: client/dist/dynophores_webclient/.
           src_branch: workflow
           dst_path: /dynophores_webclient/
           dst_owner: nadja-mansurov
