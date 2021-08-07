@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Go to client Folder
-      - run: cd client
+        run: cd client
       - uses: actions/checkout@v2
       - name: Cache node_modules
         uses: actions/cache@v1
