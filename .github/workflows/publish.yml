@@ -1,0 +1,38 @@
+name: Publish
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/packeges-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Use NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+      - name: Install 
+        run: |
+          cd client  
+          npm ci
+      - name: Build
+        run: |
+          cd client
+          npm run buildaot
+      - name: Upload Build Folder
+        if: github.event_name == 'push'
+        uses: actions/upload-artifact@v1
+        with:
+          name: code-build
+          path: client/dist/dynophores_webclient
+      - name: Trigger deploy
+        run: |
+          curl -XPOST -u "${{ secrets.PAT_USERNAME }}:${{ secrets.PAT_TOKEN }}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/nadja-mansurov/nadja-mansurov.github.io/actions/workflows/ci.yml/dispatches --data '{"ref": "gh-pages"}'
