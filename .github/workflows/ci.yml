@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Folders
+      - name: Folders 1
         run: ls
       - name: Go to client Folder
         run: cd client
@@ -23,10 +23,13 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "14.x"
-      - run: npm ci
+      - name: Folders 2
+        run: ls
+      - run: cd client && npm ci
+      - name: Folders 3
+        run: ls
       - name: Build
-        if: github.event_name == 'push'
-        run: npm run build
+        run: cd client && npm run build
       - name: Upload Build Folder
         uses: actions/upload-artifact@v1
         with:
