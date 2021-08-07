@@ -1,0 +1,45 @@
+
+  name: Unit_Test
+
+  on: 
+    push: 
+      branches:
+        - "feature/#1_add_cypress"
+
+  jobs:
+    unit_test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2 
+        - name: Setup node   
+          uses: actions/setup-node@v2
+          with:
+            node-version: '14'
+        - name: Install npm
+          working-directory: ./client
+          run: npm ci
+        - name: Unit test
+          working-directory: ./client
+          run: npm test 
+
+    #cypress:
+      #runs-on: ubuntu-latest
+      #steps:
+    #  - uses: actions/checkout@v2
+    #    - uses: bahmutov/npm-install@v1
+    #      with:
+    #        working-directory: ./client
+    #    - name: Start server in the background
+    #      working-directory: ./client
+    #      run: npm start
+
+    #    - uses: cypress-io/github-action@v2
+    #      with:
+    #        working-directory: ./client
+    #    - name: Cypress
+    #      working-directory: ./client
+    #      run: npm cypress run
+            
+              
+                          
+    
