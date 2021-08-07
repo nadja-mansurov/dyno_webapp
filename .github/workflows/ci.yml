@@ -24,10 +24,13 @@ jobs:
           node-version: "14.x"
       - run: npm ci & npm build
       
-      - name: Publish content to GitHub Pages
-        uses: tsunematsu21/actions-publish-gh-pages@v1.0.2
+      - name: Copy
+        uses: andstor/copycat-action@v3
         with:
-          dir: dist
-          repo: nadja-mansurov.github.io/dynophores_webclient
-          branch: gh-pages
-          token: ${{ secrets.ACCESS_TOKEN }}
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          src_path: client/dist
+          dst_path: /dynophores_webclient/
+          dst_owner: nadja-mansurov
+          dst_repo_name: nadja-mansurov.github.io
+          dst_branch: gh-pages
+          clean: true
