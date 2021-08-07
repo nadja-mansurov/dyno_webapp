@@ -40,9 +40,9 @@ jobs:
           GITHUB_REF: ${{ toJSON(github.head_ref) }}
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
-          src_path: /client/dist/dynophores_webclient/.
+          src_path: client/dist/dynophores_webclient/.
           src_branch: main
-          dst_path: /dynophores_webclient/
+          dst_path: dynophores_webclient/
           dst_owner: nadja-mansurov
           dst_repo_name: nadja-mansurov.github.io
           dst_branch: gh-pages
