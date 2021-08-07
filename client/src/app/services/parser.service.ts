@@ -66,7 +66,7 @@ export class ParserService {
 
   structureDrawing(pdbFile: any, stageInstance: any, fileName?: string) {
 
-    pdbFile.addRepresentation('backbone', {
+    pdbFile.addRepresentation('cartoon', {
       colorScheme: 'element',
       crossSize: 0.75 });
 

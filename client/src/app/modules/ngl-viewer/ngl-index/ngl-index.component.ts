@@ -25,6 +25,10 @@ const PLAYER_TIMEOUT = 500;
 })
 export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  public isFullSize = false;
+  public bTitle = 'Full Screen';
+
+  private stageSize = [];
   private atomsCoordsList: DynophoreAtomModel[] = [];
   private stageInstance: any;
   private subs = new SubSink();
@@ -100,6 +104,28 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
       this.storeSubscription();
 
     }, PLAYER_TIMEOUT);
+
+  }
+
+  public toggleFullSize() {
+
+    this.isFullSize = !this.isFullSize;
+
+    if (this.isFullSize) {
+
+      this.bTitle = 'Close Full Screen';
+
+    } else {
+
+      this.bTitle = 'Full Screen';
+
+    }
+
+    asyncScheduler.schedule(() => {
+
+      this.stageInstance.handleResize();
+
+    }, 500);
 
   }
 
