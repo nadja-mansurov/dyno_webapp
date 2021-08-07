@@ -26,7 +26,7 @@ jobs:
         run: |
           cd client
           npm i
-          npm run build
+          npm run buildaot
       - name: Push Build to Releases
         uses: ncipollo/release-action@v1
         with:
