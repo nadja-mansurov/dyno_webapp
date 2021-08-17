@@ -1,5 +1,5 @@
 
-  name: Unit_Test
+  name: Tests
 
   on: 
     push: 
@@ -8,7 +8,7 @@
 
   jobs:
     unit_test:
-      runs-on: ubuntu-latest
+      runs-on: windows-latest
       steps:
         - uses: actions/checkout@v2 
         - name: Setup node   
@@ -26,7 +26,7 @@
 
 
     cypress:
-      runs-on: ubuntu-latest
+      runs-on: windows-latest
       steps:
         - uses: actions/checkout@v2      
         - name: Install 
