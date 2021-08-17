@@ -30,6 +30,9 @@
         - uses: bahmutov/npm-install@v1
           with:
             working-directory: ./client
+        - name: Install npm
+          working-directory: ./client
+          run: npm ci
         - name: Start server and E2E tests
           working-directory: ./client
           run: npm run test:cypress
