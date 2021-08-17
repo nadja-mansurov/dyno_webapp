@@ -14,28 +14,29 @@
         - name: Setup node   
           uses: actions/setup-node@v2
           with:
-            node-version: '14'
-        - name: Install npm
-          working-directory: ./client
-          run: npm install
+            node-version: '14.x'
+        - name: Install 
+          run: |
+            cd client  
+            npm ci
         - name: Unit test
-          working-directory: ./client
-          run: npm test 
+          run: |
+            cd client
+            npm test 
 
 
     cypress:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v2
-        - uses: bahmutov/npm-install@v1
-          with:
-            working-directory: ./client
-        - name: Install npm
-          working-directory: ./client
-          run: npm install
+        - uses: actions/checkout@v2      
+        - name: Install 
+          run: |
+            cd client  
+            npm ci
         - name: Start server and E2E tests
-          working-directory: ./client
-          run: npm run test:cypress
+          run: |
+            cd client
+            npm run test:cypress
 
         
             
