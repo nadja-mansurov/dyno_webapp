@@ -79,6 +79,7 @@
     "protractor": "7.0.0",
     "start-server-and-test": "^1.13.1",
     "ts-node": "10.0.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.3",
+    "webpack-dev-server": "^3.11.2"
   }
 }
