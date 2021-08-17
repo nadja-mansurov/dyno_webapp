@@ -17,7 +17,7 @@
             node-version: '14'
         - name: Install npm
           working-directory: ./client
-          run: npm ci
+          run: npm install
         - name: Unit test
           working-directory: ./client
           run: npm test 
@@ -32,7 +32,7 @@
             working-directory: ./client
         - name: Install npm
           working-directory: ./client
-          run: npm ci
+          run: npm install
         - name: Start server and E2E tests
           working-directory: ./client
           run: npm run test:cypress
