@@ -31,7 +31,7 @@ export class ControlPanelIndexComponent implements OnInit, OnDestroy {
   public currentFrame: string = 'All';
 
   public selectedParams: boolean = false;
-  public rangeType: 'show'|'hide'|null = null;
+  public rangeType: 'show'|'hide'|null = 'show';
   public playRange: number[]= [];
   public showRange: number[]= [];
 
@@ -185,11 +185,17 @@ export class ControlPanelIndexComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(DisplayActions.setRangeSelected({ range: this.showRange, selected: this.rangeType }));
 
+    // we decided to have one global selector
+    this.store.dispatch(PlayerActions.setRange({ range: this.showRange }));
+
   }
 
   public setPlayedRange() {
 
-    this.store.dispatch(PlayerActions.setRange({ range: this.playRange }));
+    // when we will have separate playRange selector
+    // this.store.dispatch(PlayerActions.setRange({ range: this.playRange }));
+
+    this.store.dispatch(PlayerActions.setRange({ range: this.showRange }));
 
   }
 

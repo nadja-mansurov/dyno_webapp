@@ -98,9 +98,8 @@
           [ngModel]="rangeType"
           (ngModelChange)="setHideShowType($event)"
         >
-          <option selected [value]="null">-select-</option>
-          <option [value]="'show'">Show</option>
-          <option [value]="'hide'">Hide</option>
+          <option selected [value]="'show'">Show</option>
+          <!--option [value]="'hide'" [disabled]>Hide</option-->
         </select>
       </div>
       <div class="col-sm-8">
@@ -121,9 +120,7 @@
         </button>
       </div>
     </div>
-  </div>
 
-  <div class="logical-container">
     <div class="row">
       <div class="col-sm-8">
         <div class="btn-group btn-group-sm  width-100" role="group">
@@ -179,7 +176,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <!--div class="row">
       <div class="col-sm-12">
         <div class="form-check">
           <input
@@ -214,7 +211,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div-->
   </div>
 
   <div class="logical-container">
