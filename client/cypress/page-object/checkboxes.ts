@@ -1,25 +1,36 @@
-/// <reference types="Cypress" />
+// / <reference types="Cypress" />
 
 export class Checkboxes {
 
-    getUploadCustomFilesCheckbox(): any{
-        return cy.get('input#customFiles');
-    }
+  getUploadCustomFilesCheckbox(): any {
 
-    getHidePreviousFramesCheckbox(): any {
-        return cy.get('#hidePrevFrames');
-    }
+    return cy.get('input#customFiles');
 
-    getPlayOnlyCheckbox(): any {
-       return cy.get('#selectedFrames');
-    }
+  }
 
-    getShowHelpCheckbox(): any {
-        return cy.get('#helpShow');
-    }
+  getHidePreviousFramesCheckbox(): any {
 
-    getLogicalContainer(): any {
-        return cy.get('.logical-container');
-    }
+    return cy.get('#hidePrevFrames');
+
+  }
+
+  getPlayOnlyCheckbox(): any {
+
+    return cy.get('#selectedFrames');
+
+  }
+
+  getShowHelpCheckbox(): any {
+
+    return cy.get('#helpShow');
+
+  }
+
+  getLogicalContainer(): any {
+
+    return cy.get('.logical-container');
+
+  }
+
 }
 export const checkboxes = new Checkboxes();
