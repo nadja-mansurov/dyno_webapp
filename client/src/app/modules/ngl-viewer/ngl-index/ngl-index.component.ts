@@ -16,7 +16,7 @@ import { PlayerActions, SelectionActions } from '@/app/actions/action-types';
 import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
 
 
-const PLAYER_TIMEOUT = 500;
+const PLAYER_TIMEOUT = 1000;
 
 @Component({
   selector: 'dyno-ngl-index',

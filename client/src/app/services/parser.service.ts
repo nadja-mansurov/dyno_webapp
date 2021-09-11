@@ -35,6 +35,13 @@ export class ParserService {
 
   };
 
+  /**
+   * Get coords for connections between dynophore and molecule
+   * @param atoms
+   * @param structureComponent
+   * @returns
+   */
+
   getAtomDynophoreInteractions(atoms: number[], structureComponent: any) {
 
     let i = 1;
