@@ -35,13 +35,14 @@
               "src/data"
             ],
             "styles": [
-              "src/styles.scss",
+              "src/styles/styles.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src/assets/"
+                "src/assets/",
+                "src/styles/"
               ]
             },
             "scripts": []
@@ -64,8 +65,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "3mb"
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
