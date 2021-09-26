@@ -199,6 +199,12 @@ export class ParserService {
           const cloudColor = item.opacity && atomsCoordsList ? new Color(tinyColor) : featureCloud.featureColor;
 
           position = item.position;
+          if (item.opacity && atomsCoordsList) {
+
+            position = null;
+
+          }
+
           shape.addSphere(item.position,
               cloudColor,
               item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
@@ -217,6 +223,7 @@ export class ParserService {
         });
 
       }
+
       shapes[featureCloud.featureId] = shape;
 
     });

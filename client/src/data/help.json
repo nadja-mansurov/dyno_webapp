@@ -37,12 +37,7 @@
         {
           "text": "Select 'Hide' or 'Show' and numbers of frames, then click 'Set' - only selected frames for each clouds will be displayed",
           "hasIssue": false
-        }
-      ]
-    },
-    {
-      "name": "Play block",
-      "text": [
+        },
         {
           "text": "Click play to play all frames. Previous frames are darken than current for each cloud",
           "hasIssue": false
@@ -57,10 +52,6 @@
         },
         {
           "text": "Set checkbox 'Hide previous frames' to display only current frame",
-          "hasIssue": false
-        },
-        {
-          "text": "'Play only...' opens block where you can set frames to play",
           "hasIssue": false
         },
         {
