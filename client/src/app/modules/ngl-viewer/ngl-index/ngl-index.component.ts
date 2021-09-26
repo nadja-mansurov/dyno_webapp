@@ -16,7 +16,7 @@ import { PlayerActions, SelectionActions } from '@/app/actions/action-types';
 import { DynophoreAtomModel } from '@/app/models/dynophore-atom.model';
 
 
-const PLAYER_TIMEOUT = 1000;
+const PLAYER_TIMEOUT = 500;
 
 @Component({
   selector: 'dyno-ngl-index',
@@ -254,7 +254,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.playRange[0] && this.playRange[0] !== this.globalMin) {
 
         this.player.setParameters({
-          start: this.playRange[0] - 1,
+          start: this.playRange[0],
         });
 
       }
@@ -292,8 +292,8 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
           end: this.globalMax,
           step: 1,
           timeout: PLAYER_TIMEOUT,
-          interpolateType: 'spline',
-          interpolateStep: 1,
+          // interpolateType: 'linear',
+          // interpolateStep: 2,
           mode: 'loop',
           direction: 'forward',
         });
