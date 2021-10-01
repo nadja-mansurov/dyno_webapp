@@ -218,7 +218,31 @@ export class ParserService {
         featureCloud.involvedAtomSerials.map((item: number) => {
 
           const atomPosition = atomsCoordsList[item];
-          shape.addArrow(position, atomPosition, featureCloud.featureColor, 0.05, `${featureCloud.name}`);
+          if (featureCloud.name !== 'H' && // HBA or HBD
+              +position.x - atomPosition.x < 5 &&
+              +position.y - atomPosition.y < 5 &&
+              +position.z - atomPosition.z < 5
+          ) {
+
+            position.x = 1.2*atomPosition.x;
+            position.y = 1.2*atomPosition.y;
+            position.z = 1.2*atomPosition.z;
+
+            if (featureCloud.name !== 'HBA') {
+
+              shape.addArrow(position, atomPosition, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
+
+            } else {
+
+              shape.addArrow(atomPosition, position, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
+
+            }
+
+          } else {
+
+            shape.addArrow(position, atomPosition, featureCloud.featureColor, 0.05, `${featureCloud.name}`);
+
+          }
 
         });
 
