@@ -230,11 +230,11 @@ export class ParserService {
 
             if (featureCloud.name !== 'HBA') {
 
-              shape.addArrow(position, atomPosition, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
+              shape.addArrow(atomPosition, position, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
 
             } else {
 
-              shape.addArrow(atomPosition, position, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
+              shape.addArrow(position, atomPosition, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
 
             }
 
