@@ -135,7 +135,7 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
         switchMap((pdb) => {
 
           this.structureComponent =
-            this.parserService.structureDrawing(pdb, this.stageInstance);
+            this.parserService.structureDrawing(pdb);
 
           this.stageInstance.signals.clicked.add(this.stageClicked, this);
           return this.filesService.uploadDcd(isCustom);
@@ -236,7 +236,8 @@ export class NglIndexComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const atomCoords = this.parserService.parseAtomCoord(this.structureComponent.structure.getAtomData());
 
-    this.dynophoreShapes = this.parserService.dynophoreDrawingByVisible(this.dynophore, range, atomCoords);
+    this.dynophoreShapes = this.parserService
+        .dynophoreDrawingByVisible(this.dynophore, range, atomCoords, this.playStatus);
 
     Object.keys(this.dynophoreShapes).map((shapeId, i) => {
 

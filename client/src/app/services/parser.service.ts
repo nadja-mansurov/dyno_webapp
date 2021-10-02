@@ -71,14 +71,11 @@ export class ParserService {
 
   }
 
-  structureDrawing(pdbFile: any, stageInstance: any, fileName?: string) {
+  structureDrawing(pdbFile: any) {
 
     pdbFile.addRepresentation('cartoon', {
-      colorScheme: 'element',
-      crossSize: 0.75 });
-
-    const shapeComp = stageInstance.addComponentFromObject(new NGL.Shape(pdbFile));
-    shapeComp.addRepresentation('buffer', { opacity: 0.3 });
+      radius: 0.01,
+    });
 
     pdbFile.autoView();
     return pdbFile;
@@ -182,7 +179,8 @@ export class ParserService {
 
   }
 
-  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[], atomsCoordsList?: any) {
+  dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[],
+      atomsCoordsList?: any, playStatus?: 'play'|'pause'|'stop') {
 
     const shapes: any = {};
     dynophore.featureClouds.map((featureCloud: any) => {
@@ -195,19 +193,24 @@ export class ParserService {
         item.setVisibility(visibleIndecies);
         if (!item.hidden) {
 
-          const tinyColor = '#' + tinycolor(featureCloud.featureColor.getHexString()).darken(25).toHex();
-          const cloudColor = item.opacity && atomsCoordsList ? new Color(tinyColor) : featureCloud.featureColor;
-
           position = item.position;
           if (item.opacity && atomsCoordsList) {
 
+            const tinyColor = '#' + tinycolor(featureCloud.featureColor.getHexString()).darken(25).toHex();
             position = null;
+            shape.addSphere(item.position,
+                new Color(tinyColor),
+                item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
+
+          } else {
+
+            shape.addSphere(item.position,
+                featureCloud.featureColor,
+                playStatus === 'stop' || !playStatus ? item.radius : item.radius*1.8,
+                `${featureCloud.name} frame index is ${item.frameIndex}`);
 
           }
 
-          shape.addSphere(item.position,
-              cloudColor,
-              item.radius, `${featureCloud.name} frame index is ${item.frameIndex}`);
 
         }
 
@@ -224,9 +227,15 @@ export class ParserService {
               +position.z - atomPosition.z < 5
           ) {
 
-            position.x = 1.2*atomPosition.x;
-            position.y = 1.2*atomPosition.y;
-            position.z = 1.2*atomPosition.z;
+            position.x = 1.5 * atomPosition.x;
+            position.y = 1.5 * atomPosition.y;
+            position.z = 1.5 * atomPosition.z;
+
+            const newPosition = {
+              x: atomPosition.x - 0.25,
+              y: atomPosition.y - 0.25,
+              z: atomPosition.z - 0.25,
+            };
 
             if (featureCloud.name !== 'HBA') {
 
@@ -234,7 +243,7 @@ export class ParserService {
 
             } else {
 
-              shape.addArrow(position, atomPosition, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
+              shape.addArrow(position, newPosition, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
 
             }
 
