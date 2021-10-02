@@ -21,7 +21,7 @@ export class AdditionalPointModel {
   weigth: number = 0.0;
   frameIndex: number = 0;
   bufferArray: number[] = [0.0, 0.0, 0.0];
-  radius: number = 0.2;
+  radius: number = 0.3;
   distance: number = 0.0;
   x: number = 0.0;
   y: number = 0.0;
