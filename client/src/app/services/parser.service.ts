@@ -227,6 +227,7 @@ export class ParserService {
               +position.z - atomPosition.z < 5
           ) {
 
+            /*
             position.x = 1.5 * atomPosition.x;
             position.y = 1.5 * atomPosition.y;
             position.z = 1.5 * atomPosition.z;
@@ -235,7 +236,7 @@ export class ParserService {
               x: atomPosition.x - 0.25,
               y: atomPosition.y - 0.25,
               z: atomPosition.z - 0.25,
-            };
+            };*/
 
             if (featureCloud.name !== 'HBA') {
 
@@ -243,7 +244,7 @@ export class ParserService {
 
             } else {
 
-              shape.addArrow(position, newPosition, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
+              shape.addArrow(position, atomPosition, featureCloud.featureColor, 0.1, `${featureCloud.name}`);
 
             }
 
