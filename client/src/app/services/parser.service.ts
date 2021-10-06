@@ -71,6 +71,12 @@ export class ParserService {
 
   }
 
+  /**
+   * Render protein from file
+   * @param {any}
+   * @returns {any}
+   */
+
   structureDrawing(pdbFile: any) {
 
     pdbFile.addRepresentation('cartoon', {
@@ -112,10 +118,16 @@ export class ParserService {
 
   }
 
+  /**
+   * Render initial dynophore cloud, render dynophore from to frames without playing it
+   * @param {any}
+   * @returns {any}
+   */
+
   dynophoreDrawing(dynophore: any) {
 
     const shapes: any = {};
-    let min = 1000000; // magic number
+    let min = 1000000; // magic number, just big enough
     let max = 0;
     dynophore.featureClouds.map((featureCloud: FeatureCloudModel) => {
 
@@ -179,6 +191,15 @@ export class ParserService {
 
   }
 
+  /**
+   * Render dynophore cloud, while playing
+   * @param {any}
+   * @param {number[]}
+   * @param {any}
+   * @param {'play'|'pause'|'stop'}
+   * @returns {any}
+   */
+
   dynophoreDrawingByVisible(dynophore: any, visibleIndecies: number[],
       atomsCoordsList?: any, playStatus?: 'play'|'pause'|'stop') {
 
@@ -190,13 +211,18 @@ export class ParserService {
 
       featureCloud.additionalPoints.map((item: AdditionalPointModel) => {
 
+
+        // set visibility by indicies, dynophores_webapp/client/src/app/models/additional-point.model.ts
         item.setVisibility(visibleIndecies);
+
         if (!item.hidden) {
 
           position = item.position;
           if (item.opacity && atomsCoordsList) {
 
+            // darken previous frames
             const tinyColor = '#' + tinycolor(featureCloud.featureColor.getHexString()).darken(25).toHex();
+            // remove arrows from previoues frames
             position = null;
             shape.addSphere(item.position,
                 new Color(tinyColor),
@@ -204,9 +230,12 @@ export class ParserService {
 
           } else {
 
+            // If is in play/pause state, increase current frame radius x 1.8
+            const radius = playStatus === 'stop' || !playStatus ? item.radius : item.radius*1.8;
+
             shape.addSphere(item.position,
                 featureCloud.featureColor,
-                playStatus === 'stop' || !playStatus ? item.radius : item.radius*1.8,
+                radius,
                 `${featureCloud.name} frame index is ${item.frameIndex}`);
 
           }
@@ -221,22 +250,13 @@ export class ParserService {
         featureCloud.involvedAtomSerials.map((item: number) => {
 
           const atomPosition = atomsCoordsList[item];
-          if (featureCloud.name !== 'H' && // HBA or HBD
+
+          // Draw arrows for current frames
+          if (featureCloud.name !== 'H' && // HBA or HBD or AR
               +position.x - atomPosition.x < 5 &&
               +position.y - atomPosition.y < 5 &&
               +position.z - atomPosition.z < 5
           ) {
-
-            /*
-            position.x = 1.5 * atomPosition.x;
-            position.y = 1.5 * atomPosition.y;
-            position.z = 1.5 * atomPosition.z;
-
-            const newPosition = {
-              x: atomPosition.x - 0.25,
-              y: atomPosition.y - 0.25,
-              z: atomPosition.z - 0.25,
-            };*/
 
             if (featureCloud.name !== 'HBA') {
 
@@ -263,10 +283,6 @@ export class ParserService {
     });
 
     return shapes;
-
-  }
-
-  additionalPointDrawing() {
 
   }
 
